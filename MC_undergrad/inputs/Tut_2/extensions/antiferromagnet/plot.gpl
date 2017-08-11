@@ -1,0 +1,7 @@
+set term png
+set output 'hist.png'
+plot 'M_hist.dat' u 1:2 w l
+set output 'M_seq.png'
+plot 'M_seq.dat' w l
+set output
+set term x11
