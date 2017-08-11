@@ -1,0 +1,22 @@
+NPT simulation of Lennard-Jones fluid at critical point - aim to reproduce Fig. 2 in Wilding & Binder, Physica A 231 439 (1996) 
+finish
+seeds 12 34 56 78               # Seed RNG seeds explicitly to the default                          
+nbrlist auto                    # Use a neighbour list to speed up energy calculations
+maxnonbondnbrs 4                # Maximum number of neighbours in neighbour list  
+verlet 0.0
+temperature     2.269 # T* = \frac{2}{\ln(1+sqrt(2))} 
+steps          130000000            # Number of moves to perform in simulation 
+equilibration    0              # Equilibration period: statistics are gathered after this period
+print           100000         # Print statistics every 'print' moves
+stats           100000
+stack           10              # Size of blocks for block averaging to obtain statistics
+sample coords   10000000         # Sample coordinates to ARCHIV every <N> steps
+revconformat dlmonte            # REVCON file is in DL_MONTE CONFIG format
+archiveformat dlmonte           # ARCHIV file is in DL_MONTE CONFIG format
+#yamldata 1000                   # Print yamldata every <N> steps
+move semigrandatoms 1 1 0.0     # Move type semigrandatoms <n> <f> <deltamu>
+A core B core                   # Semi-grand exchanges of atom A and B 
+#move atom 1 1
+#A core
+start 
+
