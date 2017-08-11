@@ -1,315 +1,146 @@
 .. _tutorial_1:
 
-TUTORIAL 1 : NVT Lennard-Jones fluid
+TUTORIAL 1 : NVT Lennard-Jones solid
 ====================================
 
-Authors James Grant, John Purton, r.j.grant@bath.ac.uk
+Authors: Chris King, James Grant, John Purton
 
-Introduction to DLMONTE
+Introduction to Molecular Dynamics
+----------------------------------
+
+Molecular Dynamics (MD) is a classical potential modelling simulation technique.  Potential models employ several approximations compared to quantum mechanical modelling, such as: integrating electrons out of calculations, all charges are point charges and describing interatomic (intermolecular) interactions as potential functions.  MD uses these potential functions aand their associated force fields to plot trajectories of mobile objects by integrating Newton\'s Equations of Motion (EOMs).  This allows the velocities of any object at any given instant in the simulation to be calculated.  The time interval at which velocities are recalculated depends on the timescale over which interactions occur.  Molecular dynamics is a particularly useful way to model liquids and gases as well as predict transport properties of chemical species in solid and/or liquid solutions, such as diffusion, electrical conductivity and viscocity.  In this session, you will use molecular dynamics to simulate the phase behaviour of a model system.
+
+The Lennard-Jones Solid
 -----------------------
 
-We will start our DLMONTE tutorial with the simplest Monte Carlo simulation, a canonical, NVT simulation of a  Lennard-Jones fluid. In this example only the atoms are allowed to move and a random walk is constructed following the approach of Metropolis *et al.* [#F1]_ . There are three steps to this approach.
-
-1. Select an atom at random (**r_1**) and calculate its energy :math:`(U(\mathbf{r}_1))`.
-2. Displace this atom by a random amount to a new position (**r_2**) and calculate its new energy :math:`(U\mathbf{r}_2)`.
-3. Accept/reject the displacement according to the Metropolis algorithm
+Now that you\'ve become acquainted with the nature of MD simulations, we shall now apply some of the concepts and methods to explore the properties of a model system: a 2D Lennard-Jones material.
+A Lennard-Jones material is a hypothetical material (LennardJonesium) which is made up of chargeless particles that only interact with each other via the Lennard-Jones potential.  The Lennard-Jones potential has the following form:
 
 .. math::
 
-         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1)] \} )
-
-DLMONTE Input Files
--------------------
-
-The purpose of this test example or tutorial is to introduce some of the basic commands and file formats that are used by DLMONTE. Like DLPOLY, DLMONTE requires (at least) 3 standard input files:
-
-FIELD, CONFIG and CONTROL 
-
-We will start by introducing these files and will discuss each of these in turn.  
-Full details of options available are given the DLMONTE manual.
-
-FIELD
------
-
-The FIELD file contains the interatomic potentials and a detailed discussion of this topic can be found in the DLMONTE-2 manual. The file is similar to that used by DLPOLY, but contains some important differences.
-The FIELD file for the first tutorial is shown below
-
-.. code-block:: html
-   :linenos:
-
-   CUTOFF 2.5
-   UNITS internal
-   NCONFIGS 1
-   ATOMS 1
-   LJ core 1.0  0.0
-   MOLTYPES 1
-   lj
-   MAXATOM 512
-   FINISH
-   VDW 1
-   LJ core  LJ core lj   1.0 1.0
-   CLOSE
-   
-The important points to note are the *cutoff = 2.5* for the short-range interactions in Angstroms and the energy units expected by DLMONTE are in *internal* units, the CONFIG file contains 1 configuration *NCONFIGS = 1*.  
-There is one *ATOM*/particle type called called *LJ* having *mass = 1.0* and *charge = 0.0*. 
-These are contained within a single molecule called *lj*. The size of this molecule is restricted to 512 particles, which in this case is the same number of particles that will be read in from the CONFIG file.
-The particles interact through a *lj == Lennard-Jones* interaction having depth *\epsilon = 1* and range *\sigma = 1*.  
-Unlike DL_POLY there is no one-to-one correspondence between the FIELD and CONFIG file thus we only need to specify the particle type under the keyword ATOMS.
-
-CONFIG
-------
-
-As with DLPOLY the CONFIG file contains the positions of the particles and a sample of the configuration is provided below.
-
-.. code-block:: html
-   :linenos:
-   
-   Example 1: LJ NVT
-   0         0
-   11.7452  0.00000  0.00000
-   0.00000  11.7452  0.00000
-   0.00000  0.00000  11.7452
-   NUMMOL 1 1
-   MOLECULE lj 512 512
-   LJ core
-   0 0 0
-   LJ core
-   0 0 0.125
-   ......
-   
-The first line is simply a title. 
-In line 2 the first integer is similar to levcfg in DLPOLY and controls the amount of input and one can use this to skip the forces and velocities in output from DLPOLY configurations, note however that these will not work in DLMONTE without some modification.  
-The second integer reflects the style of coordinates *0 == fractional* (but also for Cartesian: 1 == cubic lattice, 2 == orthorhombic, 3 == palleliped). 
-These are followed by the lattice vectors. 
-
-NUMMOL specifies the number of types of molecules followed by the number of each type.  
-In this case there is one MOLECULE type lj, and there is one of them in the CONFIG file.  
-The molecule has 512 atoms/particles to initially and is limited to a maximum number of 512.
-Finally the atoms/particles are read in. 
-The atom data follows and for each particle, its name (usually chemical symbol) and type (core, semi and metal that can be abbreviate to c, s, and m) are specified.  
-On the next line these are followed by the coordinates in a format consistent with that given on line 2.  
- 
-CONTROL
--------
- 
-The CONTROL provides directives to DLMONTE how to undertake the calculations and switches on or off functionality. The CONTROL file in this example is:
-
-.. code-block:: html
-   :linenos:
-  
-   NVT simulation of Lennard-Jones fluid
-   finish
-   seeds 12 34 56 78               # Seed RNG seeds explicitly to the default
-   nbrlist auto                    # Use a neighbour list to speed up energy calculations
-   maxnonbondnbrs 512              # Maximum number of neighbours in neighbour list
-   temperature     1.4283461511745 # Corresponds to T*=1.1876; T(in K) = T* / BOLTZMAN (see constants_module.f90)
-   steps          10000            # Number of moves to perform in simulation
-   equilibration    0              # Equilibration period: statistics are gathered after this period
-   print           1000            # Print statistics every 'print' moves
-   stack           1000            # Size of blocks for block averaging to obtain statistics
-   sample coord   10000            # How often to print configurations to ARCHIVE.000
-   revconformat dlmonte            # REVCON file is in DLMONTE CONFIG format
-   archiveformat dlpoly4           # ARCHIVE.000/HISTORY.000/TRAJECTORY.000 format 
-                                   # In this case: HISTORY.000 in DLPOLY4 style
-   move atom 1 100                 # Move atoms with a weight of 100
-   LJ core
-   start
- 
-The first line is the title and the second contains the keyword *finish*. 
-We will see later that there a number of directives in DLMONTE that *must* be placed before this directive which must be present in the CONTROL file.
-*Seeds* followed by a series of 4 integers provides a reproducible seed, otheriwse *ranseed* generates a random seed from the system clock at initialisation.
-The diretives *nbrlist* and *maxnonbondnbrs* control the size and administration of the neighbourlist used by DLMONTE to optimise performance, and are explained further in one of the exercises.
-*Temperature* is self explanatory while *steps* is the length of the simulation in attempted  moves.
-*Equilibration* etc control the detail of how data is output from DLMONTE.
-The *revconformat dlmonte* instruction describes the format of the output file REVCON.000 which contains the final configuration of the simulation and can be used for continuing a simulation, *dlpoly2*, *dlpoly4* are other options.
-*archiveformat dlpoly4* describes the format of the trajectory file here it will be HISTORY.000, equivalent of the HISTORY in DLPOLY4.  The *dlpoly{2,4}* formats are readable by common visualisation packages such as vmd.  Full options are detailed in the manual.
-
-The directive *move atoms* is where we begin to touch on the fundamental control of the simulation.
-The key feature here is that DLMONTE will not do anything unless told to do so (N.B. While this gives DLMONTE great flexibility it means also means that it may be possible to ask DLMONTE to perform ill-defined calculations). 
-In this simple *NVT* ensemble only the particles move, thus *move atoms* tells DLMONTE to move *1* atom type, with a weight of  *100*. 
-The line(s) following this detail the atom and type.
-Finally the *start* directive ends the *CONTROL* file and instructs DLMONTE to start the simulation.
-
-.. You are now ready to run DLMONTE
-
-Running and Output
-------------------
-
-A successful DLMONTE calculation will produce a number of output files::
-
-* OUTPUT.000 contains details of the simulation, statistics, running time, or errors if the calculation failed.
-* REVCON.000 contains the final configuration in the format specified
-* PTFILE.000 contains statistics though will eventually be deprecated in favour of
-* YAMLDAT.000 which contains statistics in the yaml format
-* ARCHIVE.000/HISTORY.000/TRAJECTORY.000 contains the trajectory in the specified format
-* note that GCMC is not yet supported by standard packages.
+  \phi(r_{ij}) = 4\epsilon\biggl[\Bigl(\frac{\sigma}{r_{ij}}\Bigr)^{12}-\Bigl(\frac{\sigma}{r_{ij}}\Bigr)^{6}\biggr]
+         
+where :math:`\phi(r_{ij})` is the potential energy of the interaction between particles i and j separated by a distance :math:`r_{ij}`, :math:`\epsilon` is parameter relating to the depth of the potential well and :math:`\sigma` is finite distance at which the interaction is zero.  The positive term represents the repulsive component of the interactions which stems from phenomena like the Pauli Exclusion Principle and is dominant at short distances.  The negative term represents the attractive component of the interaction and stems from phenomena like London Dispersion and dominates at longer distances.  The figure below illustrates the shape of :math:`\phi_{ij}` and the corresponding force acting between two objects, :math:`F_{ij} = -\frac{d\phi_{ij}}{dr_{ij}}`, as a function of :math:`r_{ij}`.  When :math:`F_{ij}` is positive, the resultant force acting between the two objects is repulsive and when :math:`F_{ij}` is negative, the resultant force are attractive.  As you can see, at :math:`r_{ij}<r_{min}`, :math:`F_{ij}` is repulsive and the two objects repel each other, and when :math:`r_{ij} <  r_{min}`, :math:`F_{ij}` is attractive and the two objects move towards each other.
 
-For analysis we will typically process the YAMLDAT.000 and visualise the trajectory files.  
-However for understanding how the simulation proceeds it is useful to have some familiarity with the OUTPUT file.
-The file begins with a header detailing the version, authors and suggested citations, followed by the brief summary of details of the simulation as specified in the input files.
-As section headed *simulation parameters* then specifies all parameter values that will be used within the simulation.
+.. figure:: images/Tut_0_images/LJ_potential.png
+   :align: center
 
-The final step before starting the calculation is to determine the initial energy of the system and the details of this are printed in a block::
+   Figure 1: Shapes of (a) the Lennard-Jones potential, :math:`\phi(r_{ij})`, between two particles and (b) the corresponding force acting between the two particles.
 
- --------------------------------------------------
-                  initial energies
- --------------------------------------------------
+This model system has limited use in real world applications as it neglects all other possible intermolecular interactions, such as the Coulombic, permanent dipole-dipole and hydrogen bonding.  However, Lennard-Jonesium has been used to model the phase behaviour of noble gases, like argon, with a reasonable degree of accuracy [#f1]_, [#f2]_, [#f3]_.
 
- break down of energies for box:   1
+Exercise 1)
+-----------
 
- total energy                       -0.7037212307E+03
- reciprocal space coulomb            0.0000000000E+00
- real space coulomb                  0.0000000000E+00
- external mfa coulomb                0.0000000000E+00
- nonbonded two body (vdw)           -0.7037212307E+03
- bonded two body (pair)              0.0000000000E+00
- nonbonded three body                0.0000000000E+00
- bonded three body (angle)           0.0000000000E+00
- bonded four body (angle)            0.0000000000E+00
- many body energy                    0.0000000000E+00
- external potential energy           0.0000000000E+00
- total virial                        0.0000000000E+00
- volume                              0.1620247087E+04
+In this exercise, we will be running molecular dynamics calculations on a 3D model of solid Lennard-Jonesium in an face-centred cubic (fcc) arrangement to predict its behaviour when the temperature is raised.  
 
-This is followed by a partial breakdown per molecule type in the system and the time taken to initialise the calculation.  There after every *print* steps as specified in the CONTROL file a block is printed to the output::
+Navigate to ________________.  You will see input files: CONFIG, CONTROL, and FIELD.  The CONFIG file displays the size of the system and the position and velocity components in each direction (x, y, z) of every particle at the beginning of the simulation, the FIELD file defines the interactions between particles, and the CONTROL file sets parameters and conditions for running the simulation. Create a new folder (directory) in your area and copy the files into it.  You should also open these files to familiarise yourself with their contents.
+Now you will attempt to run the simulation using these input files.  Open the Command Prompt on your Windows machine and type the following command::
 
- Iteration       1000 - elapsed time (seconds)     0.0730
+	___________
 
-      step      en-total            h-total             coul-rcp            coul
- -real
-      step      en-vdw              en-three            en-pair             en-a
- ngle
-      step      en-four             en-many                                 volu
- me
-      step      cell-a              cell-b              cell-c
-      step      alpha               beta                gamma
-      r-av      en-total            h-total             coul-rcp            coul
- -real
-      r-av      en-vdw              en-three            en-pair             en-a
- ngle
-      r-av      en-many             vir-tot             volume              pres
- sure
-      r-av      cell-a              cell-b              cell-c
-      r-av      alpha               beta                gamma
- ----------------------------------------------------------------------------------------------------
-      1000    -0.7650295178E+03   -0.6130828709E+02    0.0000000000E+00    0.0000000000E+00
-              -0.7650295178E+03    0.0000000000E+00    0.0000000000E+00    0.0000000000E+00
-               0.0000000000E+00    0.0000000000E+00    0.0000000000E+00    0.0000000000E+00
-               0.1174520000E+02    0.1174520000E+02    0.1174520000E+02
-               0.9000000000E+02    0.9000000000E+02    0.9000000000E+02
+and press \'Enter\' on your keyboard.  This calls a molecular dynamics program called DL_POLY to run the simulation according to the parameters in the CONFIG, CONTROL and FIELD files.  The calculation should take around __ minutes to complete, you will know when it is complete when your working directory is displayed next to the keyboard prompt, you can also look at the latest modification times on your output files.  If the calculation finishes almost immediately after submitting it, an error has occurred.  In this instance, ask a demonstrator to help you find the problem (HINT: start by looking at the bottom of the OUTPUT file).  
 
+As the calculation runs and completes, you will notice several new files appear in your directory.  These are standard output files for DLPOLY.  The files that you will need for the purposes of this exercise are the HISTORY, OUTPUT and REVCON files.  The HISTORY file contains the configuration of the system at different times within the simulation (the spacing of these intervals is specified in the \'print\' line of the CONTROL file), OUTPUT records various properties like energies, pressure and temperature over the course of the simulation (at intervals specified by the CONTROL file) and REVCON displays the final configuration of the system.  
 
-              -0.7351584460E+03   -0.3143721526E+02    0.0000000000E+00    0.0000000000E+00
-              -0.7351584460E+03    0.0000000000E+00    0.0000000000E+00    0.0000000000E+00
-               0.0000000000E+00    0.0000000000E+00    0.0000000000E+00    0.0000000000E+00
-               0.1174520000E+02    0.1174520000E+02    0.1174520000E+02
-               0.9000000000E+02    0.9000000000E+02    0.9000000000E+02
+N.B. you may notice that the REVCON is bigger than the initial CONFIG file, this is because the initial CONFIG doesn\'t contain any velocity data (it assumes that the initial velocities of all particles are zero).
 
- LJ       c        512.0000        512.0000
+So you\'ve successfully run a simulation and obtained some outputs, now what? Well, there are many possible actions one could take, depending on what you are looking for.  For this exercise, we will start with viewing both the initial and final configurations of your system and seeing what differences, if any, are present.  To do this, click the windows button and search for a program called \'Vesta\' and open it.  Vesta is a program which allows you to visualise systems of atoms/molecules in three dimensions. To view your initial and final system configurations, go to file -> New Structure; select import and browse to find your CONFIG and REVCON, respectively.  Do this separately for each file.  You should see both structures in separate tabs. 
 
- lj                1.0000          1.0000
- ----------------------------------------------------------------------------------------------------
+Describe the initial and final configurations.  Rationalise any observed differences.
 
-This specifies the same breakdown in a tabulated form, including the iteration number and time taken.  By using the command::
+You can visualise the time evolution of the system using a program called VMD, find and open this program.  You should see several windows appear, an example of what you should see is shown below:
 
-  grep time OUTPUT.000
+.. figure:: images/Tut_0_images/VMD_initialise.png
+   :scale: 50 %
+   :align: center
 
-you can quickly gauge the progress of your calculation.
-DLMONTE runs a *check* of the system at regular intervals to verify that the system is behaving correctly.
-This typically involves calculating the energy from scratch and comaring it with the running total, the result is printed to the OUTPUT.000 with a line looking like::
+   Figure 2: An example screenshot showing the windows which appear upon initialising VMD.
 
- Workgroup    0, box    1 check: U_recalc - U_accum =  0.32742E-10  0.27570E-10  0.53847E-13 -0.32246E-13 (internal, kT, kT/atom, dU/U)
+In the \'VMD Main\' window, click file \rightarrow New Molecule, then click \'Browse\' and navigate to your chosen HISTORY file and open it.  From the \'Determine file type\' drop-down menu, select either \'DL_POLY_4 HISTORY\' or \'DL_POLY_C HISTORY\' and then press \'Load\'.  You should see an animation appear in the display window, each frame is a system configuration from the HISTORY file.  It will initially display the particles as lines and won\'t appear very informative.  You can change this by navigating to: Graphics \rightarrow Representations and choosing from the \'Drawing Method\' drop-down menu (\'VDW\' is probably the most intuitive way to visualise the system).  You can reduce the frame rate of the animation by adjusting the \'speed\' scale in the \'VMD Main\' window.  
 
-The final value is the relative energy difference which should be of the order of the working precision, typically ending E-13 or E-14.
+Repeat the calculation at increasingly high temperatures, following the instructions above, but changing the temperature value in the CONTROL file.  You will not need to go above 10 K.  You may wish to create a new directory for each temperature and copy the CONFIG, CONTROL and FIELD files into each.  
 
-Finally at the end of the simulation a summary block detailing the average values during the simulation (excluding the first *equilbration* steps) and their fluctations, the final energies, and 'processing data' detailing time, move data and final parameters::
+Note, you can add \'\&\' to the end of the run command to make the calculation run in the background, allowing you to use the Command Prompt to run the calculations from the other directories.  The calculations will then run simultaneously in the background, though running a lot calculations may result in some performance issues for your machine while they all run.  To avoid this, try to avoid running any more than __ calculations at one time.  
 
- ----------------------------------------------------------------------------
-                          processing data
+View the REVCON from each calculation in Vesta (the CONFIG file will be the same for each one) and view the evolution of the system in VMD.  What do you notice about the final configuration of the system as the temperature increases? What happens to the solid as the temperature is increased? Qualitatively determine and record the temperature(s) at which any significant transitions occur.  
 
+N.B. You will only be able to reliably view one animation at a time in VMD, so you will either need to quit VMD (by closing the \'VMD Main\' window) or by deleting your \'molecule\' from the \'VMD Main\' window by selecting the entry in the window, then selecting: \'Molecule\' \rightarrow \'Delete Molecule\'. 
 
- ----------------------------------------------------------------------------
+Part 2: Energy in Molecular Dynamics Simulations
+------------------------------------------------
 
- total no of atom moves         :     10000
- successful no of atom moves    :      5279      0.52790000
+This part of the tutorial aims to help solidify your understanding of how kinetic energy and potential energy are treated and used to control and monitor a molecular dynamics simulation.  The total energy of any thermodynamic system, *E*, can be broken down into the contributions from both kinetic, *KE*, and potential energy, *U*, such that:
 
- displacement (Angstroms) for LJ       c :   0.5346
+.. math::
 
- total elapsed time (seconds)          0.7730
- normal exit
+  E = U + KE
+	
+The conservation of total energy (*E* = constant) is critical to maintaining physicality of the system.  So if *KE* decreases, *U* must increase to keep *E* constant and vice-versa.  According to Kinetic Theory, the kinetic energy is directly proportional to the mean square speed of our particles, which in turn defines the temperature of the system:
 
-The OUTPUT.000 of a succssfully completed job will end with *normal exit*.
+.. math::
 
-.. Here begins Balena specific submission
+  KE = \frac{1}{2}m\langle c^{2} \rangle = \frac{3}{2}RT
 
-Submitting your job
--------------------
+where *m* is the total mass of all the particles, *R* is the molar gas constant, and *c* is the speed of the particle (in an arbitrary direction), the < \dots > represent taking the average value of the variable inside them.  In this case, the average is conducted over all particles.
+For our model (and many other classical models), the total potential energy of the system is the sum of the potential energies of each particle with the rest of the system: 
 
-We will be using the University of Bath's HPC, Balena for the workshop.
-You should have received a crib sheet on accessing Balena.
-To begin with submit your job using the command::
+.. math::
 
-[username@balena-01 tutorial1]$ sbatch single.sub
+  U = \sum_{i} \psi_{i}
 
-Most jobs in the workshop can be run using this script.  
-You can monitor the job using::
+where:
 
-[user@balena-01 tutorial1]$ squeue -u $USER
+.. math::
 
-In order to analyse output and visualise trajectories you will need to log into a copmute node using the command::
+  \psi_i = \sum_{j=1,j \neq i}^{N-1} \phi(r_{ij})
 
-[user@balena-01 tutorial1]$ sint
+where *N* is the total number of particles in a system and :math:`\psi_i` is the total interaction energy of particle i with all other particles in the system (excluding itself).  
+The Lennard-Jones potential represents a short-range interaction (:math:`r_{ij}^-6` and :math:`r_{ij}^-12`), the contributions from interactions between particles become infinitesimal the further away they are from each other.  Also, the calculation time increases considerably if we explicitly calculate the interaction energy for each particle pair, so it is common to often invoke a cut-off distance.  By convention, this is taken as 2.5*\sigma* and is stated in the CONTROL file of the simulation. For a given particle, only particles within the cut-off are assumed to significantly contribute to the interaction energy.  This introduces a small but easily-correctable error in our calculated values. 
 
-To visualise your calculation run vmd::
 
-[user0@node-sw-039 tutorial1]$ vmd
+Exercise 2)
+-----------
 
-To visualise the trajectory::
+In this part of the tutorial, we will extract total, potential and kinetic energies of the system from the OUTPUT file and plot them as a function of temperature.  To do this, start by navigating to one of your directories in the Command Prompt and run the following command:
 
-   File
-      New molecule
 
-   Determine file type
-      -> Select DLPOLY V3 History
-      -> Browse and Select HISTORY.000 
 
-Now add the line::
+This will activate a script which will extract *T*, *E*, and *U*, from the OUTPUT file and place them into a new file called _____.  It also calculates the average kinetic energy as :math:`E - U` appends it to ______.  Run this command on each of your simulations so that you have a data file in each of your repositories.  Now plot *E*, *U* and *KE* against *T* on the same graph, using whichever program you\'re most comfortable with (Excel, MATLab, gnuplot etc.).  It may also be helpful to run more simulations around the transition temperature to improve the accuracy of your plotted data at the transition.  Comment on the shape of the plots.  Do these indicate the presence of a phase transition?
 
-  yamldata 1000
+Part 3: Cooling in Molecular dynamics simulations
+-------------------------------------------------
 
-to the control file and rerun the simulation.
+As you have seen from the tutorial so far, potential modelling of physical systems can reliably and accurately simulate the thermodynamic behaviour when increasing the temperature.  However, for reasons that we will discuss, it can be a lot harder to cool a system back down in a way that reflects observed physical behaviour.
 
-To analyse the trajectory, e.g. the energy evolution during the calculation, first run the script:: 
+Exercise 3)
+-----------
 
-[user0@node-sw-039 tutorial1]$ strip_yaml.sh energy
+In this final exercise, you will observe what happens when you cool your Lennard-Jonesium liquid.  To do this, go to a directory where the simulation has *just* melted (*i.e.* at a temperature just above the estimated melting point) and copy the REVCON, CONTROL and FIELD files into a new directory.  Rename REVCON to CONFIG and change the temperature in the CONTROL file to a value *just* below your system\'s melting point.  Now you should have everything ready to simulate the cooling of your liquid back into a solid.  We take the REVCON and not the CONFIG as we want the final melted configuration from the \'hot\' simulation to be the starting configuration in the \'cool\' simulation.  Now run the simulation and view the results in both Vesta and VMD.  Record your observations.  Is this what you expect? Is this behaviour supported by thermodynamic theory?
 
-and then plot the time sequence::
+It is far more difficult to accurately model a systems thermodynamic behaviour when reducing the temperature using MD (or any potential modelling technique) primarily because of entropy, *S*, and the Third Law of Thermodynamics.  The Third Law of Thermodynamics can be stated as :math:`S \geq 0`.  When you cool a system, its entropy decreases, but this corresponds to an increase in entropy of its surroundings such that the Third Law of Thermodynamics is obeyed.  In a computational simulation, it is difficult to define \'entropy\' and \'the surroundings\' in this way, so when you cool a system from a temperature where it is liquid to one where it is solid, the observed \'disorder\' of a system will not change, and the system will still appear to be liquid (or it may become a glass, if you run for long enough times).  Also, a system crystallises when the atoms within the system to enter into a fixed orientation relative to one another, if all the atoms are freely moving, this outcome is **highly** unlikely.
 
-   [user0@node-sw-039 tutorial1]$ gnuplot
-   gnuplot> plot './energy.dat' u 1:2
+Conclusions
+-----------
 
-.. Here ends Balena specific submission
+Congratulations, you have applied molecular dynamics to a model system of Lennard-Jonesium to observe its thermodynamic behaviour as you change its temperature and related it back to the behaviour of real-life systems.  You have determined a phase transition, both qualitatively from the time-evolution of the system and more quantitatively from plots of system energies.  You have seen how potential modelling techniques deal with thermodynamic quantities like energy, entropy and particle trajectories and the limitations of such techniques in recovering the full range of observed thermal behaviour of real-life systems.
 
-.. Links to extension exercises
+Extensions (optional)
+---------------------
 
-Now try the extension exercises to learn more about funcitonality within DLMONTE and to optimise your calculation:
+In your studies you may have come across the idea of latent heat of phase transitions.  Latent heat, *L*, can be described as the energy required for all particles in a material to overcome thermal activation barriers and become more mobile in a less condensed phase (solid-liquid, liquid-gas).  This is observed as a plateau at the transition temperatures of heating curves, where no change in temperature is seen despite heat flowing into the system, or as a step-change in the potential energy at the phase transition as a function of temperature.  From your plot of *U* vs *T*, estimate the latent heat for the solid-liquid phase transition of Lennard-Jonesium.
 
-  :ref:`tut1_ex1`
+A widely-used classification of phase transitions is the Ehrenfest classification, which describes phase transitions as n\ :sup:`th` \ order, where n is the n\ :sup:`th` \ order temperature derivative of an intrinsic quantity where a discontinuity occurs (see Figure 3).  For instance, the liquid-gas phase transition is described as a 1\ :sup:`st` \ order phase transition as there is a discontinuity in :math:`C_{v} = \frac{\partial U}}{\partial T}`.  While a solid-solid phase transition is a 2\ :sup:`nd` \ order phase transition as there is a discontinuity in :math:`\frac{\partial C_{v}}{\partial T} = \frac{\partial^{2} U}{\partial T^{2}}`.
 
-  :ref:`tut1_ex2`
+.. figure:: images/Tut_0_images/Ehrenfest.png
+   :align: center
 
-  :ref:`tut1_ex3`
+   Figure 3: Gibbs Free Energy, *G*, volume, *V*, enthalpy, *H*, entropy, *S*, and heat capacity at constant pressure, :math:`C_{p}` graphs against temperature for 0\ :sup:`th`\, 1\ :sup:`st` \ and 2\ :sup:`nd` \ order Ehrenfest phase transitions..
 
-With each exercise we recommend you create a copy of the inputs in a sub-directory::
-
-[user0@node-sw-039 tutorial1]$ mkdir ex1
-[user0@node-sw-039 tutorial1]$ cp CONFIG CONTROL FIELD ex1
-[user0@node-sw-039 tutorial1]$ cd ex1
-
-.. Link to next tutorial
-
-Or move on to  :ref:`tutorial_2` and NPT simulations.
+With this in mind, what type of phase transition is your Lennard-Jonesium system undergoing and why?
 
 .. rubric:: Footnotes
 
-.. [#f1] N. Metropolis, A.W. Rosenbluth, M.N. Rosenbluth, A.N. Teller, and E. Teller. Equation of state calculations by fast computing machines. J. Chem. Phys. , 21:1087 1092, 1953.
+.. [#f1] W. T. Ashurst and W. G. Hoover, "Argon Shear Viscosity via a Lennard-Jones Potential with Equilibrium and Nonequilibrium Molecular Dynamics", *Phys. Rev. Lett.*, 31, 4, 206-208, July 1973.
+.. [#F2] B. W. Davies, "Radial Distribution Function for Argon: Calculations from Thermodynamic Properties and the Lennard-Jones 6:12 Potential", *J. Chem. Phys.*, 54, 11, pp.4616-4625, June 1971. 
+.. [#F3] R. O. Watts, "Percus-Yevick Approximation for the Truncated Lennard-Jones (12, 6) Potential Applied to Argon", *J. Chem. Phys.*, 50, 2, pp. 984-988, January 1969.  
