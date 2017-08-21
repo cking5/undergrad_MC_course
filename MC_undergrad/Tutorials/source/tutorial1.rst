@@ -22,7 +22,7 @@ A Lennard-Jones material is a hypothetical material which is made up of chargele
          
 where :math:`\phi(r_{ij})` is the potential energy of the interaction between particles i and j separated by a distance :math:`r_{ij}`, :math:`\epsilon` is the parameter relating to the depth of the potential well and :math:`\sigma` is the finite distance at which the interaction is zero.  The positive term represents the repulsive component of the interactions which stems from phenomena like the Pauli Exclusion Principle and is dominant at short distances.  The negative term represents the attractive component of the interaction and stems from phenomena like London Dispersion and dominates at longer distances.  The figure below illustrates the shape of :math:`\phi_{ij}` and the corresponding force acting between two objects, :math:`F_{ij} = -\frac{d\phi_{ij}}{dr_{ij}}`, as a function of :math:`r_{ij}`.  When :math:`F_{ij}` is positive, the resultant force acting between the two objects is repulsive and when :math:`F_{ij}` is negative, the resultant force are attractive.  As you can see, at :math:`r_{ij}<r_{min}`, :math:`F_{ij}` is repulsive and the two objects repel each other, and when :math:`r_{ij} <  r_{min}`, :math:`F_{ij}` is attractive and the two objects move towards each other.
 
-.. figure:: images/Tut_0_images/LJ_potential.png
+.. figure:: images/Tut_1_images/LJ_potential.png
    :align: center
 
    Figure 1: Shapes of (a) the Lennard-Jones potential, :math:`\phi(r_{ij})`, between two particles and (b) the corresponding force acting between the two particles.
@@ -49,15 +49,11 @@ So you\'ve successfully run a simulation and obtained some outputs, now what? We
 
 Describe the initial and final configurations.  Rationalise any observed differences.
 
-You can visualise the time evolution of the system using a program called VMD, find and open this program.  You should see several windows appear, an example of what you should see is shown below:
+You can visualise the time evolution of the system using a program called VMD, find and open this program.  You should see several windows appear.
 
-.. figure:: images/Tut_0_images/VMD_initialise.png
-   :scale: 50 %
-   :align: center
+In the \'VMD Main\' window, click file :math:`\rightarrow` New Molecule, then click \'Browse\' and navigate to your chosen HISTORY file and open it.  From the \'Determine file type\' drop-down menu, select either \'DL_POLY_4 HISTORY\' or \'DL_POLY_C HISTORY\' and then press \'Load\'.  You should see an animation appear in the display window, each frame is a system configuration from the HISTORY file.  It will initially display the particles as lines and won\'t appear very informative.  You can change this by navigating to: Graphics :math:`\rightarrow` Representations and choosing from the \'Drawing Method\' drop-down menu (\'VDW\' is probably the most intuitive way to visualise the system).  You can reduce the frame rate of the animation by adjusting the \'speed\' scale in the \'VMD Main\' window. For a full explanation, refer to the VMD _documentation.
 
-   Figure 2: An example screenshot showing the windows which appear upon initialising VMD.
-
-In the \'VMD Main\' window, click file :math:`\rightarrow` New Molecule, then click \'Browse\' and navigate to your chosen HISTORY file and open it.  From the \'Determine file type\' drop-down menu, select either \'DL_POLY_4 HISTORY\' or \'DL_POLY_C HISTORY\' and then press \'Load\'.  You should see an animation appear in the display window, each frame is a system configuration from the HISTORY file.  It will initially display the particles as lines and won\'t appear very informative.  You can change this by navigating to: Graphics :math:`\rightarrow` Representations and choosing from the \'Drawing Method\' drop-down menu (\'VDW\' is probably the most intuitive way to visualise the system).  You can reduce the frame rate of the animation by adjusting the \'speed\' scale in the \'VMD Main\' window.  
+.. _documentation: http://www.ks.uiuc.edu/Research/vmd/current/docs.html target="_blank"  
 
 Repeat the calculation at increasingly high temperatures, following the instructions above, but changing the temperature value in the CONTROL file.  You will not need to go above 10 K.  You may wish to create a new directory for each temperature and copy the CONFIG, CONTROL and FIELD files into each.  
 
@@ -65,7 +61,7 @@ Note, you can add \'\&\' to the end of the run command to make the calculation r
 
 View the REVCON from each calculation in Vesta (the CONFIG file will be the same for each one) and view the evolution of the system in VMD.  What do you notice about the final configuration of the system as the temperature increases? What happens to the solid as the temperature is increased? Qualitatively determine and record the temperature(s) at which any significant transitions occur.  
 
-N.B. You will only be able to reliably view one animation at a time in VMD, so you will either need to quit VMD (by closing the \'VMD Main\' window) or by deleting your \'molecule\' from the \'VMD Main\' window by selecting the entry in the window, then selecting: \'Molecule\' :math:`\rightarrow` \'Delete Molecule\'. 
+*N.B.* You will only be able to reliably view one animation at a time in VMD, so you will either need to quit VMD (by closing the \'VMD Main\' window) or by deleting your \'molecule\' from the \'VMD Main\' window by selecting the entry in the window, then selecting: \'Molecule\' :math:`\rightarrow` \'Delete Molecule\'. 
 
 Part 2: Energy in Molecular Dynamics Simulations
 ------------------------------------------------
@@ -123,24 +119,30 @@ It is far more difficult to accurately model a system's thermodynamic behaviour 
 Conclusions
 -----------
 
-Congratulations, you have applied molecular dynamics to a model system of Lennard-Jones solid to observe its thermodynamic behaviour as you change its temperature and related it back to the behaviour of real-life systems.  You have determined a phase transition, both qualitatively from the time-evolution of the system and more quantitatively from plots of system energies.  You have seen how potential modelling techniques deal with thermodynamic quantities like energy, entropy and particle trajectories and the limitations of such techniques in recovering the full range of observed thermal behaviour of real-life systems.
+Congratulations, you have applied molecular dynamics to a model system of Lennard-Jones solid to observe its thermodynamic behaviour as you change its temperature and related it back to the behaviour of real-life systems.  You have:
+
+- determined a phase transition, both qualitatively from the time-evolution of the system and more quantitatively from plots of system energies
+- seen how potential modelling techniques deal with thermodynamic quantities like energy, entropy and particle trajectories 
+- appreciated the limitations of such techniques in recovering the full range of observed thermal behaviour of real-life systems
+
+Now that you have an awareness of MD techniques, we will move onto introducing the general theory and methodology of Monte Carlo simulations.
 
 Extensions (optional)
 ---------------------
 
 In your studies you may have come across the idea of latent heat of phase transitions.  Latent heat, *L*, can be described as the energy required for all particles in a material to overcome thermal activation barriers and become more mobile in a less condensed phase (solid-liquid, liquid-gas).  This is observed as a plateau at the transition temperature of heating curves, where no change in temperature is seen despite heat flowing into the system, or as a step-change in the potential energy at the phase transition as a function of temperature.  From your plot of *U* vs *T*, estimate the latent heat for the solid-liquid phase transition of the Lennard-Jones material.
 
-A widely-used classification of phase transitions is the Ehrenfest classification, which describes phase transitions as n\ :sup:`th` \ order, where n is the n\ :sup:`th` \ order temperature derivative of an intrinsic quantity where a discontinuity occurs (see Figure 3).  For instance, the liquid-gas phase transition is described as a 1\ :sup:`st` \ order phase transition as there is a discontinuity in :math:`C_{v} = \frac{\partial U}}{\partial T}`.  While a solid-solid phase transition is a 2\ :sup:`nd` \ order phase transition as there is a discontinuity in :math:`\frac{\partial C_{v}}{\partial T} = \frac{\partial^{2} U}{\partial T^{2}}`.
+A widely-used classification of phase transitions is the Ehrenfest classification, which describes phase transitions as n\ :sup:`th` \ order, where n is the n\ :sup:`th` \ order temperature derivative of an intrinsic quantity where a discontinuity occurs (see Figure 2).  For instance, the liquid-gas phase transition is described as a 1\ :sup:`st` \ order phase transition as there is a discontinuity in :math:`C_{v} = \frac{\partial U}{\partial T}`.  While a solid-solid phase transition is a 2\ :sup:`nd` \ order phase transition as there is a discontinuity in :math:`\frac{\partial C_{v}}{\partial T} = \frac{\partial^{2} U}{\partial T^{2}}`.
 
-.. figure:: images/Tut_0_images/Ehrenfest.png
+.. figure:: images/Tut_1_images/Ehrenfest.png
    :align: center
 
-   Figure 3: Gibbs Free Energy, *G*, volume, *V*, enthalpy, *H*, entropy, *S*, and heat capacity at constant pressure, :math:`C_{p}` graphs against temperature for 0\ :sup:`th`\, 1\ :sup:`st` \ and 2\ :sup:`nd` \ order Ehrenfest phase transitions..
+   Figure 2: Gibbs Free Energy, *G*, volume, *V*, enthalpy, *H*, entropy, *S*, and heat capacity at constant pressure, :math:`C_{p}` graphs against temperature for 0\ :sup:`th`\, 1\ :sup:`st` \ and 2\ :sup:`nd` \ order Ehrenfest phase transitions..
 
 With this in mind, what type of phase transition is your Lennard-Jones system undergoing and why?
 
 .. rubric:: Footnotes
 
-.. [#f1] W. T. Ashurst and W. G. Hoover, "Argon Shear Viscosity via a Lennard-Jones Potential with Equilibrium and Nonequilibrium Molecular Dynamics", *Phys. Rev. Lett.*, 31, 4, 206-208, July 1973.
-.. [#F2] B. W. Davies, "Radial Distribution Function for Argon: Calculations from Thermodynamic Properties and the Lennard-Jones 6:12 Potential", *J. Chem. Phys.*, 54, 11, pp.4616-4625, June 1971. 
-.. [#F3] R. O. Watts, "Percus-Yevick Approximation for the Truncated Lennard-Jones (12, 6) Potential Applied to Argon", *J. Chem. Phys.*, 50, 2, pp. 984-988, January 1969.  
+.. [#f1] W. T. Ashurst and W. G. Hoover, "Argon Shear Viscosity via a Lennard-Jones Potential with Equilibrium and Nonequilibrium Molecular Dynamics", *Phys. Rev. Lett.*, **31**, 4, 206-208, July 1973.
+.. [#F2] B. W. Davies, "Radial Distribution Function for Argon: Calculations from Thermodynamic Properties and the Lennard-Jones 6:12 Potential", *J. Chem. Phys.*, **54**, 11, pp.4616-4625, June 1971. 
+.. [#F3] R. O. Watts, "Percus-Yevick Approximation for the Truncated Lennard-Jones (12, 6) Potential Applied to Argon", *J. Chem. Phys.*, **50**, 2, pp. 984-988, January 1969.  

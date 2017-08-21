@@ -13,7 +13,7 @@ Contents:
 
    tutorial1
    tutorial2
-
+   tutorial3
 
 Indices and tables
 ==================

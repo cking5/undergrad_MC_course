@@ -8,19 +8,22 @@ Authors Chris King, James Grant
 Introduction to Monte Carlo methods
 -----------------------------------
 
-Monte Carlo is the name given to the simulation technique that attempts to solve a problem by randomly sampling out of all of its possible outcomes (\'configurational space\')and obtaining a result based on numerical analysis of the sampling.  Monte Carlo is a stochastic method, which means that the final state of the system cannot be predicted precisely based on the initial state and parameters, but through numerical analysis, reproducible results can be obtained.  This contrasts with other techniques like molecular dynamics, which are deterministic, in that if you know the initial state and the inputs for the equations, you can predict what the configuration of the system will be at any and all times thereafter.  Based on this difference, Monte Carlo is used in a variety of applications across the scientific community where deterministic techniques are ineffective or impossible to use, such as phase co-existence and criticality, adsorption, and development of solid-state defects [#f1]_.
+Monte Carlo is the name given to the simulation technique that attempts to solve a problem by randomly sampling out of all of its possible outcomes (\'configurational space\')and obtaining a result based on numerical analysis of the sampling.  Monte Carlo is a stochastic method, which means that the final state of the system cannot be predicted precisely based on the initial state and parameters, but through numerical analysis, reproducible results can be obtained.  This contrasts with other techniques like molecular dynamics, which are deterministic, in that if you know the initial state and the inputs for the calculations, you can predict what the configuration of the system will be at any and all times thereafter.  Based on this difference, Monte Carlo is used in a variety of applications across the scientific community where deterministic techniques are ineffective or impossible to use, such as phase co-existence and criticality, adsorption, and development of solid-state defects [#f1]_.
 
 Having discussed the concepts behind Monte Carlo simulation methods, it is time to demonstrate how to apply them to a physical system.  This tutorial will be centred on a Monte Carlo simulation of the magnetic properties of solid materials.
+
+Results from Monte Carlo simulations are generally accurate and reliable, assuming that the technique has representatively sampled the distribution of possible configurations in the system ('configurational space').  As such, the choice of sampling method is crucial when formulating the parameters and criteria of your simulation.
 
 There are many possible ways one can sample the configurational space of a simulated system, the intuitive case is simple random sampling in that we move randomly from one configuration to another and collect a representative sample of configurations that way.  However, the reliabilty of this process is heavily dependent on the probability distribution of possible states and does not take into account the respective weighting of a given configuration.  For example, it can under-represent a small number of configurations who contribute significantly to the overall state of the system and sample mostly insignificant states instead.
 
 The concept of statistical weight of a configuration in a system is crucial in thermodynamics and describes how likely the particular configuration is of being observed out of a hypothetically *large* number of replicas of that system.  For instance, consider the possible configurations of the gas molecules in this room, clearly, this system would have a high probability of being in a configuration where the gas molecules are evenly (on average) distributed throughout the volume of the room and so this configurational has a high weighting.  However, there is a configuration where every gas molecule sits in one corner of the room, this configuration is highly unlikely to be seen and so its weighting would be lower. A random sampling method would not take these weightings into account, so is often not used to sample configurational space unless all configurations are equally weighted.
 
-There are more sophisticated ways of sampling configurational space, such as the Metropolis Algorithm, which is one of the most widely used sampling schemes in Monte Carlo simulations (including this one).  After proposing a spin flip, it calculates the new energy of the configuration using equation __ and compares it with the energy of the previous configuration before the move was proposed.  It then applies the following condition:
+There are more sophisticated ways of sampling configurational space, such as the Metropolis Algorithm, which is one of the most widely used sampling schemes in Monte Carlo simulations (including this one).  After proposing a spin flip, it calculates the new energy of the configuration using equation :eq:`1` and compares it with the energy of the previous configuration before the move was proposed.  It then applies the following condition:
 
 .. math::
 
          P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1)] \} )
+   :label: 1
 
 where :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of accepting the move from the initial configuration, :math:`\mathbf{r}_1`, with an energy, :math:`U(\mathbf{r}_1)`, to the new configuration, :math:`\mathbf{r}_2`, with an energy, :math:`U(\mathbf{r}_2)`.  The function min() means that the smallest value in the brackets is chosen.  If the energy of the new configuration is less than that of the original, *i.e.* :math:`U(\mathbf{r}_2) < U(\mathbf{r}_1)`, then :math:`U(\mathbf{r}_2)-U(\mathbf{r}_1) < 0` and so :math:`\exp \{- \beta [U(\mathbf{r}_2)-U(\mathbf{r}_1)] \}  > 1` and so the move is accepted with :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = 1`.  If the new energy is greater than the energy of the original configuration, *i.e.* :math:`U(\mathbf{r}_2) > U(\mathbf{r}_1)`, then :math:`U(\mathbf{r}_2)-U(\mathbf{r}_1) > 0` and so :math:`\exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1)] \}  > 1` and the move is accepted with probability :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1)] \} < 1`.  
 
@@ -35,14 +38,14 @@ An application where Monte Carlo is more effective than deterministic methods is
 
 Our simulation will be based on a 2D Ising model, which describes the macroscopic magnetic behaviour of a solid material as a result of the relative orientation of electron spins within the crystal lattice of a material.  As you may recall, each electron has an intrinsic \'spin\'.  In simple terms, the spin of an electron can be thought of as a magnetic moment, with two possible orientations: \'up\' and \'down\'.  This idea helps define two classes of magnetic materials: diamagnetic and paramagnetic.  Diamagnetic materials are made up of atoms/molecules without unpaired electrons, do not interact with external magnetic fields, making them non-magnetic.  Paramagnetic materials contain unpaired electrons, exhibiting a net magnetic moment that can interact with external magnetic fields and give the material its magnetic properties.  Figure 1 below shows an example of a paramagnetic material as a 2D lattice of colour-coded spins.
 
-.. figure:: images/Tut_1_images/paramagnet_config.png
+.. figure:: images/Tut_2_images/paramagnet_config.png
    :align: center
 
    Figure 1: A 2D schematic of a paramagnetic material under an external magnetic field.  Yellow indicates the spins that are aligned with the field and purple are spins that are anti-aligned.
 
 There is another type of magnetism observed known as ferromagnetism, where instead of a uniform alignment of spins as in paramagnetic materials, \'domains\' of aligned spins form, bound by domains of oppositely aligned spins (see Figure 2).  Ferromagnetic materials can show unique properties, such as being able to generate their own magnetic field (magnetisation) in the absence of an external magnetic field.  These form the common magnets seen in real-world applications.
 
-.. figure:: images/Tut_1_images/ferromagnet_cand2.png
+.. figure:: images/Tut_2_images/ferromagnet_cand2.png
    :align: center
 
    Figure 2: A 2D schematic of a ferromagnetic material at :math:`T < T_{c}`.  Yellow and purple represent the two different spin orientations, 'up' and 'down', respectively.
@@ -52,6 +55,7 @@ The main factor influencing whether a given atom\'s spin is aligned with its nei
 .. math::
 
 	E = -J \sum_{<i,j>} s_{i}s_{j}
+   label: 2
 
 where *J* is the coupling constant between adjacent atoms in a given material and :math:`s_{i/j}` is the spin of the particle in position i/j in the lattice, respectively.  The <...> here mean the sum goes over the nearest neighbours of the atom in position (i,j), *i.e.* over the atoms at positions  (i-1, j), (i+1, j), (i, j-1) and (i, j+1) only.  The sign of *J* determines whether spin alignment (ferromagnetism) or anti-alignment (antiferromagnetism) is favourable.
 
@@ -66,7 +70,7 @@ The aim of this exercise is to familiarise yourself with running calculations on
 
 First, go to _____ and copy the contents into a new directory in your domain.  The CONFIG file displays the initial configuration of your system, the CONTROL file allows you to set the parameters and constraints for your simulation, and the FIELD file describes the interactions between each particle pairing (though they may look slightly different to the ones presented in the last session, they perform the same roles).  Though we will be going through the function of these in detail in the next session, it may be helpful to have a look and familiarise yourself with their contents.  
 
-First, we will run the simulation with the current setup of input files.  To do this, open Command Prompt in Windows (or the command line in Linux), navigate to your directory containing your inputs and enter the following command::
+Now we will run the simulation with the current setup of input files.  To do this, open Command Prompt in Windows (or the command line in Linux), navigate to your directory containing your inputs and enter the following command::
 
 	DLISING.X
 
@@ -93,7 +97,8 @@ For any general 2D lattice where coupling along rows and along columns are equal
 .. math::
 
 	T_{c} = \frac{2}{\ln(1+\sqrt{2})} \approx 2.269
-	
+   label: 3
+
 Does your estimation of :math:`T_{c}` agree with that predicted by the above equation? Account for any observed discrepancies.
 
 Plot the time-evolution of magnetisation (on the same graph) for:
@@ -140,12 +145,23 @@ Re-run the calculation with this CONTROL file and plot the magnetisation vs time
 
 What do you notice about the magnetisation evolution in the two calculations? Does this confirm that the stochastic nature of Monte Carlo methods can produce reliable results?
 
+Conclusions:
+------------
+
+Now that you have reached the end of this tutorial, you will hopefully have a better understanding of the Monte Carlo method and the motivation for its use. You have simulated the magnetic properties of a 2D material based on the Ising model and obtained:
+
+- the temperature-dependence of magnetisation
+- the evolution of magnetisation with time
+- validation of the stochastic nature of Monte Carlo
+
+In the next tutorial, you will be introduced to a general Monte Carlo program called DL_MONTE and use it to model the thermal properties of a Lennard-Jones material.
+
 Extensions (optional):
 ----------------------
 
-In this tutorial you have looked at how the magnetic behaviour of a ferromagnetic system changes over time and temperature, but there is another possible type of magnetism called antiferromagnetism, where the sign of the coupling constant, *J*, from equation __ changes sign.  This means that it is now favourable for the spin of one atom to be opposed to the spin of its neighbours, resulting in a preferable \'checkerboard\' pattern of magnetisation on the 2D lattice (see Figure 3).  You can investigate the magnetic behaviour in this case using the 2D Ising model.
+In this tutorial you have looked at how the magnetic behaviour of a ferromagnetic system changes over time and temperature, but there is another possible type of magnetism called antiferromagnetism, where the sign of the coupling constant, *J*, from equation :eq:`2` changes sign.  This means that it is now favourable for the spin of one atom to be opposed to the spin of its neighbours, resulting in a preferable \'checkerboard\' pattern of magnetisation on the 2D lattice (see Figure 3).  You can investigate the magnetic behaviour in this case using the 2D Ising model.
 
-.. figure:: images/Tut_1_images/antiferromagnet.png
+.. figure:: images/Tut_2_images/antiferromagnet.png
    :align: center
 
    Figure 3: The most stable magnetic configuration of an antiferromagnetic material at :math:`T < T_{c}`.
