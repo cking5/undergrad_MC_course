@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=16
+
+#SBATCH --mem=60000
+
+#SBATCH --time=06:00:00
+
+#SBATCH --job-name=DLPOLY
+#SBATCH --account=free
+
+#SBATCH --mail-user=ars44@bath.ac.uk
+
+#SBATCH --output=StdOut.o.%j
+#SBATCH --error=StdErr.e.%j
+
+
+module purge
+module load gcc/4.8.2
+module load slurm
+module load intel/compiler/64/15.0.0.090
+module load intel/mkl/64/11.3
+module load openmpi/intel/1.8.4
+
+
+export OMP_NUM_THREADS=1
+
+mpirun -np 16 /home/d/ck368/bin/DLMONTE-SRL.X
+
+
