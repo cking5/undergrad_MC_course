@@ -1,0 +1,1031 @@
+Lennard-Jones sc starting configuration rho = 0.316
+         0         0
+  11.7452  0.00000  0.00000
+  0.00000  11.7452  0.00000
+  0.00000  0.00000  11.7452
+NUMMOL 1 1
+MOLECULE lj 512 512
+LJ core
+ 0 0 0
+LJ core
+ 0 0 0.125
+LJ core
+ 0 0 0.25
+LJ core
+ 0 0 0.375
+LJ core
+ 0 0 0.5
+LJ core
+ 0 0 0.625
+LJ core
+ 0 0 0.75
+LJ core
+ 0 0 0.875
+LJ core
+ 0 0.125 0
+LJ core
+ 0 0.125 0.125
+LJ core
+ 0 0.125 0.25
+LJ core
+ 0 0.125 0.375
+LJ core
+ 0 0.125 0.5
+LJ core
+ 0 0.125 0.625
+LJ core
+ 0 0.125 0.75
+LJ core
+ 0 0.125 0.875
+LJ core
+ 0 0.25 0
+LJ core
+ 0 0.25 0.125
+LJ core
+ 0 0.25 0.25
+LJ core
+ 0 0.25 0.375
+LJ core
+ 0 0.25 0.5
+LJ core
+ 0 0.25 0.625
+LJ core
+ 0 0.25 0.75
+LJ core
+ 0 0.25 0.875
+LJ core
+ 0 0.375 0
+LJ core
+ 0 0.375 0.125
+LJ core
+ 0 0.375 0.25
+LJ core
+ 0 0.375 0.375
+LJ core
+ 0 0.375 0.5
+LJ core
+ 0 0.375 0.625
+LJ core
+ 0 0.375 0.75
+LJ core
+ 0 0.375 0.875
+LJ core
+ 0 0.5 0
+LJ core
+ 0 0.5 0.125
+LJ core
+ 0 0.5 0.25
+LJ core
+ 0 0.5 0.375
+LJ core
+ 0 0.5 0.5
+LJ core
+ 0 0.5 0.625
+LJ core
+ 0 0.5 0.75
+LJ core
+ 0 0.5 0.875
+LJ core
+ 0 0.625 0
+LJ core
+ 0 0.625 0.125
+LJ core
+ 0 0.625 0.25
+LJ core
+ 0 0.625 0.375
+LJ core
+ 0 0.625 0.5
+LJ core
+ 0 0.625 0.625
+LJ core
+ 0 0.625 0.75
+LJ core
+ 0 0.625 0.875
+LJ core
+ 0 0.75 0
+LJ core
+ 0 0.75 0.125
+LJ core
+ 0 0.75 0.25
+LJ core
+ 0 0.75 0.375
+LJ core
+ 0 0.75 0.5
+LJ core
+ 0 0.75 0.625
+LJ core
+ 0 0.75 0.75
+LJ core
+ 0 0.75 0.875
+LJ core
+ 0 0.875 0
+LJ core
+ 0 0.875 0.125
+LJ core
+ 0 0.875 0.25
+LJ core
+ 0 0.875 0.375
+LJ core
+ 0 0.875 0.5
+LJ core
+ 0 0.875 0.625
+LJ core
+ 0 0.875 0.75
+LJ core
+ 0 0.875 0.875
+LJ core
+ 0.125 0 0
+LJ core
+ 0.125 0 0.125
+LJ core
+ 0.125 0 0.25
+LJ core
+ 0.125 0 0.375
+LJ core
+ 0.125 0 0.5
+LJ core
+ 0.125 0 0.625
+LJ core
+ 0.125 0 0.75
+LJ core
+ 0.125 0 0.875
+LJ core
+ 0.125 0.125 0
+LJ core
+ 0.125 0.125 0.125
+LJ core
+ 0.125 0.125 0.25
+LJ core
+ 0.125 0.125 0.375
+LJ core
+ 0.125 0.125 0.5
+LJ core
+ 0.125 0.125 0.625
+LJ core
+ 0.125 0.125 0.75
+LJ core
+ 0.125 0.125 0.875
+LJ core
+ 0.125 0.25 0
+LJ core
+ 0.125 0.25 0.125
+LJ core
+ 0.125 0.25 0.25
+LJ core
+ 0.125 0.25 0.375
+LJ core
+ 0.125 0.25 0.5
+LJ core
+ 0.125 0.25 0.625
+LJ core
+ 0.125 0.25 0.75
+LJ core
+ 0.125 0.25 0.875
+LJ core
+ 0.125 0.375 0
+LJ core
+ 0.125 0.375 0.125
+LJ core
+ 0.125 0.375 0.25
+LJ core
+ 0.125 0.375 0.375
+LJ core
+ 0.125 0.375 0.5
+LJ core
+ 0.125 0.375 0.625
+LJ core
+ 0.125 0.375 0.75
+LJ core
+ 0.125 0.375 0.875
+LJ core
+ 0.125 0.5 0
+LJ core
+ 0.125 0.5 0.125
+LJ core
+ 0.125 0.5 0.25
+LJ core
+ 0.125 0.5 0.375
+LJ core
+ 0.125 0.5 0.5
+LJ core
+ 0.125 0.5 0.625
+LJ core
+ 0.125 0.5 0.75
+LJ core
+ 0.125 0.5 0.875
+LJ core
+ 0.125 0.625 0
+LJ core
+ 0.125 0.625 0.125
+LJ core
+ 0.125 0.625 0.25
+LJ core
+ 0.125 0.625 0.375
+LJ core
+ 0.125 0.625 0.5
+LJ core
+ 0.125 0.625 0.625
+LJ core
+ 0.125 0.625 0.75
+LJ core
+ 0.125 0.625 0.875
+LJ core
+ 0.125 0.75 0
+LJ core
+ 0.125 0.75 0.125
+LJ core
+ 0.125 0.75 0.25
+LJ core
+ 0.125 0.75 0.375
+LJ core
+ 0.125 0.75 0.5
+LJ core
+ 0.125 0.75 0.625
+LJ core
+ 0.125 0.75 0.75
+LJ core
+ 0.125 0.75 0.875
+LJ core
+ 0.125 0.875 0
+LJ core
+ 0.125 0.875 0.125
+LJ core
+ 0.125 0.875 0.25
+LJ core
+ 0.125 0.875 0.375
+LJ core
+ 0.125 0.875 0.5
+LJ core
+ 0.125 0.875 0.625
+LJ core
+ 0.125 0.875 0.75
+LJ core
+ 0.125 0.875 0.875
+LJ core
+ 0.25 0 0
+LJ core
+ 0.25 0 0.125
+LJ core
+ 0.25 0 0.25
+LJ core
+ 0.25 0 0.375
+LJ core
+ 0.25 0 0.5
+LJ core
+ 0.25 0 0.625
+LJ core
+ 0.25 0 0.75
+LJ core
+ 0.25 0 0.875
+LJ core
+ 0.25 0.125 0
+LJ core
+ 0.25 0.125 0.125
+LJ core
+ 0.25 0.125 0.25
+LJ core
+ 0.25 0.125 0.375
+LJ core
+ 0.25 0.125 0.5
+LJ core
+ 0.25 0.125 0.625
+LJ core
+ 0.25 0.125 0.75
+LJ core
+ 0.25 0.125 0.875
+LJ core
+ 0.25 0.25 0
+LJ core
+ 0.25 0.25 0.125
+LJ core
+ 0.25 0.25 0.25
+LJ core
+ 0.25 0.25 0.375
+LJ core
+ 0.25 0.25 0.5
+LJ core
+ 0.25 0.25 0.625
+LJ core
+ 0.25 0.25 0.75
+LJ core
+ 0.25 0.25 0.875
+LJ core
+ 0.25 0.375 0
+LJ core
+ 0.25 0.375 0.125
+LJ core
+ 0.25 0.375 0.25
+LJ core
+ 0.25 0.375 0.375
+LJ core
+ 0.25 0.375 0.5
+LJ core
+ 0.25 0.375 0.625
+LJ core
+ 0.25 0.375 0.75
+LJ core
+ 0.25 0.375 0.875
+LJ core
+ 0.25 0.5 0
+LJ core
+ 0.25 0.5 0.125
+LJ core
+ 0.25 0.5 0.25
+LJ core
+ 0.25 0.5 0.375
+LJ core
+ 0.25 0.5 0.5
+LJ core
+ 0.25 0.5 0.625
+LJ core
+ 0.25 0.5 0.75
+LJ core
+ 0.25 0.5 0.875
+LJ core
+ 0.25 0.625 0
+LJ core
+ 0.25 0.625 0.125
+LJ core
+ 0.25 0.625 0.25
+LJ core
+ 0.25 0.625 0.375
+LJ core
+ 0.25 0.625 0.5
+LJ core
+ 0.25 0.625 0.625
+LJ core
+ 0.25 0.625 0.75
+LJ core
+ 0.25 0.625 0.875
+LJ core
+ 0.25 0.75 0
+LJ core
+ 0.25 0.75 0.125
+LJ core
+ 0.25 0.75 0.25
+LJ core
+ 0.25 0.75 0.375
+LJ core
+ 0.25 0.75 0.5
+LJ core
+ 0.25 0.75 0.625
+LJ core
+ 0.25 0.75 0.75
+LJ core
+ 0.25 0.75 0.875
+LJ core
+ 0.25 0.875 0
+LJ core
+ 0.25 0.875 0.125
+LJ core
+ 0.25 0.875 0.25
+LJ core
+ 0.25 0.875 0.375
+LJ core
+ 0.25 0.875 0.5
+LJ core
+ 0.25 0.875 0.625
+LJ core
+ 0.25 0.875 0.75
+LJ core
+ 0.25 0.875 0.875
+LJ core
+ 0.375 0 0
+LJ core
+ 0.375 0 0.125
+LJ core
+ 0.375 0 0.25
+LJ core
+ 0.375 0 0.375
+LJ core
+ 0.375 0 0.5
+LJ core
+ 0.375 0 0.625
+LJ core
+ 0.375 0 0.75
+LJ core
+ 0.375 0 0.875
+LJ core
+ 0.375 0.125 0
+LJ core
+ 0.375 0.125 0.125
+LJ core
+ 0.375 0.125 0.25
+LJ core
+ 0.375 0.125 0.375
+LJ core
+ 0.375 0.125 0.5
+LJ core
+ 0.375 0.125 0.625
+LJ core
+ 0.375 0.125 0.75
+LJ core
+ 0.375 0.125 0.875
+LJ core
+ 0.375 0.25 0
+LJ core
+ 0.375 0.25 0.125
+LJ core
+ 0.375 0.25 0.25
+LJ core
+ 0.375 0.25 0.375
+LJ core
+ 0.375 0.25 0.5
+LJ core
+ 0.375 0.25 0.625
+LJ core
+ 0.375 0.25 0.75
+LJ core
+ 0.375 0.25 0.875
+LJ core
+ 0.375 0.375 0
+LJ core
+ 0.375 0.375 0.125
+LJ core
+ 0.375 0.375 0.25
+LJ core
+ 0.375 0.375 0.375
+LJ core
+ 0.375 0.375 0.5
+LJ core
+ 0.375 0.375 0.625
+LJ core
+ 0.375 0.375 0.75
+LJ core
+ 0.375 0.375 0.875
+LJ core
+ 0.375 0.5 0
+LJ core
+ 0.375 0.5 0.125
+LJ core
+ 0.375 0.5 0.25
+LJ core
+ 0.375 0.5 0.375
+LJ core
+ 0.375 0.5 0.5
+LJ core
+ 0.375 0.5 0.625
+LJ core
+ 0.375 0.5 0.75
+LJ core
+ 0.375 0.5 0.875
+LJ core
+ 0.375 0.625 0
+LJ core
+ 0.375 0.625 0.125
+LJ core
+ 0.375 0.625 0.25
+LJ core
+ 0.375 0.625 0.375
+LJ core
+ 0.375 0.625 0.5
+LJ core
+ 0.375 0.625 0.625
+LJ core
+ 0.375 0.625 0.75
+LJ core
+ 0.375 0.625 0.875
+LJ core
+ 0.375 0.75 0
+LJ core
+ 0.375 0.75 0.125
+LJ core
+ 0.375 0.75 0.25
+LJ core
+ 0.375 0.75 0.375
+LJ core
+ 0.375 0.75 0.5
+LJ core
+ 0.375 0.75 0.625
+LJ core
+ 0.375 0.75 0.75
+LJ core
+ 0.375 0.75 0.875
+LJ core
+ 0.375 0.875 0
+LJ core
+ 0.375 0.875 0.125
+LJ core
+ 0.375 0.875 0.25
+LJ core
+ 0.375 0.875 0.375
+LJ core
+ 0.375 0.875 0.5
+LJ core
+ 0.375 0.875 0.625
+LJ core
+ 0.375 0.875 0.75
+LJ core
+ 0.375 0.875 0.875
+LJ core
+ 0.5 0 0
+LJ core
+ 0.5 0 0.125
+LJ core
+ 0.5 0 0.25
+LJ core
+ 0.5 0 0.375
+LJ core
+ 0.5 0 0.5
+LJ core
+ 0.5 0 0.625
+LJ core
+ 0.5 0 0.75
+LJ core
+ 0.5 0 0.875
+LJ core
+ 0.5 0.125 0
+LJ core
+ 0.5 0.125 0.125
+LJ core
+ 0.5 0.125 0.25
+LJ core
+ 0.5 0.125 0.375
+LJ core
+ 0.5 0.125 0.5
+LJ core
+ 0.5 0.125 0.625
+LJ core
+ 0.5 0.125 0.75
+LJ core
+ 0.5 0.125 0.875
+LJ core
+ 0.5 0.25 0
+LJ core
+ 0.5 0.25 0.125
+LJ core
+ 0.5 0.25 0.25
+LJ core
+ 0.5 0.25 0.375
+LJ core
+ 0.5 0.25 0.5
+LJ core
+ 0.5 0.25 0.625
+LJ core
+ 0.5 0.25 0.75
+LJ core
+ 0.5 0.25 0.875
+LJ core
+ 0.5 0.375 0
+LJ core
+ 0.5 0.375 0.125
+LJ core
+ 0.5 0.375 0.25
+LJ core
+ 0.5 0.375 0.375
+LJ core
+ 0.5 0.375 0.5
+LJ core
+ 0.5 0.375 0.625
+LJ core
+ 0.5 0.375 0.75
+LJ core
+ 0.5 0.375 0.875
+LJ core
+ 0.5 0.5 0
+LJ core
+ 0.5 0.5 0.125
+LJ core
+ 0.5 0.5 0.25
+LJ core
+ 0.5 0.5 0.375
+LJ core
+ 0.5 0.5 0.5
+LJ core
+ 0.5 0.5 0.625
+LJ core
+ 0.5 0.5 0.75
+LJ core
+ 0.5 0.5 0.875
+LJ core
+ 0.5 0.625 0
+LJ core
+ 0.5 0.625 0.125
+LJ core
+ 0.5 0.625 0.25
+LJ core
+ 0.5 0.625 0.375
+LJ core
+ 0.5 0.625 0.5
+LJ core
+ 0.5 0.625 0.625
+LJ core
+ 0.5 0.625 0.75
+LJ core
+ 0.5 0.625 0.875
+LJ core
+ 0.5 0.75 0
+LJ core
+ 0.5 0.75 0.125
+LJ core
+ 0.5 0.75 0.25
+LJ core
+ 0.5 0.75 0.375
+LJ core
+ 0.5 0.75 0.5
+LJ core
+ 0.5 0.75 0.625
+LJ core
+ 0.5 0.75 0.75
+LJ core
+ 0.5 0.75 0.875
+LJ core
+ 0.5 0.875 0
+LJ core
+ 0.5 0.875 0.125
+LJ core
+ 0.5 0.875 0.25
+LJ core
+ 0.5 0.875 0.375
+LJ core
+ 0.5 0.875 0.5
+LJ core
+ 0.5 0.875 0.625
+LJ core
+ 0.5 0.875 0.75
+LJ core
+ 0.5 0.875 0.875
+LJ core
+ 0.625 0 0
+LJ core
+ 0.625 0 0.125
+LJ core
+ 0.625 0 0.25
+LJ core
+ 0.625 0 0.375
+LJ core
+ 0.625 0 0.5
+LJ core
+ 0.625 0 0.625
+LJ core
+ 0.625 0 0.75
+LJ core
+ 0.625 0 0.875
+LJ core
+ 0.625 0.125 0
+LJ core
+ 0.625 0.125 0.125
+LJ core
+ 0.625 0.125 0.25
+LJ core
+ 0.625 0.125 0.375
+LJ core
+ 0.625 0.125 0.5
+LJ core
+ 0.625 0.125 0.625
+LJ core
+ 0.625 0.125 0.75
+LJ core
+ 0.625 0.125 0.875
+LJ core
+ 0.625 0.25 0
+LJ core
+ 0.625 0.25 0.125
+LJ core
+ 0.625 0.25 0.25
+LJ core
+ 0.625 0.25 0.375
+LJ core
+ 0.625 0.25 0.5
+LJ core
+ 0.625 0.25 0.625
+LJ core
+ 0.625 0.25 0.75
+LJ core
+ 0.625 0.25 0.875
+LJ core
+ 0.625 0.375 0
+LJ core
+ 0.625 0.375 0.125
+LJ core
+ 0.625 0.375 0.25
+LJ core
+ 0.625 0.375 0.375
+LJ core
+ 0.625 0.375 0.5
+LJ core
+ 0.625 0.375 0.625
+LJ core
+ 0.625 0.375 0.75
+LJ core
+ 0.625 0.375 0.875
+LJ core
+ 0.625 0.5 0
+LJ core
+ 0.625 0.5 0.125
+LJ core
+ 0.625 0.5 0.25
+LJ core
+ 0.625 0.5 0.375
+LJ core
+ 0.625 0.5 0.5
+LJ core
+ 0.625 0.5 0.625
+LJ core
+ 0.625 0.5 0.75
+LJ core
+ 0.625 0.5 0.875
+LJ core
+ 0.625 0.625 0
+LJ core
+ 0.625 0.625 0.125
+LJ core
+ 0.625 0.625 0.25
+LJ core
+ 0.625 0.625 0.375
+LJ core
+ 0.625 0.625 0.5
+LJ core
+ 0.625 0.625 0.625
+LJ core
+ 0.625 0.625 0.75
+LJ core
+ 0.625 0.625 0.875
+LJ core
+ 0.625 0.75 0
+LJ core
+ 0.625 0.75 0.125
+LJ core
+ 0.625 0.75 0.25
+LJ core
+ 0.625 0.75 0.375
+LJ core
+ 0.625 0.75 0.5
+LJ core
+ 0.625 0.75 0.625
+LJ core
+ 0.625 0.75 0.75
+LJ core
+ 0.625 0.75 0.875
+LJ core
+ 0.625 0.875 0
+LJ core
+ 0.625 0.875 0.125
+LJ core
+ 0.625 0.875 0.25
+LJ core
+ 0.625 0.875 0.375
+LJ core
+ 0.625 0.875 0.5
+LJ core
+ 0.625 0.875 0.625
+LJ core
+ 0.625 0.875 0.75
+LJ core
+ 0.625 0.875 0.875
+LJ core
+ 0.75 0 0
+LJ core
+ 0.75 0 0.125
+LJ core
+ 0.75 0 0.25
+LJ core
+ 0.75 0 0.375
+LJ core
+ 0.75 0 0.5
+LJ core
+ 0.75 0 0.625
+LJ core
+ 0.75 0 0.75
+LJ core
+ 0.75 0 0.875
+LJ core
+ 0.75 0.125 0
+LJ core
+ 0.75 0.125 0.125
+LJ core
+ 0.75 0.125 0.25
+LJ core
+ 0.75 0.125 0.375
+LJ core
+ 0.75 0.125 0.5
+LJ core
+ 0.75 0.125 0.625
+LJ core
+ 0.75 0.125 0.75
+LJ core
+ 0.75 0.125 0.875
+LJ core
+ 0.75 0.25 0
+LJ core
+ 0.75 0.25 0.125
+LJ core
+ 0.75 0.25 0.25
+LJ core
+ 0.75 0.25 0.375
+LJ core
+ 0.75 0.25 0.5
+LJ core
+ 0.75 0.25 0.625
+LJ core
+ 0.75 0.25 0.75
+LJ core
+ 0.75 0.25 0.875
+LJ core
+ 0.75 0.375 0
+LJ core
+ 0.75 0.375 0.125
+LJ core
+ 0.75 0.375 0.25
+LJ core
+ 0.75 0.375 0.375
+LJ core
+ 0.75 0.375 0.5
+LJ core
+ 0.75 0.375 0.625
+LJ core
+ 0.75 0.375 0.75
+LJ core
+ 0.75 0.375 0.875
+LJ core
+ 0.75 0.5 0
+LJ core
+ 0.75 0.5 0.125
+LJ core
+ 0.75 0.5 0.25
+LJ core
+ 0.75 0.5 0.375
+LJ core
+ 0.75 0.5 0.5
+LJ core
+ 0.75 0.5 0.625
+LJ core
+ 0.75 0.5 0.75
+LJ core
+ 0.75 0.5 0.875
+LJ core
+ 0.75 0.625 0
+LJ core
+ 0.75 0.625 0.125
+LJ core
+ 0.75 0.625 0.25
+LJ core
+ 0.75 0.625 0.375
+LJ core
+ 0.75 0.625 0.5
+LJ core
+ 0.75 0.625 0.625
+LJ core
+ 0.75 0.625 0.75
+LJ core
+ 0.75 0.625 0.875
+LJ core
+ 0.75 0.75 0
+LJ core
+ 0.75 0.75 0.125
+LJ core
+ 0.75 0.75 0.25
+LJ core
+ 0.75 0.75 0.375
+LJ core
+ 0.75 0.75 0.5
+LJ core
+ 0.75 0.75 0.625
+LJ core
+ 0.75 0.75 0.75
+LJ core
+ 0.75 0.75 0.875
+LJ core
+ 0.75 0.875 0
+LJ core
+ 0.75 0.875 0.125
+LJ core
+ 0.75 0.875 0.25
+LJ core
+ 0.75 0.875 0.375
+LJ core
+ 0.75 0.875 0.5
+LJ core
+ 0.75 0.875 0.625
+LJ core
+ 0.75 0.875 0.75
+LJ core
+ 0.75 0.875 0.875
+LJ core
+ 0.875 0 0
+LJ core
+ 0.875 0 0.125
+LJ core
+ 0.875 0 0.25
+LJ core
+ 0.875 0 0.375
+LJ core
+ 0.875 0 0.5
+LJ core
+ 0.875 0 0.625
+LJ core
+ 0.875 0 0.75
+LJ core
+ 0.875 0 0.875
+LJ core
+ 0.875 0.125 0
+LJ core
+ 0.875 0.125 0.125
+LJ core
+ 0.875 0.125 0.25
+LJ core
+ 0.875 0.125 0.375
+LJ core
+ 0.875 0.125 0.5
+LJ core
+ 0.875 0.125 0.625
+LJ core
+ 0.875 0.125 0.75
+LJ core
+ 0.875 0.125 0.875
+LJ core
+ 0.875 0.25 0
+LJ core
+ 0.875 0.25 0.125
+LJ core
+ 0.875 0.25 0.25
+LJ core
+ 0.875 0.25 0.375
+LJ core
+ 0.875 0.25 0.5
+LJ core
+ 0.875 0.25 0.625
+LJ core
+ 0.875 0.25 0.75
+LJ core
+ 0.875 0.25 0.875
+LJ core
+ 0.875 0.375 0
+LJ core
+ 0.875 0.375 0.125
+LJ core
+ 0.875 0.375 0.25
+LJ core
+ 0.875 0.375 0.375
+LJ core
+ 0.875 0.375 0.5
+LJ core
+ 0.875 0.375 0.625
+LJ core
+ 0.875 0.375 0.75
+LJ core
+ 0.875 0.375 0.875
+LJ core
+ 0.875 0.5 0
+LJ core
+ 0.875 0.5 0.125
+LJ core
+ 0.875 0.5 0.25
+LJ core
+ 0.875 0.5 0.375
+LJ core
+ 0.875 0.5 0.5
+LJ core
+ 0.875 0.5 0.625
+LJ core
+ 0.875 0.5 0.75
+LJ core
+ 0.875 0.5 0.875
+LJ core
+ 0.875 0.625 0
+LJ core
+ 0.875 0.625 0.125
+LJ core
+ 0.875 0.625 0.25
+LJ core
+ 0.875 0.625 0.375
+LJ core
+ 0.875 0.625 0.5
+LJ core
+ 0.875 0.625 0.625
+LJ core
+ 0.875 0.625 0.75
+LJ core
+ 0.875 0.625 0.875
+LJ core
+ 0.875 0.75 0
+LJ core
+ 0.875 0.75 0.125
+LJ core
+ 0.875 0.75 0.25
+LJ core
+ 0.875 0.75 0.375
+LJ core
+ 0.875 0.75 0.5
+LJ core
+ 0.875 0.75 0.625
+LJ core
+ 0.875 0.75 0.75
+LJ core
+ 0.875 0.75 0.875
+LJ core
+ 0.875 0.875 0
+LJ core
+ 0.875 0.875 0.125
+LJ core
+ 0.875 0.875 0.25
+LJ core
+ 0.875 0.875 0.375
+LJ core
+ 0.875 0.875 0.5
+LJ core
+ 0.875 0.875 0.625
+LJ core
+ 0.875 0.875 0.75
+LJ core
+ 0.875 0.875 0.875

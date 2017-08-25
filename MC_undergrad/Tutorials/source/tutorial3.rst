@@ -1,15 +1,15 @@
-------------------------------------------------------
-*TUTORIAL 3: Introduction to Ensembles and Move Types*
-------------------------------------------------------
+----------------------------------------------------
+TUTORIAL 3: Introduction to Ensembles and Move Types
+----------------------------------------------------
 
 Authors: Chris King, James Grant - r.j.grant@bath.ac.uk
 
 Introduction
 ============
 
-In the previous session, you were introduced to the ideas underlying the Monte Carlo simulation technique by modelling a simple system and extracting useful output data which (hopefully) concurred with theory.  In this session, you will be formally introduced to the general Monte Carlo program, DLMONTE, which you unknowingly used in the previous session.  This session will begin to touch upon the concepts of ensembles and how the choice of ensemble affects the outcome of a simulation and explore the possible types of moves available in each ensemble.
+In the previous session, you were introduced to the ideas underlying Monte Carlo simulations by modelling a simple system and extracting useful output data which (hopefully) concurred with theory.  In this session, you will be formally introduced to the general Monte Carlo program, DLMONTE, which you unknowingly used in the previous session.  This session will begin to touch upon the concepts of ensembles and how the choice of ensemble affects the outcome of a simulation and explore the possible types of moves available in each ensemble.
 
-Ensembles are very important in thermodynamics and statistical mechanics, where one can readily observe the macroscopic properties of a system without being able to know or control its microscopic properties.  In simple terms, an ensemble can be thought of as a collection of a large number of replicas of a system, akin to running repeating an experiment many times with the same initial conditions.  By averaging the outcomes of each of these replicas, one can create a probability distribution of possible outcomes for an experiment in a given ensemble.  In this course and statistical mechanics you will come across several different ensembles which are described in the form of three letters, describing which parameters of the system are kept constant for the ensemble.  Ensembles are defined in this manner to ensure that statistical equilibrium is maintained, *i.e.* ensembles not to evolve over time, these include:
+Ensembles are very important in thermodynamics and statistical mechanics, where one can readily observe the macroscopic properties of a system without being able to know or control its microscopic properties.  In simple terms, an ensemble can be thought of as a collection of a large number of replicas of a system, akin to running repeating an experiment many times with the same initial conditions.  By averaging the outcomes of each of these replicas, one can create a probability distribution of possible outcomes for an experiment in a given ensemble.  In this course and statistical mechanics you will come across several different ensembles which are described in the form of three letters, describing which parameters in the ensemble of the system are kept constant.  Ensembles are defined in this manner to ensure that they demonstrate statistical equilibrium, *i.e.* ensembles do not evolve over time, these include:
 
 - *N*: total number of individual objects (atoms, molecules, particles etc.) in the system kept constant.
 - *V*: system volume kept constant
@@ -25,14 +25,14 @@ For example, 'NVT' means that the total number of particles, total volume and te
    
    **Figure 1**: Visual representation of different ensembles [#f1]_. 
 
-As you may recall, a key part of Monte Carlo simulations is the sampling over all possible states of the system by 'moving' through configuration space, where a move is a change from an initial configuration to a new one.  So far in this course we have looked at moves which consist of physically moving an object from one set of coordinates to another (within reason), which are known as translational moves.  But this is not the only move that can be made in Monte Carlo simulations, Other moves are possible, depending on the type of ensemble used.  For instance, one can define a volume move, where the proposed move is changing the total system volume by altering one or more length scales of the system and as we will see later in the course one can also perform insert/delete and swap moves of objects. 
+As you may recall, a key part of Monte Carlo simulations is sampling over all possible states of the system by 'moving' through configuration space, where a move is a change from an initial configuration to a new one.  The most intuitive move is translational moves which consist of physically moving an object from one set of coordinates to another (within reason).  But other types of moves are possible, depending on the type of ensemble used.  For instance, one can define a volume move, where the proposed move is changing the total system volume by altering the length scales of one or more dimensions of the system and (as we will see later in the course) one can also perform insert/delete and swap moves of objects. 
 
-The sequence of moves defines the 'trajectory' of the system in configurational space.  It is important to understand that this is not the same as the physical motion of individual objects in the system, or the system itself, which is the traditional definition of a trajectory that you are probably used to. There is no 'time' in Monte Carlo simulations; nothing *in* the system evolves with time.  This limits Monte Carlo to simulation of static systems only, so it cannot determine any dynamic properties of the system, like diffusion coefficients or rates of reaction..  Any reference to time in this context refers to the computational time required to complete the calculation. 
+The sequence of moves defines the 'trajectory' of the system in configurational space.  It is important to understand that this is not the same as the physical motion of individual objects in the system, or the system itself, which is the traditional definition of a trajectory. There is no 'time' in Monte Carlo simulations; nothing *in* the system evolves with time.  This limits Monte Carlo to simulation of static systems only, so it cannot determine any dynamic properties of the system, like diffusion coefficients or rates of reaction.  Any reference to time in this context refers to the computational time required to complete the calculation. 
 
-Part 1: NVT Lennard-Jones fluid
-===============================
+Part 1: NVT Lennard-Jones material
+==================================
 
-To start with, you will be given an overview of the program that you will use (or have used) throughout this course: DLMONTE.  DLMONTE is the name of a program which provides a general Monte Carlo framework for use in scientific research.  This program is a direct Monte Carlo analogue to the Molecular Dynamics program DL_POLY (which you used in Tutorial 1). 
+To start with, you will be given an overview of the program that you will use (or have used) for all Monte Carlo calculations throughout this course: DLMONTE.  DLMONTE is the name of a program which provides a general Monte Carlo framework for use in scientific research.  This program is a direct Monte Carlo analogue to the Molecular Dynamics program DLPOLY (which you used in Tutorial 1). 
 
 The best way to learn how to use DLMONTE is by applying it to a simple system, in this case determining the thermal behaviour of a Lennard-Jones solid.  This part of the tutorial is directly analagous to Tutorial 1, except now we shall be using Monte Carlo to simulate our Lennard-Jones material instead of Molecular Dynamics.  This will hopefully help highlight the differences in their respective approaches to this problem.
 
@@ -41,7 +41,7 @@ The purpose of this part of the tutorial is to introduce some of the basic comma
 CONFIG
 ------
 
-The CONFIG file contains the positions of the particles and a sample of the configuration is provided below.
+The CONFIG file contains the positions of the particles and part of the file is shown below:
 
 .. code-block:: html
    :linenos:
@@ -51,15 +51,15 @@ The CONFIG file contains the positions of the particles and a sample of the conf
    11.7452  0.00000  0.00000       # These lines describe the dimensions of the system in terms of basis lattice vectors, with 'x y z' components, respectively
    0.00000  11.7452  0.00000       # Since our system is 3D, we need three basis vectors to fully describe it
    0.00000  0.00000  11.7452       # In this case, the system is a cube with sides of length 11.7452 Angstroms
-   NUMMOL 1 1                      # NUMMOL specifies the number of types of molecules followed by the number of each type. In this case there is one MOLECULE type lj, and there is one of them in the CONFIG file. 
+   NUMMOL 1 1                      # NUMMOL specifies the number of types of molecules followed by the number of each type. 
    MOLECULE lj 512 512             # The molecule has 512 atoms/particles to initially and is limited to a maximum number of 512
-   LJ core                         # Now each particle is read in to the file, in the form:
-    0 0 0                          # NAME core
-   LJ core                         # x y z position in the system, the first particle is located at the origin
-    0 0 0.125                      # and the second is located at x = 0, y = 0, z = 0.125 
+   LJ core                         # Now each particle is read in to the file, in the form: NAME core
+    0 0 0                          # x y z position in the system, the first particle is located at the origin
+   LJ core                         # And the second is located at x = 0, y = 0, z = 0.125
+    0 0 0.125                      # And so on until all atoms are defined 
    ......
 
-The rest of the file reads in the rest of the particles in our molecule in the same format.  If there were more than type of molecule, it would read in all the atoms/particles in each molecule sequentially.
+The rest of the file reads in the rest of the particles in our molecule in the same format.  If there were more than type of molecule, the file would define all the atoms/particles in each molecule sequentially.
 
 CONTROL
 -------
@@ -97,7 +97,7 @@ The FIELD file contains a full description of the interatomic potentials present
    :linenos:
    
     Lennard-Jones                    # Title
-    CUTOFF 2.5                       # The maximum distance between two particles at which the potential energy is calculated
+    CUTOFF 2.5                       # The maximum distance between two particles for which the interaction energy is calculated
     UNITS internal                   # Set the units of energies, internal = 10 J mol^-1
     NCONFIGS 1                       # Number of configurations described in the CONFIG file
     ATOMS 1                          # Number of atom types in the system
@@ -106,56 +106,26 @@ The FIELD file contains a full description of the interatomic potentials present
     lj                               # ...called 'lj'...
     MAXATOM 512                      # ...with a maximum number of 512 atoms
     FINISH                           # Completes the list of atom and molecule types in the system
-    VDW 1                            # The number of potentials present in the system, this must be the same number as the number of interaction types presented on the following lines
-    LJ core  LJ core lj   1.0 1.0    # Defines the interaction between two LJ atoms as a Lennard-Jones (lj) potential with epsilon = 1.0 and sigma = 1.0
+    VDW 1                            # The number of potentials present in the system
+    LJ core  LJ core lj   1.0 1.0    # Defines the interaction between two LJ atoms as a Lennard-Jones (lj) potential with epsilon = 1.0 eV and sigma = 1.0 Angstroms
     CLOSE                            # This ends the FIELD file once all interaction are described
     
-The CUTOFF keyword is defined as 2.5:math:`\sigma` by convention.  The UNITS can also be electron volts (eV), kJmol\ :sup:-1 \, kJ or kcal.  The *NCONFIGS* keyword refers to the number of configurations and this is usually set to 1. You will see in later tutorials that more than one types of interactions can be defined at the end of the file.
+The CUTOFF keyword is defined as 2.5 :math:`\sigma` by convention.  The UNITS can also be electron volts (eV), kJmol\ :sup:`-1` \, kJ or kcal.  The *NCONFIGS* keyword refers to the number of configurations and this is usually set to 1. You will see in later tutorials that more than one types of interactions can be defined at the end of the file.
 
 For more information on these files, refer to the DLMONTE manual in 'this directory'.
 
-You are now ready to run DLMONTE
+Exercise 1)
+-----------
 
-Exercise 1
-----------
+The aim of this exercise is to mirror some of the exercises from the first session and will hopefully illustrate another way to model a Lennard-Jones solid.  In this case, we will simulate the system under the NVT ensemble at various temperatures in order to estimate the melting point of the solid.
 
-The aim of this exercise is to mirror the exercises from the first session and will hopefully illustrate another way to model a Lennard-Jones solid.  In this case, we will simulate the system under the NVT ensemble at various temperatures in order to estimate the melting point of the solid.
+|think| What types of moves are possible in this ensemble?
 
-What types of moves are possible in this ensemble?
+.. |think| image:: images/General/think.png
+   :height: 100 px
+   :scale: 25 %
 
-[instructions to get onto Balena]We will be using the University of Bath's HPC, Balena for the workshop.  You should have received a crib sheet on accessing Balena.
-
-Once you have successfully logged onto Balena, type the following command into the command line::
-
-   cd tutorial NVT inputs filepath
-
-and press 'Enter'.  This will navigate you to the appropriate directory where you will run your calculations and analyse your data.  
-
-In general you can use::
-
-   cd thefilepathintowhateverfolderyouwant
-
-to navigate from one folder to another on Balena.  *N.B.* to go back one directory, type '../' into the cd command, write this for each folder that you want to go back from, *i.e.* if you wanted to go back three folders, you would type::
-
-   cd ../../../
-
-You can then add the filepath of the folder to the end of this to navigate in one fluid line.  You can auto-complete by pressing the 'Tab' key once (this can be a good way to check whether a folder name that you type is present in that directory).  If you can't remember what files are present or lose where you are while typing your command, you can double-tap 'Tab' to list all files in your current directory.
-
-Open the folder called '++++', you will see your DLMONTE input files: CONFIG, CONTROL and FIELD, as well as some scripts that you will use to analyse your output data.
-
-Now you will submit a calculation to Balena from this folder using the current input files.
-
-Submitting your job
-^^^^^^^^^^^^^^^^^^^
-
-To begin with submit your job using the command::
-
-   [username@balena-01 tutorial1]$ sbatch single.sub
-
-Most jobs in the workshop can be run using this script.  
-You can monitor the job using::
-
-   [user@balena-01 tutorial1]$ squeue -u $USER
+**instructions for running a calculation here**
 
 Outputs
 ^^^^^^^
@@ -169,53 +139,51 @@ A successful DLMONTE calculation will produce a number of output files:
 * ARCHIVE.000/HISTORY.000/TRAJECTORY.000 contains the trajectory in the specified format
 
 In this exercise we will analyse the YAMLDAT.000 and visualise the trajectory files.  
-However for understanding how the simulation proceeds it is useful to have some familiarity with the OUTPUT file.
+For your understanding of how the simulation proceeds it may nonetheless be useful to have some familiarity with the OUTPUT file.
 
 *N.B.* The OUTPUT.000 of a successfully completed job will end with 'normal exit'.
 
-To visualise the trajectory of your system, you can use a program called 'vmd' by running the following commands::
+|action| Repeat the calculation at different temperatures.  |action| Create a new folder for each new temperature and copy the CONFIG, CONTROL and FIELD files from one of your other calculations into it.  |action| Then change the temperature value in the CONTROL file to a value of your choosing (HINT: you won't need to go above ++).  |action| Run this calculation in the same manner as described above.  |action| Do this for a range of temperatures and |think| identify the melting temperature by visualising it's evolution using VMD.
 
-   [user0@balena-01 tutorial1]$ module load vmd
-   [user0@balena-01 tutorial1]$ vmd
+.. |action| image:: images/General/action.png
+   :scale: 5 % 
+ 
+|think| How does your estimate of the melting point compare with that based on your Molecular Dynamics calculation?
 
-Once it has loaded, you should see a 'VMD Main' window, in this window, go to:
-
-   File :math:`\rightarrow` New molecule :math:`\rightarrow` Determine file type :math:`\rightarrow` Select DLPOLY V3 History :math:`\rightarrow` Browse and Select HISTORY.000 
-
-Repeat the calculation at different temperatures.  Create a new folder for each new temperature and copy the CONFIG, CONTROL and FIELD files from one of your other calculations into it.  Then change the temperature value in the CONTROL file to a value of your choosing (HINT: you won't need to go above ++).  Run this calculation in the same manner as described above.  Do this for a range of temperatures and identify the melting temperature by visualising it's evolution using VMD.  
-
-Exercise 2:
+Exercise 2)
 -----------
 
-So far in this course, we have assumed that the system has reached equilibrium with its surroundings, *i.e.* that the system has reached its most thermodynamically stable state with minimal net exchange of energy with its surroundings.  Equilibration is incredibly important to Monte Carlo (and many other computational modelling techniques) as it ensures reproducibility of results.  If we start from an arbitrary initial state with a given set of parameters, the first stage of the calculation will be establishing equilibrium, with the output during this period being of little use and should be omitted from any statistical analysis of the output.  In DLMONTE (and DLPOLY) we account for this period o time using the 'equilibration' parameter in the CONTROL file.  This states the point at which output data is included in any statistical analysis.  This 'equilibration time' will be different for every system with a given set of initial parameters and is usually estimated during preliminary analysis of the data.
+So far in this course, we have assumed that the system has reached equilibrium with its surroundings, *i.e.* that the system has reached its most thermodynamically stable state with minimal net exchange of energy with its surroundings.  Equilibration is incredibly important to Monte Carlo (and many other computational modelling techniques) as it ensures reproducibility of results.  If we start from an arbitrary initial state with a given set of parameters, the first stage of the calculation will be establishing equilibrium, with the output during this period being of little use and should be omitted from any statistical analysis of the output.  In DLMONTE (and DLPOLY) we account for this period of time using the 'equilibration' parameter in the CONTROL file.  This states the point at which output data is included in any statistical analysis.  This 'equilibration time' will be different for every system with a given set of initial parameters and is usually estimated during preliminary analysis of the data.
 
-One way of determining when a system has reached equilibrium is by plotting the time evolution of total energy over the course of the simulation, which is what you will now do:
+One way of determining when a system has reached equilibrium is by plotting the time evolution of total energy over the course of the simulation, which is what you will now do.
 
-Navigate to one of your completed calculations and run the following command:: 
+|action| Navigate to one of your completed calculations and run the following command:: 
 
    [user0@node-sw-039 tutorial1]$ strip_yaml.sh energy
 
-This will give you a yaml file containing the total energy after a given number of steps has completed.  Plot this data, either by using software packages like Excel, or by running the following commands in your directory::
+|think| From these energy plots, how can you tell whether the system has equilibrated? Estimate the equilibration time for your system.
 
-   [user0@node-sw-039 tutorial1]$ gnuplot
-   gnuplot> plot './energy.dat' u 1:2
-   gnuplot> set term png
-   gnuplot> set output energyvst.png
+|think| How do you think the equilibration time will change with temperature? Explain your answer.
 
-This opens a data plotting program called 'gnuplot' and tells it to plot the file called 'energy.dat' and save it as a png file in your directory.  While in gnuplot, you can navigate to different directories with the 'cd' command, but with the filepath in 'quotes'.  To exit gnuplot, type::
-   
-   exit 
+As you may recall, detailed balance is a sufficient condition for ensuring that our simulation reflects the laws of thermodynamics.  It is generally stated as:
 
-From these energy plots, how can you tell whether the system has equilibrated? Estimate the equilibration time for your system.
+.. math::
 
-How do you think the equilibration time will change with temperature? Explain your answer.
+   W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)
 
-Exercise 3:
+where :math:`W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the statistical weight of moving from an initial configuration, :math:`\mathbf{r}_1` to a final configuration, :math:`\mathbf{r}_2` (and vice-versa for :math:`W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)`) and :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probabilty of accepting the move from :math:`\mathbf{r}_1` to :math:`\mathbf{r}_2` (and similarly for :math:`P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)`).
+
+|think| Describe the condition for detailed balance in this series of simulations, where only translational moves are permitted.
+
+Part 2: NPT Lennard-Jones Material:
+===================================
+
+Exercise 3)
 -----------
 
 In this part of the tutorial, we will again be looking at the phase transition of a Lennard-Jones solid, but under the NPT ensemble.  This allows not only translational moves of individual particles, but also volume moves (system expansion/contraction).
 
-Navigate to the folder 'NPT', you will find the same input files as in the NVT ensemble and a directory for each temperature that you will run a calculation.  The CONFIG and FIELD files are unchanged but the CONTROL has a few modifications:
+|action| Navigate to the folder 'NPT', you will find the same input files as in the NVT ensemble and a directory for each temperature that you will run a calculation.  The CONFIG and FIELD files are unchanged but the CONTROL has a few modifications:
 
 .. code-block:: html
    :linenos:
@@ -247,45 +215,135 @@ which is the instruction to introduce volume moves as *move volume*, *linear* re
 
    pressure     0.0179123655568
 
-In these calculations, volume moves are attempted less frequently than translational moves, this is because typically volume moves are more computationally intensive than single atom moves, why do you think that this is the case?
+In these calculations, volume moves are attempted less frequently than translational moves, this is because typically volume moves are more computationally intensive than single atom moves, |think| why do you think that this is the case?
 
-Run and analyse the output data in the same manner as for the previous exercise. Ensure that the system has equilibrated at each instance.  Remember to create a new directory for each temperature you attempt. 
+|action| Run and analyse the output data in the same manner as for the previous exercise. |action| Ensure that the system has equilibrated at each instance.  Remember to create a new directory for each temperature you attempt. 
 
-Examine the evolution of your system using VMD, rationalise any observed differences between the behaviours of the system under the NVT and NPT ensembles?
+|action| Examine the evolution of your system using VMD, |think| rationalise any observed differences between the behaviours of the system under the NVT and NPT ensembles.
 
-Estimate the melting point of the Lennard-Jones solid under the NPT ensemble.  How does it compare with the value you obtained from the NVT calculations?
+|think| Estimate the melting point of the Lennard-Jones solid under the NPT ensemble.  |think| How does it compare with the value you obtained from the NVT calculations?
 
-Plot the total energy of the system as a function of temperature under both NPT and NVT ensembles on the same graph.  How do they compare with each other? (HINT: think about the different types of energy transfer that could be taking place in each case.)
+|action| Plot the total energy of the system as a function of temperature under both NPT and NVT ensembles on the same graph.  |think| How do they compare with each other? (HINT: think about the different types of energy transfer that could be taking place in each case.)
 
-Additionally, by using the command::
+|action| Additionally, by using the command::
 
    strip_yaml.sh volume
 
-you can extract the time evolution of the system volume from YAMLDATA.000.  Plot this data for each temperature on the same graph.  What trends do you observe as you change the temperature? Is this what you expect from a material? 
+you can extract the time evolution of the system volume from YAMLDATA.000.  |think| Plot this data for each temperature on the same graph.  |think| What trends do you observe as you change the temperature? Is this what you expect from a real material? 
 
-For at least one of your calculations, plot the volume and energy time evolutions on the same graph, are there any similarities between the shape of the two plots?
+|action| For at least one of your calculations, plot the volume and energy time evolutions on the same graph, |think| are there any similarities between the shape of the two plots?
 
-Conclusions:
-============
+Exercise 4)
+-----------
 
-After this session, you should now be familiar with the input/output files of DLMONTE as well as running calculation with the program.  You have demonstrated its use by running simulations on the simple Lennard-Jones solid system and confirmed that it shows thermodynamic behaviour consistent with real materials.  You have been introduced to the concept of ensembles in thermodynamics, in particular the NVT and NPT ensembles.  You should also have an appreciation for the possible types of Monte Carlo moves that can be proposed within NVT and NPT ensembles and the differences between them.  In the next session, we will move onto simulations under the :math:`\mu` VT (Grand Canonical) ensemble and troduce the concept of detailed balance in the Monte Carlo technique.
+You have found the melting point of the system by varying the temperature while keeping the pressure constant.  Now you will examine how the melting point of the system changes with both temperature and pressure.  You can readily change the pressure of the system by altering the associated value in the CONTROL file.  |action| Navigate to the 'changep' directory, open the CONTROL file, and change the pressure (*N.B.* values anywhere between x and y should be sufficient).  |action| Create a new directory for each pressure, and within each of these directories, run the calculation at various temperatures and |think| estimate the melting point of the system.  |think| How does the melting point vary with temperature and pressure?
 
-Extensions (optional):
-======================
-
-1. Lennard-Jones phase diagram
------------------------------- 
-
-You have found the melting point of the system by varying the temperature while keeping the pressure constant.  Now you will examine how the melting point of the system changes with both temperature and pressure.  You can readily change the pressure of the system by altering the associated value in the CONTROL file.  Create a new directory for each pressure value you make, and for each pressure, run the calculation at various temperatures and estimate the melting point of the system.  How does pressure and temperature affect the melting point of the system?
+*N.B.* make sure to copy the strip_yaml script into each new directory you make.
 
 .. figure:: images/Tut_3_images/LJ_phase_diagram.png
    :align: center
 
-   **Figure 1**: Phase diagram for the Lennard-Jones system [#f2]_
+   **Figure 2**: Phase diagram of the Lennard-Jones system, plotting (reduced) temperature against (reduced) density [#f2]_.
 
-Figure 1 shows the phase diagram for the Lennard-Jones system, compare your results with the phase diagram.  Why do you not see the coexistence of solid-liquid phases in your system?
+Figure 2 shows the phase diagram for the Lennard-Jones system, |action| compare your results with the phase diagram.  |think| Why do you not see the coexistence of solid and liquid phases in your system?
 
-2. Neighbour lists
+*N.B.* Don't be put off by the fact that density is shown instead of pressure, they are equivalent in our system.
+
+*N.B.* If you want to know about reduced units, try the following links: [1] http://www4.ncsu.edu/~franzen/public_html/CH795N/modules/ar_mod/comp_output.html, [2] http://cbio.bmt.tue.nl/pumma/index.php/Manual/ReducedUnits
+
+Conclusions:
+============
+
+After this session, you should now be familiar with the input/output files of DLMONTE as well as running calculation with the program.  You have demonstrated its use by running simulations on a simple Lennard-Jones solid system and confirmed that it shows thermodynamic behaviour consistent with real materials.  You have been introduced to the concept of ensembles in thermodynamics, in particular the NVT and NPT ensembles.  You should also have an appreciation for the possible types of Monte Carlo moves that can be proposed within NVT and NPT ensembles and the differences between them.  In the next session, we will move onto simulations under the :math:`\mu` VT (Grand Canonical) ensemble, where the total number of particles in the system is not constant.
+
+Extensions (optional):
+======================
+
+1.  Move size update
+--------------------
+
+DLMONTE is able to automatically tune the size of attempted moves to optimise performance. By altering the maximum proposed move size during the simulation DLMONTE is able to optimise for the particular problem.
+
+|think| If the proposed moves are very small, how does this affect the acceptance probability? |think| How would this affect the evolution of the system?
+
+|think| Similarly, what happens when proposed moves are very big?
+
+|action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_4' :math:`\rightarrow` 'extensions' :math:`\rightarrow` 'movesize' to find your standard DLMONTE input files for this part of the tutorial.  If you open the CONTROL file, you will notice three new lines::
+
+    maxatmdist   0.1               # Maximum atom displacement for a proposed move is 0.1 Angstroms
+    acceptatmmoveupdate      100   # Adjust the maximum atom displacement every 100 steps
+    acceptatmmoveratio    0.37     # The desired ratio of successful translational moves to all attempted translational moves
+
+There are two key parts of code that are needed for this performance optimisation-generating the move:
+
+.. code-block:: html
+   :linenos:
+   
+   atm = random_number * natoms + 1                           # Randomly select a particle in the system
+   delta_pos = (random_number - 0.5) * max_atm_displacement   # Change its position by moving it a random distance :math:`\leq` the maximum possible displacement
+   pos_new = pos_old + delta_pos                              # Define the new position of the particle 
+
+and updating the move size: 
+
+.. code-block:: html
+   :linenos:
+   
+    do iter = 1 to max_iterations                                   # Start a 'do' loop that represents the entire simulation
+    
+        DO MONTE CARLO STUFF                                        # Use DLMONTE to run the simulation as normal
+    
+        if mod(iter / accept_atm_move_update) == 0                  # Execute the following lines of code if the number of steps is divisible by acceptatmmoveupdate number
+        
+            ratio = accepted_moves / attempted_moves                # The acceptance ratio at this point in the simulation
+            
+            if ratio > accept_atm_move_ratio                        # Execute the following line if the ratio is greater than acceptatmmoveratio
+            
+                max_atm_displacement = max_atm_displacement * 1.05  # Increase the maxatmdist value by a factor of 1.05
+                
+            else                                                    # Execute the following line if the ratio is less than acceptatmmoveratio
+            
+                max_atm_displacement = max_atm_displacement * 0.95  # Decrease the maxatmdist value by a factor of 0.95
+                
+            endif                                                   # End the if statement at line number = 9
+            
+        endif                                                       # End the if statement at line number = 5
+        
+    enddo                                                           # End the 'do' loop, i.e. end the calculation
+
+The maximum displacement of an atom is controlled by the variable *max_atm_displacement*. The *max_atm_displacement* can not be known prior to the start of the simulation and the most suitable valuable changes as the simulation progresses. The acceptance ratio (ratio of accepted moves to all proposed moves) can determine the rate of equilibration and the efficiency of the sampling. For these reasons DLMONTE provides a mechanism for adjusting the value of *max_atm_displacement* as the simulation proceeds.
+
+The initial values in the CONTROL file are the default values for DLMONTE but by altering these values you can improve the efficiency of sampling and minimise the equilbration time.
+
+|action| Vary each of these values and investigate how the energy equilibrates during the course of the simulation. |action| Try and determine the set of values that give the most efficient equilibration.
+
+You can use::
+
+   grep displacement OUTPUT.000
+
+or the script::
+
+   disp.sh
+
+to print the initial values and the final value of the maximum displacement(s).
+
+*N.B.*  This functionality should be used to identify the optimum move size for sampling a given system.  Beware using this functionality in a calculation as it can break detailed balance.
+
+|think| How could the condition of detailed balance be broken by using this functionality?
+
+2. Detailed balance for volume moves
+------------------------------------
+
+Establishing the condition for detailed balance in a simulation where volume moves are enabled is more complicated than for translational moves alone.  To maintain detailed balance with volume moves, the acceptance probability for a move from an initial configuration of particles in positions :math:`\mathbf{r}_1` in a volume, :math:`V_1` to a new configuration, :math:`\mathbf{r}_2` with a volume :math:`V_2`, changes in the Metropolis algorithm to:
+
+.. math::
+
+   P_{\mathrm{acc}}([\mathbf{r}_{1},V_1] \rightarrow [\mathbf{r}_2,V_2]) = \min(1, \exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1) + P_{ext}(V_{2}-V_{1}) - N \beta^{-1} \ln(V_{2} / V_{1}) ] \} )
+
+where :math:`P_{ext}` is the external pressure acting on the system and :math:`\beta = \frac{1}{kT}`.  In most simulations, the positions of every object in a system is expressed as dimensionless, scalable position coordinates, which scale with the size of the system such that when the volume changes, the *relative* positions of the objects in the new size remains the same, but the distance between objects in the system goes up or down depending on whether the volume has increased or decreased.  However, the number of possible configurations of a system is determined in part by its total volume, such that a larger system will have more possible configurations.  This must be accounted with the :math:`N \beta^{-1} \ln(V_{2} / V_{1})` term.  The other terms in the exponent come from the probability distributions of isothermal-isobaric systems, where the :math:`P_{ext}(V_{2}-V_{1}` represents the work done *on* the system by an external pressure.  For more information on detailed balance for volume moves, see _[#f3].
+
+|think| When performing volume moves on molecular systems, the position of the centre of mass of the molecule is scaled, as opposed to the positions of all of its constituent atoms, rationalise this caveat. (Hint: what would happen to all the chemical bonds if the atom positions were scaled instead? How would this affect the likelihood of accepting the move?) 
+
+3. Neighbour lists
 ------------------
 
 DLMONTE uses neighbour list to improve the performance of the energy calculation, particles only have to check interactions with their neighbours, not every particle in the simulation.  This is particularly beneficial when particles retain the same numbers for the whole simulation or for any attempted moves. In DLMONTE, this functionality is described by the following lines in the CONTROL file::
@@ -298,11 +356,11 @@ This rebuilds a particle's neighbourlist whenever necessary.  The size of the ne
 
 This determines the memory allocated for each particles neighbourlist.  The size will be determined by the size of your system, its density and the interaction cut-off as specified in the FIELD file.  
 
-Go to the directory named 'helloneighbour' and view the CONTROL file, you will notice that it looks identical to the CONTROL files that you have already seen, with one extra line called::
+|action| Go to the directory named 'helloneighbour' and view the CONTROL file, you will notice that it looks identical to the CONTROL files that you have already seen, with one extra line called::
 
    verlet <float>  
 
-Run calculations using different values for this parameter and see how they affect the time taken to complete the calculation.  You can extract this for a given calculation by using the command::
+|action| Run calculations using different values for this parameter and see how they affect the time taken to complete the calculation.  |action| You can extract this for a given calculation by using the command::
 
    grep "total elapsed" OUTPUT.000
 
@@ -310,23 +368,25 @@ or alternatively the script::
 
    time.sh
 
-How does tuning the parameter affect the duration of this calculation?  Why might this be the case?
+|think| How does tuning the *verlet* parameter affect the duration of this calculation? |think| Why might this be the case?
 
-*N.B.* For short simulations system time can dominate the apparent performance of the calculation.  To see this affect try running DLMONTE consecutively and checking the duration.
+4. Logarithmic Volume Moves
+---------------------------
 
-3. Different Sampling Schemes
------------------------------
+The 'linear' keyword in the 'volume move' line of the NPT CONTROL file represents how the volume will change, in this case, on a linear scale.  However, one can also set the volume change to a logarithmic scale, this can be more efficient in simulations where large volume changes are required to representatively sample configuration space. 
 
-It is also possible to conduct a random walk in the logarithm of the volume.  Create a new directory and copy the CONFIG, CONTROL and FIELD files from one of your completed calculations into it.  Open the CONTROL file and change the keyword *linear* to  *log* in the volume move command.  This changes the way in which the the move is generated; logarithmic rather than linear, and is often claimed to be more efficient.  The acceptance criterion for the move in the Metropolis algorithm is now:
+|action| Create a new directory and copy the CONFIG, CONTROL and FIELD files and the strip_yaml script from one of your completed calculations into it. |action| Open the CONTROL file and change the keyword *linear* to  *log* in the volume move command.  This changes the way in which the the move is generated; logarithmic rather than linear, and is often claimed to be more efficient.  The acceptance criterion for the move in the Metropolis algorithm is now:
 
 .. math::
 
-  P_{\mathrm{acc}}([\mathbf{r}_{1},V_1] \rightarrow [\mathbf{r}_2,V_2]) = \min(1, \exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1) + P_{ext}(V_{2}-V_{1}) - ( N + 1 ) \beta^{-1} \ln(V_{2} / V_{1}) ] \} )
+  P_{\mathrm{acc}}([\mathbf{r}_{1},V_1] \rightarrow [\mathbf{r}_2,V_2]) = \min(0,  ( N + 1 ) \ln(\frac{V_{2}}{V_{1}}) - \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1) + P_{ext}(V_{2}-V_{1})])
          
-Extract the time evolution of the volume for this calculation and compare it with the volume evolution from the equivalent linear calculation.  Rationalise the observed differences.
+|action| Extract the time evolution of the volume for this calculation and compare it with the volume evolution from the equivalent linear calculation.  |think| Rationalise the observed differences.
 
 .. rubric:: Footnotes
 
 .. [#f1] Statistical_Ensembles.png - Wikipedia Commons: from - https://commons.wikimedia.org/wiki/File:Statistical_Ensembles.png Author: NZjacobmartin
 
 .. [#f2] B. L. Holian, "Shear viscosities away from the melting line: A comparison of equilibrium and nonequilibrium molecular dynamics", *J. Chem. Phys.*, **78**, 11, pp. 5147-5150, 1983.
+
+.. [#f3] M. S. Shell, "Monte Carlo simulations in other ensembles"[online], University of California at Santa Barbara: Engineering, 2012.  Available from: https://engineering.ucsb.edu/~shell/che210d/Monte_Carlo_other_ensembles.pdf
