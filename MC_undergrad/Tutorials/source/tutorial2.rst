@@ -39,7 +39,7 @@ where :math:`E(\mathbf{r})` is the energy of a configuration :math:`\mathbf{r}`.
 
    W(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \frac{W(\mathbf{r_1})P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)}{N}
 
-where :math:`W(\mathbf{r_1})` is the weight associated with :math:`\mathbf{r}`, :math:`P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of moving from configuration :math:`\mathbf{r}_1` to :math:`\mathbf{r}_2` and *N* is the number of possible configurations. Figure 1 demonstrates the concept of statistical weights between moving from two configurations, A and B.  The corresponding weight of going from :math:`\mathbf{r}_2` back to :math:`\mathbf{r}_1` is:
+where :math:`W(\mathbf{r_1})` is the weight associated with :math:`\mathbf{r}_1`, :math:`P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of moving from configuration :math:`\mathbf{r}_1` to :math:`\mathbf{r}_2` and *N* is the number of possible configurations. Figure 1 demonstrates the concept of statistical weights between moving from two configurations, A and B.  The corresponding weight of going from :math:`\mathbf{r}_2` back to :math:`\mathbf{r}_1` is:
 
 .. math::
 
@@ -147,13 +147,19 @@ The aim of this exercise is to familiarise yourself with running MC calculations
 
 As the calculation runs and completes, you will notice several new files appear in your directory.  These have similar roles to their counterparts from the previous session and will be explained in detail in the next tutorial.  The files you will be using throughout this tutorial will be the OUTPUT.000 and the PTFILE.000.  
 
-Now that you have all the output data you could possibly need from this calculation, we shall proceed with extracting the following data from the OUTPUT.000 and PTFILE.000: the time evolution of magnetisation and the distribution of the magnetisations over the course of the simulation.  |action| you will need to employ the 'analysis.sh' script by running the following command in the directory containing your output files::
+Now that you have all the output data you could possibly need from this calculation, we shall proceed with extracting the following data from the OUTPUT.000 and PTFILE.000: the time evolution of magnetisation and the distribution of the magnetisations over the course of the simulation.  
+
+|action| You will need to employ the 'analysis.sh' script by running the following command in the directory containing your output files::
 
 	analysis.sh
 	
 The command should complete almost instantly and you should see several new files: M_seq.dat, M_hist.dat, M_hist.png, and M.dat.  These files contain: time-evolution of magnetisation, a normalised magnetisation frequency distribution (in both data and plotted forms), and the average magnetisation at the temperature of the simulation, respectively.
 
-We shall now proceed to run the calculation at higher temperatures to obtain the temperature-dependence of the magnetisation.  |action| Create a new directory for each temperature and copy the CONFIG, CONTROL and FIELD files from your first calculation to them.  |action| Open the CONTROL file in each and increase the temperature to a value of your choosing (HINT: you will not need to go above 5.0 K!) and run the calculations.    
+We shall now proceed to run the calculation at higher temperatures to obtain the temperature-dependence of the magnetisation.  
+
+|action| Create a new directory for each temperature and copy the CONFIG, CONTROL and FIELD files from your first calculation to them.
+  
+|action| Open the CONTROL file in each and increase the temperature to a value of your choosing (HINT: you will not need to go above 5.0 K!) and run the calculations.    
 
 |action| Once each calculation is complete, run the analysis script in the same manner as above to obtain the relevant data.
 
@@ -173,7 +179,7 @@ For any general 2D lattice where coupling along rows and along columns are equal
 	b) :math:`T \approx T_c`
 	c) :math:`T > T_{c}`
 
-|think| Comment on any differences between in these plots and rationalise them using your knowledge of ferromagnetism.  |think| Do the results correspond to the predictions of the Ising model?
+|think| Comment on any differences between in these plots and rationalise them using your knowledge of ferromagnetism.  Do the results correspond to the predictions of the Ising model?
 
 |action| Also, have a look at the magnetisation histogram for some of your temperatures and describe how the distribution of magnetisations appears to change with temperature.  |think| Does this behaviour support the rest of your output data?
 
@@ -182,17 +188,25 @@ Extension:
 
 You have seen what happens as the system is heated, but you can also look at the magnetisation upon cooling the system from a state above the critical temperature to a state below the critical temperature. 
 
-|action| Take the REVCON from one of your simulations where :math:`T>T_{c}`, copy it into a new directory and rename it 'CONFIG'.  |action| Also copy the CONTROL and FIELD files into this directory and change the temperature to :math:`\sim 10^{-3} K`.  Then run the simulation.  
+|action| Take the REVCON from one of your simulations where :math:`T>T_{c}`, copy it into a new directory and rename it 'CONFIG'.  Also copy the CONTROL and FIELD files into this directory and change the temperature to :math:`\sim 10^{-3} K`.  Then run the simulation.  
 
-|action| Once the simulation is complete, use the analysis.sh script to extract the output data and plot the time evolution of magnetisation.  |think| Record your observations.  
-|think| Does this agree with magnetic behaviour predicted by the Ising model? |think| How does this compare with the time evolution at :math:`T > T_{c}`?
+|action| Once the simulation is complete, use the analysis.sh script to extract the output data and plot the time evolution of magnetisation.  Record your observations.  
+|think| Does this agree with magnetic behaviour predicted by the Ising model? 
+
+|think| How does this compare with the time evolution at :math:`T > T_{c}`?
 
 Exercise 2)
 -----------
 
 This exercise will demonstrate the stochastic nature of MC simulations as well as how the Metropolis algorithm produces reliable and accurate results for this simple 2D Ising model.
 
-We have seen what happens when we start the simulations from a fixed starting configuration (all spins aligned), but what will happen when we start from a random configuration? |action| Create a new directory and copy the CONFIG, CONTROL and FIELD files from one of your previous calculations into it. |action| Replace the line starting with 'seeds' to just 'ranseed'.  |action| Make a note of the temperature and run the calculation and use analysis.sh on the output data as you have done in the previous exercise. 
+We have seen what happens when we start the simulations from a fixed starting configuration (all spins aligned), but what will happen when we start from a random configuration? 
+
+|action| Create a new directory and copy the CONFIG, CONTROL and FIELD files from one of your previous calculations into it. 
+
+|action| Replace the line starting with 'seeds' to just 'ranseed'.  
+
+|action| Make a note of the temperature and run the calculation and use analysis.sh on the output data as you have done in the previous exercise. 
 
 |action| Run this calculation on these input files several times (WARNING: remember to copy the output files into separate directories each time before running the calculation again!) and plot the time-evolution of the magnetisation for each calculation.  Each of these calculations represent running the simulation on a different, randomly-generated initial configuration at the same temperature.  
 
@@ -205,7 +219,11 @@ Extension:
 
 	grep seeds OUTPUT.000
 
-Running this command should return a line containing four integer numbers.  |action| Create a new directory and copy the CONFIG, CONTROL and FIELD files into it.  |action| Then, go to your CONTROL file and replace 'ranseed' with 'seeds int1 int2 int3 int4' where 'int' are the numbers from the command line.
+Running this command should return a line containing four integer numbers.  
+
+|action| Create a new directory and copy the CONFIG, CONTROL and FIELD files into it.  
+
+|action| Go to your CONTROL file and replace 'ranseed' with 'seeds int1 int2 int3 int4' where 'int' are the numbers from the command line.
 
 |action| Re-run the calculation with this CONTROL file and plot the magnetisation vs time.  |think| Compare this with the equivalent \'ranseed\' calculation data.  
 

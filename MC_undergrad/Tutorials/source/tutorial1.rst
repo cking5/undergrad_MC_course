@@ -21,7 +21,7 @@ where :math:`\phi(r_{ij})` is the potential energy of the interaction between pa
 .. figure:: images/Tut_1_images/LJ_potential.png
    :align: center
 
-   **Figure 1:** Shapes of (a) the Lennard-Jones potential, :math:`\phi(r_{ij})`, between two particles and (b) the corresponding force, :math:`\F(r_{ij})`, acting between the two particles.
+   **Figure 1:** Shapes of (a) the Lennard-Jones potential, :math:`\phi(r_{ij})`, between two particles and (b) the corresponding force, :math:`F(r_{ij})`, acting between the two particles.
 
 This model system has limited use in real world applications as it neglects all other possible intermolecular interactions, such as the Coulombic, permanent dipole-dipole and hydrogen bonding.  However, Lennard-Jones solids have been used to model the phase behaviour of noble gases, like Argon, with a reasonable degree of accuracy [#f1]_, [#f2]_, [#f3]_.
 
@@ -45,7 +45,9 @@ Once the calculation has successfully completed, it is now time to begin the ana
 
 **(alternate instructions for visualising configurations here)**
 
-|action| Click the windows button and search for a program called \'Vesta\' and open it.  Vesta is a program which allows you to visualise systems of atoms/molecules in three dimensions. |action| To view your initial and final system configurations, go to file :math:`\rightarrow` New Structure; select import and browse to find your CONFIG and REVCON, respectively.  Do this separately for each file.  You should see both structures appear in separate tabs. 
+|action| Click the windows button and search for a program called \'Vesta\' and open it.  Vesta is a program which allows you to visualise systems of atoms/molecules in three dimensions. 
+
+|action| To view your initial and final system configurations, go to file :math:`\rightarrow` New Structure; select import and browse to find your CONFIG and REVCON, respectively.  Do this separately for each file.  You should see both structures appear in separate tabs. 
 
 |think| Describe the initial and final configurations.  Rationalise any observed differences.
 
@@ -59,9 +61,9 @@ Once the calculation has successfully completed, it is now time to begin the ana
 
 |action| Repeat the calculation at increasingly high temperatures, following the instructions above, but changing the temperature value in the CONTROL file.  You will not need to go above 10 K.  You may wish to create a new directory for each temperature and copy the CONFIG, CONTROL and FIELD files into each.  
 
-|action| View the REVCON from each calculation in Vesta (the CONFIG file will be the same for each one) and |action| view the evolution of the system in VMD.  
+|action| View the REVCON from each calculation in Vesta (the CONFIG file will be the same for each one) and view the evolution of the system in VMD.  
 
-|think| What do you notice about the final configuration of the system as the temperature increases?  |think| What happens to the solid? 
+|think| What do you notice about the final configuration of the system as the temperature increases? 
 
 |think| Qualitatively determine and record the temperature(s) at which any significant transitions occur.  
 
@@ -104,9 +106,15 @@ In this part of the tutorial, we will extract total, potential and kinetic energ
 
 |action| start by navigating to one of your directories (in the Command Prompt) and run the following command:
 
+**script like analysis.sh here**
 
+This will activate a script which will extract *T*, *E*, and *U*, from the OUTPUT file and place them into a new file called 'output'.  It also calculates :math:`KE = E - U` and appends it to 'output'.  
 
-This will activate a script which will extract *T*, *E*, and *U*, from the OUTPUT file and place them into a new file called 'output'.  It also calculates :math:`KE = E - U` and appends it to 'output'.  |action| Run this command on each of your simulations so that you have a data file in each of your repositories.  |action| Plot *E*, *U* and *KE* against *T* on the same graph, using whichever program you're most comfortable with (Excel, MATLab, gnuplot etc.).  It may also be helpful to run more simulations around the transition temperature to improve the accuracy of your plotted data at the transition.  |action| Comment on the shape of the plots.  |think| Do these indicate the presence of a phase transition?
+|action| Run this command on each of your simulations so that you have a data file in each of your repositories.  
+
+|action| Plot *E*, *U* and *KE* against *T* on the same graph, using whichever program you're most comfortable with (Excel, MATLab, gnuplot etc.).  It may also be helpful to run more simulations around the transition temperature.  
+
+|action| Comment on the shape of the plots.  |think| Do these indicate the presence of a phase transition?
 
 Part 3: Cooling in Molecular Dynamics
 =====================================
@@ -116,7 +124,13 @@ As you have seen from the tutorial so far, potential modelling of physical syste
 Exercise 3)
 -----------
 
-In this final exercise, you will observe what happens when you cool your Lennard-Jones fluid.  |action| go to a directory where the simulation has *just* melted (*i.e.* at a temperature just above the estimated melting point) and copy the REVCON, CONTROL and FIELD files into a new directory.  |action| Rename REVCON to CONFIG and change the temperature in the CONTROL file to a value *just* below your system's melting point.  Now you should have everything ready to simulate the cooling of your liquid back into a solid.  We take the REVCON and not the CONFIG as we want the final melted configuration from the 'hot' simulation to be the starting configuration in the 'cool' simulation.  |action| Run the simulation and view the results.  |action| Record your observations.  |think| Is this what you expect? |think| Is this behaviour supported by thermodynamic theory?
+In this final exercise, you will observe what happens when you cool your Lennard-Jones fluid.  
+
+|action| Go to a directory where the simulation has *just* melted (*i.e.* at a temperature just above the estimated melting point) and copy the REVCON, CONTROL and FIELD files into a new directory.  
+
+|action| Rename REVCON to CONFIG and change the temperature in the CONTROL file to a value *just* below your system's melting point.  Now you should have everything ready to simulate the cooling of your liquid back into a solid.  We take the REVCON and not the CONFIG as we want the final melted configuration from the 'hot' simulation to be the starting configuration in the 'cool' simulation.  
+
+|action| Run the simulation and record your observations.  |think| Is this what you expect given your knowledge of thermodynamics?
 
 It is far more difficult to accurately model a system's thermodynamic behaviour when reducing the temperature using MD (or any potential modelling technique) primarily because of entropy, *S*, and the Third Law of Thermodynamics.  The Third Law of Thermodynamics can be stated as :math:`S \geq 0`.  When you cool a system, its entropy decreases, but this corresponds to an increase in entropy of its surroundings such that the Third Law of Thermodynamics is obeyed.  In a computational simulation, it is difficult to define 'entropy' and 'the surroundings' in this way, so when you cool a system from a temperature where it is liquid to one where it is solid, the observed 'disorder' of a system will not change, and the system will still appear to be liquid (or it may become a glass, if you run for long enough times).  Also, a system crystallises when the atoms within the system enter into a fixed orientation relative to one another, if all the atoms are freely moving, this outcome is **highly** unlikely.
 
@@ -136,10 +150,13 @@ Now that you have an awareness of MD techniques, we will move onto introducing t
 Extensions (optional)
 =====================
 
-1. Ehrenfest classification:
-----------------------------
+1. Latent Heat
+--------------
 
 In your studies you may have come across the idea of latent heat of phase transitions.  Latent heat, *L*, can be described as the energy required for all particles in a material to overcome thermal activation barriers and become more mobile in a less condensed phase (solid-liquid, liquid-gas).  This is observed as a plateau at the transition temperature of heating curves, where no change in temperature is seen despite heat flowing into the system, or as a step-change in the potential energy at the phase transition as a function of temperature.  |think| From your plot of *U* vs *T*, estimate the latent heat for the solid-liquid phase transition of the Lennard-Jones material.
+
+2. Ehrenfest classification:
+----------------------------
 
 A widely-used classification of phase transitions is the Ehrenfest classification, which describes phase transitions as n\ :sup:`th` \ order, where n is the n\ :sup:`th` \ order temperature derivative of an intrinsic quantity where a discontinuity occurs (see Figure 2).  For instance, the liquid-gas phase transition is described as a 1\ :sup:`st` \ order phase transition as there is a discontinuity in :math:`C_{v} = \frac{\partial U}{\partial T}`.  While a solid-solid phase transition is a 2\ :sup:`nd` \ order phase transition as there is a discontinuity in :math:`\frac{\partial C_{v}}{\partial T} = \frac{\partial^{2} U}{\partial T^{2}}`.
 
