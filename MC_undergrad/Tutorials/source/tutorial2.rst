@@ -11,9 +11,41 @@ Introduction to Monte Carlo Methods
 
 In the previous session, you were introduced to classical potential modelling simulation techniques, specifically Molecular Dynamics.  This provides useful background knowledge for the entirely different simulation technique that we will be discussing in this session: Monte Carlo. 
 
-Monte Carlo (MC) is the name given to the simulation technique that attempts to solve a problem by randomly sampling out of all of its possible outcomes ('configurational space')and obtaining a result based on numerical analysis of the sampling.  MC is a stochastic method, which means that the final state of the system cannot be predicted precisely based on the initial state and parameters, but through numerical analysis, reproducible results can be obtained.  This contrasts with other techniques like molecular dynamics, which are deterministic, where if you know the initial state and the inputs for the calculations, you can predict what the configuration of the system will be at any and all times thereafter.  This distinction allows MC to be used in a variety of applications across the scientific community where deterministic techniques are ineffective or impossible to use, such as phase co-existence and criticality, adsorption, and development of solid-state defects [#f1]_.
+This course aims to familiarise undergraduates undertaking courses in the physical sciences with an alternative simulation technique to more common techniques like Molecular Dynamics and Molecular Mechanics: Monte Carlo.  In this course you will be using a general-purpose Monte Carlo program called 'DL_MONTE' to simulate different phenomena in simple systems.  By the end of this course, you should have a solid understanding of fundamental aspects of Monte Carlo theory and applications as well as how to set up and run Monte Carlo simulations using DL_MONTE.  
 
-Results from MC simulations are generally accurate and reliable, assuming that the technique has representatively sampled the distribution of possible configurations in the system ('configurational space').  In other words, if our sampling method returns the probability distribution we expect, then we know that are sampling method is reliable.  In thermodynamic systems, the probability distribution of available states is given by the Boltzmann distribution:
+Monte Carlo (MC) is the name given to a set of numerical techniques that use random numbers to solve numerical problems.  The earliest known uses of this type of method was to estimate the value of :math:`\pi` (Buffon's Needle) and  Enrico Fermi used a similar method in the 1930s in his work studying neutron diffraction.  The MC technique used today was invented in the 1940s by scientists working on the Manhattan Project at the Los Alamos National Laboratory in the US.  Due to the sensitive nature of the work during World War 2, the technique was given the codename 'Monte Carlo' after the casino in Monaco where relatives of one of the scientists liked to frequent.
+
+Every type of system has a number of possible states or configurations that it can be in, in thermodynamics, this range of states is described by the Boltzmann distribution.  This range of possible configurations define the 'configurational space' of a system.  The essence of MC methods is that you take a system in a given initial configuration and then use random numbers to randomly change the configuration of the system in some manner, whether it be displacing a particle by a small amount, changing the system volume or adding/removing particles from a system.  This general process is called 'proposing a move' in MC calculations.  The 'move' being changing the system from one configuration to another and so it essentially 'moves' the system to a different configuration in its configurational space.  However, whether or not we accept or reject the potential move depends on what type of sampling scheme is being used.  
+
+The most commonly-used method of sampling configurational space is the Metropolis Algorithm.  Its function is as follows:
+
+1. Randomly select a particle in the system and proposes a move to another configuration
+2. Calculate the energy of both the old and new configurations
+3. Apply the following condition:
+
+.. math::
+
+         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ )
+
+where :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of accepting the move from the initial configuration, :math:`\mathbf{r}_1`, with an energy, :math:`E(\mathbf{r}_1)`, to the new configuration, :math:`\mathbf{r}_2`, with an energy, :math:`E(\mathbf{r}_2)`.  The function min() means that the smallest value in the brackets is chosen.  If the energy of the new configuration is less than that of the original, *i.e.* :math:`E(\mathbf{r}_2) < E(\mathbf{r}_1)`, then :math:`E(\mathbf{r}_2)-E(\mathbf{r}_1) < 0` and so :math:`\exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \  > 1` and so the move is accepted with :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = 1`.  If the new energy is greater than the energy of the original configuration, *i.e.* :math:`E(\mathbf{r}_2) > E(\mathbf{r}_1)`, then :math:`E(\mathbf{r}_2)-E(\mathbf{r}_1) > 0` and so :math:`\exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \  > 1` and the move is accepted with probability :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ < 1`.the relative energies associated with the two configurations.  To determine whether the move is accepted or rejected, the difference in the energy associated with both the initial and final configurations is calculated and measured against some defined acceptance criterion.  If the criterion is met then the move is accepted and the system changes its configuration, before the next move is proposed, otherwise the move is rejected and the system configuration does not change. A schematic representation of the MC process is shown in Figure 1.
+
+.. figure:: images/Tut_2_images/Metropolis_algorithm.png
+   :scale: 80%
+   :align: center
+
+   **Figure 1**: Proposing a move in Monte Carlo.  This diagram shows a 'step' in Monte Carlo simulations.
+
+|think| Even if the proposed move leads to a higher-energy configuration, there is still a non-zero probability of it being accepted! Why should this be the case?
+
+.. |think| image:: images/General/think.png
+   :height: 100 px
+   :scale: 25 %
+
+|think| What happens to the total number of accepted moves in a given simulation as we change the temperature?
+
+MC is a stochastic method, which means that the final state of the system cannot be predicted precisely based on the initial state and parameters, but through statistical analysis, reliable results can be obtained.  This contrasts with other techniques like molecular dynamics, which are deterministic, where starting in a known initial state should lead to the same (or similar) outcomes.  This distinction allows MC to be used in a variety of applications across the scientific community where deterministic techniques are ineffective, such as phase co-existence and criticality, adsorption, and development of solid-state defects [#f1]_.  Likewise, there are other instances where MC is much more inefficient than deterministic methods.
+
+The relability of MC results depends upon the method used to sample the configurational space of the system, if our sampling is not representative of all the possible states that the system can exist in, then any results will be flawed.  In other words, if our sampling method returns the probability distribution we expect, then we know that are sampling method is reliable.  In thermodynamic systems, the probability distribution of available states is given by the Boltzmann distribution:
 
 .. math::
 
@@ -25,77 +57,8 @@ where :math:`W(\mathbf{r})` is the probability of being in a state of energy, al
   
    \frac{W(\mathbf{r}_1)}{W(\mathbf{r}_2)} = \exp {\Bigl(\frac{E_2 -E_1}{kT}\Bigr)}
 
-So if our sampling method yields the Boltzmann distribution, we know that our simulation accurately reflects real systems.  There are many possible ways one can sample the configurational space of a simulated system, the intuitive case is simple random sampling in that we move randomly from one configuration to another.  However, this process is only reliable in systems with a constant probability distribution of states as it does not take into account the respective weighting of a given configuration.  For example, it can under-represent a small number of configurations who contribute significantly to the overall state of the system.
-
-The concept of statistical weight is crucial in thermodynamics and describes how likely a particular configuration is of being observed out of a hypothetically *large* number of replicas of that system.  For instance, consider the possible configurations of the gas molecules in this room, clearly, this system would have a high probability of being in a configuration where the gas molecules are evenly (on average) distributed throughout the volume of the room and so this configuration has a high weighting.  Yet, there is a configuration where every gas molecule sits in one corner of the room, this configuration is highly unlikely to be seen and so its weighting is very low.  The weight of a particular configuration is given by:
-
-.. math::
-
-   W(\mathbf{r}) = \frac{\exp {\Bigl(\frac{- E(\mathbf{r})}{kT}\Bigr)}}{\sum_{i} \exp {\Bigl(\frac{- E(\mathbf{r_{i}})}{kT}\Bigr)} }
-
-where :math:`E(\mathbf{r})` is the energy of a configuration :math:`\mathbf{r}`.  In MC simulations, the statistical weight of moving from a configuration, :math:`\mathbf{r_1}`, to a new configuration, :math:`\mathbf{r_2}`, is:
-
-.. math::
-
-   W(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \frac{W(\mathbf{r_1})P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)}{N}
-
-where :math:`W(\mathbf{r_1})` is the weight associated with :math:`\mathbf{r}_1`, :math:`P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of moving from configuration :math:`\mathbf{r}_1` to :math:`\mathbf{r}_2` and *N* is the number of possible configurations. Figure 1 demonstrates the concept of statistical weights between moving from two configurations, A and B.  The corresponding weight of going from :math:`\mathbf{r}_2` back to :math:`\mathbf{r}_1` is:
-
-.. math::
-
-   W(\mathbf{r}_2 \rightarrow \mathbf{r}_1) = \frac{W(\mathbf{r_2})P(\mathbf{r}_2 \rightarrow \mathbf{r}_1)}{N}   
-
-.. figure:: images/Tut_2_images/weights.png
-   :align: center
-
-   **Figure 1:** The associated statistical weights of moving between two configurations, A and B.
-
-There are more sophisticated ways of sampling configurational space, such as the Metropolis Algorithm, which is one of the most widely used sampling schemes in MC simulations (including this one).  The function of the Metropolis algorithm is summarised in Figure 2.  First, it randomly selects a particle in the system and proposes a move to another configuration.  It then calculates the new energy of the configuration and compares it with the energy of the previous configuration before the move was proposed.  It then applies the following condition:
-
-.. math::
-
-         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ )
-
-where :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of accepting the move from the initial configuration, :math:`\mathbf{r}_1`, with an energy, :math:`E(\mathbf{r}_1)`, to the new configuration, :math:`\mathbf{r}_2`, with an energy, :math:`E(\mathbf{r}_2)`.  The function min() means that the smallest value in the brackets is chosen.  If the energy of the new configuration is less than that of the original, *i.e.* :math:`E(\mathbf{r}_2) < E(\mathbf{r}_1)`, then :math:`E(\mathbf{r}_2)-E(\mathbf{r}_1) < 0` and so :math:`\exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \  > 1` and so the move is accepted with :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = 1`.  If the new energy is greater than the energy of the original configuration, *i.e.* :math:`E(\mathbf{r}_2) > E(\mathbf{r}_1)`, then :math:`E(\mathbf{r}_2)-E(\mathbf{r}_1) > 0` and so :math:`\exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \  > 1` and the move is accepted with probability :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ < 1`.  
-
-.. figure:: images/Tut_2_images/Metropolis_algorithm.png
-   :align: center
-
-   **Figure 2:** Visual representation of the function of the Metropolis algorithm.  Once one move outcome is complete, the algorithm repeats on the final configuration. 
-
-|think| Even if the proposed move leads to a higher-energy configuration, there is still a non-zero probability of it being accepted! Why should this be the case?
-
-|think| What happens to the total number of accepted moves in a given simulation as we change the temperature?
-
-.. |think| image:: images/General/think.png
-   :height: 100 px
-   :scale: 25 %
-
-This defines the concept of detailed balance:
-
-.. math::
-
-   W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)
-
-We can now obtain the required Boltzmann distribution from this condition by rearrangement:
-
-.. math::
-
-   \frac{W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)}{W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)} = \frac{P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)}{P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)} = exp \ {\Bigl(\frac{E_2 -E_1}{kT}\Bigr)} 
-
-This tells us that so long as we satisfy detailed balance, our system will be sampled according to the Boltzmann distribution and obey the rules of thermodynamics.  Though it is important to note that the condition of detailed balance is *sufficient* but *not necessary* to ensure that are system accurately reflects thermodynamics, *i.e.* there are simpler conditions one could employ that would ensure that our simulation obeys thermodynamics.  For instance, one could ensure that *balance* is achieved from the system which simply states that moving from one state to another state is the same for any initial and final state pairing, *i.e.*:
-
-.. math::
-   
-   \frac{\mathrm{d}W(\mathbf{r}_1)}{\mathrm{d}t} = 0
-
-However, detailed balance also ensures equilibrium between all states such that the trajectory from one configuration to another via several steps has the same probability as the reverse trajectory (See Figure 3).  This ensures the reliability of the sampling method used without requiring additional corrections in the calculations.
-
-.. figure:: images/Tut_2_images/detailed_balance2.png
-   :align: center
-
-   **Figure 3:** A visualisation of the difference between the condition of balance (left) and detailed balance (right) for a set of different configurations, A-H, in the configurational space of a system.
-
+So if our sampling method yields the Boltzmann distribution, we know that our simulation accurately reflects real systems.  There are many possible ways one can sample the configurational space of a simulated system, the intuitive case is simple random sampling in that we move randomly from one configuration to another.  However, this process is only reliable in systems with a constant probability distribution of states as it does not take into account the respective weighting of a given configuration.  For example, it can under-represent a small number of configurations who contribute significantly to the overall state of the system.  In order to return the Boltzmann distribution, MC simulations enforce a condition known as *detailed balance*, which is a sufficient, but not necessary condition (*i.e.* there are simpler conditions one could apply that could still get the same distribution).  We will discuss detailed balance in more detail in later sessions. 
+ 
 Having discussed the concepts behind MC simulation methods, it is time to demonstrate how to apply them to a physical system.  This tutorial will be centred on a MC simulation of the magnetic properties of solid materials.
 
 Ising Model of Magnetism
@@ -103,40 +66,45 @@ Ising Model of Magnetism
 
 An application where MC is more effective than deterministic methods is simulating the magnetic behaviour of solid state materials.  
 
-Our simulation will be based on a 2D Ising model, which describes the macroscopic magnetic behaviour of a solid material as a result of the relative orientation of electron spins within the crystal lattice of a material.  As you may recall, each electron has an intrinsic 'spin'.  In simple terms, the spin of an electron can be thought of as a magnetic moment, with two possible orientations: 'up' and 'down'.  This idea helps define two classes of magnetic materials: diamagnetic and paramagnetic.  Diamagnetic materials are made up of atoms/molecules without unpaired electrons, do not interact with external magnetic fields, making them non-magnetic.  Paramagnetic materials contain unpaired electrons, exhibiting a net magnetic moment that can interact with external magnetic fields and give the material its magnetic properties.  Figure 4 shows an example of a paramagnetic material as a 2D lattice of colour-coded spins.
+Our simulation will be based on a 2D Ising model, which describes the macroscopic magnetic behaviour of a solid material as a result of the relative orientation of electron spins within the crystal lattice of a material.  As you may recall, each electron has an intrinsic 'spin'.  In simple terms, the spin of an electron can be thought of as a magnetic moment, with two possible orientations: 'up' and 'down'.  If an external magnetic field is applied to a material, then the spins of the electrons within the material can interact with this field and the material can give the material its own magnetic field based on how the electron spins are aligned relative to each other.  
 
-.. figure:: images/Tut_2_images/paramagnet_config.png
+This idea helps define several classes of magnetic behaviour: diamagnetism, paramagnetism, ferromagnetism and antiferromagnetism.  Diamagnetism occurs in materials whose electron spins preferentially anti-align with an external field, creating a magnetic field in the material that opposes and repels the external field.  Paramagnetism is where the spins preferentially align with an external field, generating a (weak) magnetic field in the material which supports the external field.  Ferromagnetism has some similarity to paramagnetism in that, under an external field, electron spins preferentially align with the external field, however, unlike paramagnetic materials, the material will continue to generate its own magnetic field even when the external field that initiated it is removed.  At *T* = 0 K, all spins will be aligned and remain unchanged, so the material will never lose its magnetic field.  However, in reality, the material will lose its magnetic field over time as every-so-often, a spin will flip due to the effect of finite temperature.  Ferromagnetism is the strongest type of observed magnetism and ferromagnetic materials form the common magnets used in day-to-day life.  Antiferromagnetism is similar to ferromagnetism in that an antiferromagnetic material will generate its own magnetic field without the presence of any external fields, however, the electron spins preferentially anti-align with each other, leading to a 'checkerboard' pattern shown in Figure 1b.  Figure 1 gives the ideal configurations for a ferromagnetic and antiferromagnetic material under an external field as a 2D lattice of colour-coded spins.
+
+.. figure:: images/Tut_2_images/ferro_antiferro.png
    :align: center
 
-   **Figure 4:** A 2D schematic of a paramagnetic material under an external magnetic field.  Yellow indicates the spins that are aligned with the field and purple are spins that are anti-aligned.
+   **Figure 2:** (a) A 2D schematic of (a) a ferromagnetic material and (b) an antiferromagnetic material under an external magnetic field.  Yellow indicates the spins that are aligned with the field and purple are spins that are anti-aligned.
 
-There is another type of magnetism observed known as ferromagnetism, where instead of a uniform alignment of spins as in paramagnetic materials, 'domains' of aligned spins form, bound by domains of oppositely aligned spins (see Figure 5).  Ferromagnetic materials can show unique properties, such as being able to generate their own magnetic field (magnetisation) in the absence of an external magnetic field.  These form the common magnets seen in real-world applications.
-
-.. figure:: images/Tut_2_images/ferromagnet_cand2.png
-   :align: center
-
-   **Figure 5:** A 2D schematic of a ferromagnetic material at :math:`T < T_{c}`.  Yellow and purple represent the two different spin orientations, 'up' and 'down', respectively.
-
-The main factor influencing whether a given atom's spin is aligned with its neighbours in a crystal, and hence what type of magnetism the material displays, is its exchange energy, *E*, which in the Ising model is given by:
+In the 2D Ising model, our material is represented by a 2D square grid of lattice sites, where each site represents an electron spin in the solid structure.  The main factor influencing whether a given site's spin is aligned with its neighbours in a crystal, and hence what type of magnetism the material displays, is its exchange energy, *E*, which in the Ising model is given by:
 
 .. math::
 
 	E = -J \sum_{<i,j>} s_{i}s_{j}
 
-where *J* is the coupling constant between adjacent atoms in a given material and :math:`s_{i/j}` is the spin of the particle in position i/j in the lattice, respectively.  The <...> here mean the sum goes over the nearest neighbours of the atom in position (i,j), *i.e.* over the atoms at positions  (i-1, j), (i+1, j), (i, j-1) and (i, j+1) only.  The sign of *J* determines whether spin alignment (ferromagnetism) or anti-alignment (antiferromagnetism) is favourable.
+where *J* is the coupling constant between adjacent sites in a given material and :math:`s_{i/j}` is the spin of the at site i/j in the lattice, respectively.  The <...> here mean the sum goes over the nearest neighbours of the atom in position (i,j), *i.e.* over the sites at positions  (i-1, j), (i+1, j), (i, j-1) and (i, j+1) only.  All physical systems will try to minimise their energy, and so the sign of *J* determines whether spin alignment (ferromagnetism) or anti-alignment (antiferromagnetism) is favourable.  If :math:`J > 0`, then if :math:`\sum_{<i,j>} s_{i}s_{j} > 0`, *i.e.* the spin of the i\ :sup:`th` \ site is aligned with the majority of its neighbours, :math:`E < 0` and so the alignment of spins is energetically favourable and will be the preferred state of the system.  If :math:`J < 0`, then the anti-alignment of the i\ :sup:`th` \ site is energetically favourable.
 
-The exchange energy can be thought of as an activation barrier for an atom to change its spin depending on the spins of its neighbours.  This means that, like with any physical system with an energy barrier, spontaneous thermal fluctuations can overcome the barrier and cause some atoms/domains to flip their spin, with the likelihood of flipping a spin increasing as temperature increases.  Therefore, ferromagnetic materials only show domains at temperatures under a specific critical, or Curie, temperature, :math:`T_{c}`.  Above this point, ferromagnetic materials lose their ability to retain magnetisation because the thermal fluctuations are much larger than the energy required to switch a domain's alignment with respect to other domains.  This results in a loss of the domain structure, and hence loss of magnetisation without an external field.  It is for this reason that paramagnetism can be thought of as high-temperature ferromagnetism.
+The exchange energy can be thought of as an activation barrier for an atom to change its spin depending on the spins of its neighbours.  This means that, like with any physical system with an energy barrier, spontaneous thermal fluctuations can overcome the barrier and cause some sites to flip their spin, with the likelihood of flipping a spin increasing as temperature increases.  Therefore, ferromagnetic materials only show domains at temperatures under a specific critical, or Curie, temperature, :math:`T_{c}`.  Above this point, ferromagnetic materials lose their ability to retain magnetisation without requiring an external magnetic field.
 
 For more information on the Ising model, consult either [#f2]_ or [#f3]_.
-
-|think| The Metropolis algorithm is employed in these simulations, describe what constitutes a 'move' in the context of this system.
 
 |think| Write an expression for the energy difference between the initial and final configurations, :math:`E(\mathbf{r}_2) - E(\mathbf{r}_1)`, for the 2D Ising model.
 
 Exercise 1)
 -----------
 
-The aim of this exercise is to familiarise yourself with running MC calculations on a simple 2D Ising model of a ferromagnetic material. The material is represented by a 64x64 2D lattice of points, each representing an atom with its own net spin.  In this exercise, all atoms are spin-aligned.  We will be running a MC simulation to look at how the overall spin alignment (magnetisation) and energy of the system evolves with both time and temperature.
+The aim of this exercise is to familiarise yourself with running MC calculations on a simple 2D Ising model of a ferromagnetic material. The material is represented by a 64x64 2D lattice of sites, each representing a spin in the solid structure.  Initially, all sites in the grid are aligned.  We will be running a MC simulation to look at how the overall spin alignment (magnetisation) and energy of the system evolves with both time and temperature.  The MC process for the 2D Ising model is outlined below:
+
+1. Select a site on the lattice and propose a 'move' by inverting its spin.
+2. Calculate the energy before, :math:`E_1`, and after the proposed move, :math:`E_2`, using equation x.
+3. Accept the move using the Metropolis condition:
+
+.. math::
+
+         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E_2 - E_1}{kT}\Bigr) \ )
+
+4. Move to the next site and repeat.
+
+Actions 1-3 define a MC 'step', which are used to define how long a calculation will run.  *N.B.* a step is counted regardless of whether the propsed move was accepted or rejected.  The program selects sites systematically in the lattice, starting in one corner and going row-by-row until the end of the lattice is reached, so (on average) each site will have had one proposed move.  This defines a MC 'sweep' of the system.  Once one sweep is complete, the program will begin a new sweep and stop when it has completed a set number of MC steps.  
 
 |action| Go to 'inputs' :math:`\rightarrow` 'Tut_2' :math:`\rightarrow` 'main' :math:`\rightarrow` 'Init' and copy the contents into a new directory in your domain.  The CONFIG file displays the initial configuration of your system, the CONTROL file allows you to set the parameters and constraints for your simulation, and the FIELD file describes all interactions in the system (although they may look slightly different to the ones presented in the last session, they perform the same roles).  Though we will be going through the function of these in detail in the next session, it may be helpful to have a look and familiarise yourself with their contents.  
 
@@ -238,7 +206,7 @@ Now that you have reached the end of this tutorial, you will hopefully have a be
 - the evolution of magnetisation with time
 - validation of the stochastic nature of Monte Carlo methods
 
-In the next tutorial, you will be introduced to a general Monte Carlo program called DLMONTE and use it to model the thermal properties of a Lennard-Jones material.
+In the next tutorial, you will be introduced to a general Monte Carlo program called DL_MONTE and use it to model the thermal properties of a Lennard-Jones material.
 
 Extensions (optional):
 ======================
@@ -246,12 +214,7 @@ Extensions (optional):
 1. Antiferromagnetism:
 ----------------------
 
-So far, you have looked at how the magnetic behaviour of a ferromagnetic system changes over time and temperature, but there is another possible type of magnetism called antiferromagnetism, where the sign of the coupling constant, *J*, changes sign.  This means that it is now favourable for the spin of one atom to be opposed to the spin of its neighbours, resulting in a preferred 'checkerboard' pattern of magnetisation on the 2D lattice (see Figure 6).  You can investigate the magnetic behaviour in this case using the 2D Ising model.
-
-.. figure:: images/Tut_2_images/antiferromagnet.png
-   :align: center
-
-   **Figure 6:** The most stable magnetic configuration of an antiferromagnetic material at :math:`T < T_{c}`.
+So far, you have looked at how the magnetic behaviour of a ferromagnetic system changes over time and temperature, but there is another possible type of magnetism called antiferromagnetism, where the sign of the coupling constant, *J*, changes sign.  This means that it is now favourable for the spin of one site to be opposed to the spin of its neighbours, resulting in a preferred 'checkerboard' pattern of magnetisation on the 2D lattice.  You can investigate the magnetic behaviour in this case using the 2D Ising model.
 
 **script for changing the signs of the coupling constants in the FIELD file and create a new directory for the initial calculation**
 

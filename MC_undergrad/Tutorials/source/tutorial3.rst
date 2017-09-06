@@ -1,19 +1,19 @@
------------------------------------
-TUTORIAL 3: Introduction to DLMONTE
------------------------------------
+------------------------------------
+TUTORIAL 3: Introduction to DL_MONTE
+------------------------------------
 
 Authors: Chris King, James Grant - r.j.grant@bath.ac.uk
 
-In the previous session, you were introduced to the ideas underlying Monte Carlo simulations by modelling a simple system and extracting useful output data which (hopefully) concurred with theory.  In this session, you will be formally introduced to the general Monte Carlo program, DLMONTE, which you unknowingly used in the previous session to plot the thermodynamic behaviour of a simple Lennard-Jones material using Monte Carlo methods.  This is a direct analogy with the system studied in the first session using Molecular Dynamics and we will be able to compare the results from both methods in this session.  
+In the previous session, you were introduced to the ideas underlying Monte Carlo simulations by modelling a simple system and extracting useful output data which (hopefully) concurred with theory.  In this session, you will be formally introduced to the general Monte Carlo program, DL_MONTE, which you unknowingly used in the previous session to plot the thermodynamic behaviour of a simple Lennard-Jones material using Monte Carlo methods.  This is a direct analogy with the system studied in the first session using Molecular Dynamics and we will be able to compare the results from both methods in this session.  
 
 Part 1: NVT Lennard-Jones material
 ==================================
 
-To start with, you will be given an overview of the program that you will use (or have used) for all Monte Carlo calculations throughout this course: DLMONTE.  DLMONTE is the name of a program which provides a general Monte Carlo framework for use in scientific research.  This program is a direct Monte Carlo analogue to the Molecular Dynamics program DLPOLY (which you used in Tutorial 1). 
+To start with, you will be given an overview of the program that you will use (or have used) for all Monte Carlo calculations throughout this course: DL_MONTE.  DL_MONTE is the name of a program which provides a general Monte Carlo framework for use in scientific research.  This program is a direct Monte Carlo analogue to the Molecular Dynamics program DLPOLY (which you used in Tutorial 1). 
 
-The best way to learn how to use DLMONTE is by applying it to a simple system, in this case determining the thermal behaviour of a Lennard-Jones solid.  This part of the tutorial is directly analagous to Tutorial 1, except now we shall be using Monte Carlo to simulate our Lennard-Jones material instead of Molecular Dynamics.  This will hopefully help highlight the differences in their respective approaches to this problem.  In this part of the tutorial, each of our simulations will contain a constant number of particles, *N*, have a constant volume, *V*, and be at a fixed temperature, *T*, so these are called 'NVT' simulations. 
+The best way to learn how to use DL_MONTE is by applying it to a simple system, in this case determining the thermal behaviour of a Lennard-Jones solid.  This part of the tutorial is directly analagous to Tutorial 1, except now we shall be using Monte Carlo to simulate our Lennard-Jones material instead of Molecular Dynamics.  This will hopefully help highlight the differences in their respective approaches to this problem.  In this part of the tutorial, each of our simulations will contain a constant number of particles, *N*, have a constant volume, *V*, and be at a fixed temperature, *T*, so these are called 'NVT' simulations. 
 
-The purpose of this part of the tutorial is to introduce some of the basic commands and file formats that are used by DLMONTE. DLMONTE requires at least 3 input files: FIELD, CONFIG and CONTROL files and we will discuss each of these in turn.
+The purpose of this part of the tutorial is to introduce some of the basic commands and file formats that are used by DL_MONTE. DL_MONTE requires at least 3 input files: FIELD, CONFIG and CONTROL files and we will discuss each of these in turn.
 
 CONFIG
 ------
@@ -36,7 +36,7 @@ The CONFIG file describes the initial configuration of our system before the sim
     0 0 0.125                      # And so on until all atoms are defined 
    ......
 
-The first line of the file gives a short title to describe what system the file is showing, it is not read by DLMONTE so could be anything the author wishes.  The second line shows two numbers, the first relates to how any inputs for the file are read by DLMONTE and the second describes the format of the coordinates of each object in the system.  Lines 3-5 describe the three dimensions of our system: x, y and z.  In this case, our system is a cube with sides of length 11.7452 Angstroms.  The *NUMMOL* line specifies how many different types of molecule we have in our system followed by the number of each type present.  In this case, we have one type of molecule and there is only one of it in our system.  The molecule's name and the number of atoms it contains are stated on the following line.  In this case, our molecule is called 'lj' and contains 512 Lennard-Jones particles and can only have up to 512 particles in it. The rest of the file describes the name and position of every particle present in the system in the form:
+The first line of the file gives a short title to describe what system the file is showing, it is not read by DL_MONTE so could be anything the author wishes.  The second line shows two numbers, the first relates to how any inputs for the file are read by DL_MONTE and the second describes the format of the coordinates of each object in the system.  Lines 3-5 describe the three dimensions of our system: x, y and z.  In this case, our system is a cube with sides of length 11.7452 Angstroms.  The *NUMMOL* line specifies how many different types of molecule we have in our system followed by the number of each type present.  In this case, we have one type of molecule and there is only one of it in our system.  The molecule's name and the number of atoms it contains are stated on the following line.  In this case, our molecule is called 'lj' and contains 512 Lennard-Jones particles and can only have up to 512 particles in it. The rest of the file describes the name and position of every particle present in the system in the form:
 
 .. code-block:: html
    
@@ -47,7 +47,7 @@ The first line of the file gives a short title to describe what system the file 
 CONTROL
 -------
  
-The CONTROL file is where you set all the conditions that you want your calculation to obey in DLMONTE. The CONTROL file in this tutorial is given below:
+The CONTROL file is where you set all the conditions that you want your calculation to obey in DL_MONTE. The CONTROL file in this tutorial is given below:
 
 .. code-block:: html
    :linenos:
@@ -63,13 +63,13 @@ The CONTROL file is where you set all the conditions that you want your calculat
     print           1000                   # Print statistics every 'print' moves to the output file
     stack           1000                   # Number of moves over which average values are calculated
     sample coord   10000                   # How often to print configurations to ARCHIVE.000
-    revconformat dlmonte                   # REVCON file (the final configuration) is in DLMONTE CONFIG format
+    revconformat DL_MONTE                   # REVCON file (the final configuration) is in DL_MONTE CONFIG format
     archiveformat dlpoly4                  # Sets the format for the ARCHIVE.000/HISTORY.000/TRAJECTORY.000 files
     move atom 1 100                        # Move atoms called 'LJ' with a weight of 100
     LJ core
-    start                                  # Tells DLMONTE to begin the calculation
+    start                                  # Tells DL_MONTE to begin the calculation
 
-The first line, as in our CONFIG file, is simply a title to describe the system that this CONTROL file belongs to.  *finish* tells DLMONTE that there are no conditions that need to be immediately stated.  Line 3 describes a combination of four 'seeds' from which the initial configuration is based ('grown').  The lines beginning with *nbrlist* and *maxnonbondnbrs* are used by DLMONTE to optimise its performance.  The line below these specifies what the temperature of our system is going to be, in Kelvin.  *steps* allows you to set how long the simulation will last by specifying how many steps you want it to take, where a step is one Monte Carlo move proposal and outcome.  Equilibration is how many steps at the beginning of the simulation that are needed for the system to reach equilibrium.  Lines 9-13 allow you to adjust the format of the outputs of DLMONTE.  The *move atom* line states that we want a Monte Carlo move to represent moving a particle in our system from one position to another.  In our case, our particles are called 'LJ', corresponding to the name of the atoms in the CONFIG file.  The key feature of the CONTROL file is that DLMONTE will not do anything unless told to do so (*N.B.* While this gives DLMONTE great flexibility it means also means that it may be possible to ask DLMONTE to perform ill-defined calculations). 
+The first line, as in our CONFIG file, is simply a title to describe the system that this CONTROL file belongs to.  *finish* tells DL_MONTE that there are no conditions that need to be immediately stated.  Line 3 describes a combination of four 'seeds' from which the initial configuration is based ('grown').  The lines beginning with *nbrlist* and *maxnonbondnbrs* are used by DL_MONTE to optimise its performance.  The line below these specifies what the temperature of our system is going to be, in Kelvin.  *steps* allows you to set how long the simulation will last by specifying how many steps you want it to take, where a step is one Monte Carlo move proposal and outcome.  Equilibration is how many steps at the beginning of the simulation that are needed for the system to reach equilibrium.  Lines 9-13 allow you to adjust the format of the outputs of DL_MONTE.  The *move atom* line states that we want a Monte Carlo move to represent moving a particle in our system from one position to another.  In our case, our particles are called 'LJ', corresponding to the name of the atoms in the CONFIG file.  The key feature of the CONTROL file is that DL_MONTE will not do anything unless told to do so (*N.B.* While this gives DL_MONTE great flexibility it means also means that it may be possible to ask DL_MONTE to perform ill-defined calculations). 
 
 FIELD
 -----
@@ -93,15 +93,15 @@ The FIELD file contains a full description of the interatomic potentials present
     LJ core  LJ core lj   1.0 1.0    # Defines the interaction between two LJ atoms 
     CLOSE                            # This ends the FIELD file once all interaction are described
     
-Like with the other input files, the first line is a title which describes the system being described by the file.  *CUTOFF* states the maximum distance between two particles that DLMONTE will calculate the interaction energy between them, if the distance between two particles is greater than this, then the interaction energy is neglible and ignored by DLMONTE.  The cutoff is defined as 2.5 :math:`\sigma` by convention.  The *UNITS* line tells DLMONTE what units of energy you want to use, in DLMONTE, you can choose between electron volts (eV), kJmol\ :sup:`-1` \, kJ, kcal or 'internal'.  Internal units are the simplest units for the program to use and for DLMONTE, this is 10 J mol\:sup:`-1`.  Sometimes, a CONFIG file can specify several possible configurations, so *NCONFIGS* tells DLMONTE how many configurations are present in the associated CONFIG file.  In our case (and all future cases), there is only one configuration in the CONFIG file. The line beginning with ATOMS simply states how many different atoms are present in the CONFIG file.  In our case, there is only one (the 'LJ' in the CONFIG).  The number stated on this line must match the number of atom types present in the CONFIG file.  The next line describes all the different atom types in the form:
+Like with the other input files, the first line is a title which describes the system being described by the file.  *CUTOFF* states the maximum distance between two particles that DL_MONTE will calculate the interaction energy between them, if the distance between two particles is greater than this, then the interaction energy is neglible and ignored by DL_MONTE.  The cutoff is defined as 2.5 :math:`\sigma` by convention.  The *UNITS* line tells DL_MONTE what units of energy you want to use, in DL_MONTE, you can choose between electron volts (eV), kJmol\ :sup:`-1` \, kJ, kcal or 'internal'.  Internal units are the simplest units for the program to use and for DL_MONTE, this is 10 J mol\:sup:`-1`.  Sometimes, a CONFIG file can specify several possible configurations, so *NCONFIGS* tells DL_MONTE how many configurations are present in the associated CONFIG file.  In our case (and all future cases), there is only one configuration in the CONFIG file. The line beginning with ATOMS simply states how many different atoms are present in the CONFIG file.  In our case, there is only one (the 'LJ' in the CONFIG).  The number stated on this line must match the number of atom types present in the CONFIG file.  The next line describes all the different atom types in the form:
 
 .. code-block:: html
 
    NAME core mass charge
 
-In our case, we have only one atom type, called 'LJ' of mass = 1.0 and no charge.  *FINISH* tells DLMONTE that all the atom types have been defined and it can move onto the next lines.  Lines 11 and 12 describe all the interactions present in the system, *VDW* tells DLMONTE how many different interactions are present in the system.  The line(s) after this list each interaction between all relevant atom types. In our case we only have one interaction that is between two of our 'LJ' atoms that is described by a Lennard-Jones ('lj') potential.  For the Lennard-Jones potential, one must give a value for both :math:`\epsilon` and :math:`\sigma`, in this case, :math:`\epsilon = 1.0` eV and :math:`\sigma = 1.0` Angstroms.  Other potentials may require a different number of constants to be defined, these are tabulated in the DLMONTE manual.
+In our case, we have only one atom type, called 'LJ' of mass = 1.0 and no charge.  *FINISH* tells DL_MONTE that all the atom types have been defined and it can move onto the next lines.  Lines 11 and 12 describe all the interactions present in the system, *VDW* tells DL_MONTE how many different interactions are present in the system.  The line(s) after this list each interaction between all relevant atom types. In our case we only have one interaction that is between two of our 'LJ' atoms that is described by a Lennard-Jones ('lj') potential.  For the Lennard-Jones potential, one must give a value for both :math:`\epsilon` and :math:`\sigma`, in this case, :math:`\epsilon = 1.0` eV and :math:`\sigma = 1.0` Angstroms.  Other potentials may require a different number of constants to be defined, these are tabulated in the DL_MONTE manual.
 
-For more information on these files, refer to the DLMONTE manual in 'this directory'.
+For more information on these files, refer to the DL_MONTE manual in 'this directory'.
 
 Exercise 1)
 -----------
@@ -121,7 +121,7 @@ As you may recall, a key part of Monte Carlo simulations is sampling over all po
 Outputs
 ^^^^^^^
 
-A successful DLMONTE calculation will produce a number of output files:
+A successful DL_MONTE calculation will produce a number of output files:
 
 * OUTPUT.000 contains details of the simulation, statistics, running time, or errors if the calculation failed.
 * REVCON.000 contains the final configuration in the format specified
@@ -150,7 +150,7 @@ Remember, you can use the 'collate temperature and plot' script to plot the syst
 Exercise 2)
 -----------
 
-So far in this course, we have assumed that the system has reached equilibrium with its surroundings, *i.e.* that the system has reached its most thermodynamically stable state with minimal net exchange of energy with its surroundings.  This concept of 'equilibration' is incredibly important to Monte Carlo (and many other computational modelling techniques) as it ensures reproducibility of results.  If we start from an arbitrary initial state with a given set of parameters, the first stage of the calculation will be establishing equilibrium, with the output during this period being of little use and should be omitted from any statistical analysis of the output.  In DLMONTE (and DLPOLY) we account for this period of time using the 'equilibration' parameter in the CONTROL file.  This states the point at which output data is included in any statistical analysis.  This 'equilibration time' will be different for every system with a given set of initial parameters and is usually estimated during preliminary analysis of the data.
+So far in this course, we have assumed that the system has reached equilibrium with its surroundings, *i.e.* that the system has reached its most thermodynamically stable state with minimal net exchange of energy with its surroundings.  This concept of 'equilibration' is incredibly important to Monte Carlo (and many other computational modelling techniques) as it ensures reproducibility of results.  If we start from an arbitrary initial state with a given set of parameters, the first stage of the calculation will be establishing equilibrium, with the output during this period being of little use and should be omitted from any statistical analysis of the output.  In DL_MONTE (and DLPOLY) we account for this period of time using the 'equilibration' parameter in the CONTROL file.  This states the point at which output data is included in any statistical analysis.  This 'equilibration time' will be different for every system with a given set of initial parameters and is usually estimated during preliminary analysis of the data.
 
 One way of determining when a system has reached equilibrium is by plotting the time evolution of total energy over the course of the simulation, which is what you will now do.
 
@@ -197,7 +197,7 @@ In this part of the tutorial, we will again be looking at the phase transition o
    print           1000                     
    stack           1000                     
    sample coord   10000                     
-   revconformat dlmonte                     
+   revconformat DL_MONTE                     
    archiveformat dlpoly4                    
    move atom 1 100                          
    LJ core
@@ -259,7 +259,7 @@ Figure 2 shows the phase diagram for the Lennard-Jones system.  *N.B.* Don't be 
 Conclusions:
 ============
 
-After this session, you should now be familiar with the input/output files of DLMONTE as well as running calculation with the program.  You have demonstrated its use by running simulations on a simple Lennard-Jones solid system and confirmed that it shows thermodynamic behaviour consistent with real materials.  You have compared the results from Monte Carlo and Molecular Dynamics techniques and understood the differences between them.  You should also have an appreciation for the possible types of Monte Carlo moves that can be proposed, depending on the constraints of our simulation and the differences between them.  In the next session, we will move onto simulations under the :math:`\mu`\VT (Grand Canonical) ensemble, where the total number of particles in the system is not constant.
+After this session, you should now be familiar with the input/output files of DL_MONTE as well as running calculation with the program.  You have demonstrated its use by running simulations on a simple Lennard-Jones solid system and confirmed that it shows thermodynamic behaviour consistent with real materials.  You have compared the results from Monte Carlo and Molecular Dynamics techniques and understood the differences between them.  You should also have an appreciation for the possible types of Monte Carlo moves that can be proposed, depending on the constraints of our simulation and the differences between them.  In the next session, we will move onto simulations under the :math:`\mu`\VT (Grand Canonical) ensemble, where the total number of particles in the system is not constant.
 
 Extensions (optional):
 ======================
@@ -267,13 +267,13 @@ Extensions (optional):
 1.  Move size update
 --------------------
 
-DLMONTE is able to automatically tune the size of attempted moves to optimise performance. By altering the maximum proposed move size during the simulation DLMONTE is able to optimise for the particular problem.
+DL_MONTE is able to automatically tune the size of attempted moves to optimise performance. By altering the maximum proposed move size during the simulation DL_MONTE is able to optimise for the particular problem.
 
 |think| If the proposed moves are very small, how does this affect the acceptance probability? |think| How would this affect the evolution of the system?
 
 |think| Similarly, what happens when proposed moves are very big?
 
-|action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_4' :math:`\rightarrow` 'extensions' :math:`\rightarrow` 'movesize' to find your standard DLMONTE input files for this part of the tutorial.  If you open the CONTROL file, you will notice three new lines::
+|action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_4' :math:`\rightarrow` 'extensions' :math:`\rightarrow` 'movesize' to find your standard DL_MONTE input files for this part of the tutorial.  If you open the CONTROL file, you will notice three new lines::
 
     maxatmdist   0.1               # Maximum atom displacement for a proposed move is 0.1 Angstroms
     acceptatmmoveupdate      100   # Adjust the maximum atom displacement every 100 steps
@@ -295,7 +295,7 @@ and updating the move size:
    
     do iter = 1 to max_iterations                                   # Start a 'do' loop that represents the entire simulation
     
-        DO MONTE CARLO STUFF                                        # Use DLMONTE to run the simulation as normal
+        DO MONTE CARLO STUFF                                        # Use DL_MONTE to run the simulation as normal
     
         if mod(iter / accept_atm_move_update) == 0                  # Execute the following lines if the step number is divisible by acceptatmmoveupdate
         
@@ -315,9 +315,9 @@ and updating the move size:
         
     enddo                                                           # End the 'do' loop, i.e. end the calculation
 
-The maximum displacement of an atom is controlled by the variable *max_atm_displacement*. The *max_atm_displacement* can not be known prior to the start of the simulation and the most suitable valuable changes as the simulation progresses. The acceptance ratio (ratio of accepted moves to all proposed moves) can determine the rate of equilibration and the efficiency of the sampling. For these reasons DLMONTE provides a mechanism for adjusting the value of *max_atm_displacement* as the simulation proceeds.
+The maximum displacement of an atom is controlled by the variable *max_atm_displacement*. The *max_atm_displacement* can not be known prior to the start of the simulation and the most suitable valuable changes as the simulation progresses. The acceptance ratio (ratio of accepted moves to all proposed moves) can determine the rate of equilibration and the efficiency of the sampling. For these reasons DL_MONTE provides a mechanism for adjusting the value of *max_atm_displacement* as the simulation proceeds.
 
-The initial values in the CONTROL file are the default values for DLMONTE but by altering these values you can improve the efficiency of sampling and minimise the equilbration time.
+The initial values in the CONTROL file are the default values for DL_MONTE but by altering these values you can improve the efficiency of sampling and minimise the equilbration time.
 
 |action| Vary each of these values and investigate how the energy equilibrates during the course of the simulation. Try and determine the set of values that give the most efficient equilibration.
 
@@ -351,7 +351,7 @@ where :math:`P_{ext}` is the external pressure acting on the system and :math:`\
 3. Neighbour lists
 ------------------
 
-DLMONTE uses neighbour list to improve the performance of the energy calculation, particles only have to check interactions with their neighbours, not every particle in the simulation.  This is particularly beneficial when particles retain the same numbers for the whole simulation or for any attempted moves. In DLMONTE, this functionality is described by the following lines in the CONTROL file::
+DL_MONTE uses neighbour list to improve the performance of the energy calculation, particles only have to check interactions with their neighbours, not every particle in the simulation.  This is particularly beneficial when particles retain the same numbers for the whole simulation or for any attempted moves. In DL_MONTE, this functionality is described by the following lines in the CONTROL file::
 
    nbrlist auto
 

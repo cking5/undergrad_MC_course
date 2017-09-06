@@ -56,7 +56,69 @@ where :math:`U(\mathbf{r}_1)` is the energy of the initial configuration, :math:
    :height: 75 px
    :scale: 25 %
 
-As in the previous sessions, we will be using DLMONTE run Monte Carlo calculations on the phase behaviour of our all-too-familiar Lennard-Jones material.  However, all of our calculations in this tutorial will be conducted under the Grand Canonical ensemble.  You will hopefully see that we can get a more accurate reflection of the phase behaviour of real systems than if we are restricted to either NVT or NPT ensembles.
+Now that you are more familiar with DL_MONTE and the general Monte Carlo method, it is now a good time to discussed the concept of detailed balance, which ensures that simulations sample from the Boltzmann distribution for thermodynamic systems:
+
+.. math::
+  
+   \frac{W(\mathbf{r}_1)}{W(\mathbf{r}_2)} = \exp {\Bigl(\frac{E_2 -E_1}{kT}\Bigr)}
+
+where :math:`E_{1/2}` is the energy of configuration :math:`\mathbf{r}_{1/2}`, respectively, *k* is the Boltzmann constant, *T* is the temperature of the system, and :math:`W(\mathbf{r}_{1/2})` is the 'weight' of :math:`\mathbf{r}_{1/2}`of The concept of statistical weight is crucial in thermodynamics and describes how likely a particular configuration is of being observed out of a hypothetically *large* number of replicas of that system.  For instance, consider the possible configurations of the gas molecules in this room, clearly, this system would have a high probability of being in a configuration where the gas molecules are evenly (on average) distributed throughout the volume of the room and so this configuration has a high weighting.  Yet, there is a configuration where every gas molecule sits in one corner of the room, this configuration is highly unlikely to be seen and so its weighting is very low.  The weight of a particular configuration is given by:
+
+.. math::
+
+   W(\mathbf{r}) = \frac{\exp {\Bigl(\frac{- E(\mathbf{r})}{kT}\Bigr)}}{\sum_{i} \exp {\Bigl(\frac{- E(\mathbf{r_{i}})}{kT}\Bigr)} }
+
+where :math:`E(\mathbf{r})` is the energy of a configuration :math:`\mathbf{r}`.  In MC simulations, the statistical weight of moving from a configuration, :math:`\mathbf{r_1}`, to a new configuration, :math:`\mathbf{r_2}`, is:
+
+.. math::
+
+   W(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \frac{W(\mathbf{r_1})P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)}{N}
+
+where :math:`W(\mathbf{r_1})` is the weight associated with :math:`\mathbf{r}_1`, :math:`P(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of moving from configuration :math:`\mathbf{r}_1` to :math:`\mathbf{r}_2` and *N* is the number of possible configurations. Figure 1 demonstrates the concept of statistical weights between moving from two configurations, A and B.  The corresponding weight of going from :math:`\mathbf{r}_2` back to :math:`\mathbf{r}_1` is:
+
+.. math::
+
+   W(\mathbf{r}_2 \rightarrow \mathbf{r}_1) = \frac{W(\mathbf{r_2})P(\mathbf{r}_2 \rightarrow \mathbf{r}_1)}{N}   
+
+.. figure:: images/Tut_4_images/weights.png
+   :align: center
+
+   **Figure 1:** The associated statistical weights of moving between two configurations, A and B.
+
+As you may recall, we use the Metropolis algorithm in this course to accept/reject proposed moves according to the following condition:
+
+.. math::
+
+         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ )
+
+
+The statistical weight of a configuration amongst a given disrtibution of configurations and the acceptance probability for a move define the condition of detailed balance:
+
+.. math::
+
+   W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)
+
+We can now obtain the required Boltzmann distribution from this condition by rearrangement:
+
+.. math::
+
+   \frac{W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)}{W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)} = \frac{P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)}{P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)} = exp \ {\Bigl(\frac{E_2 -E_1}{kT}\Bigr)} 
+
+This tells us that so long as we satisfy detailed balance, our system will be sampled according to the Boltzmann distribution and obey the rules of thermodynamics.  Though it is important to note that the condition of detailed balance is *sufficient* but *not necessary* to ensure that are system accurately reflects thermodynamics, *i.e.* there are simpler conditions one could employ that would ensure that our simulation obeys thermodynamics.  For instance, one could ensure that *balance* is achieved from the system which simply states that moving from one state to another state is the same for any initial and final state pairing, *i.e.*:
+
+.. math::
+   
+   \frac{\mathrm{d}W(\mathbf{r}_1)}{\mathrm{d}t} = 0
+
+However, detailed balance also ensures equilibrium between all states such that the trajectory from one configuration to another via several steps has the same probability as the reverse trajectory (See Figure 3).  This ensures the reliability of the sampling method used without requiring additional corrections in the calculations.
+
+.. figure:: images/Tut_2_images/detailed_balance3.png
+   :align: center
+
+   **Figure 3:** A visualisation of the difference between the condition of balance (left) and detailed balance (right) for a set of different configurations, A-H, in the configurational space of a system.
+
+
+As in the previous sessions, we will be using DL_MONTE run Monte Carlo calculations on the phase behaviour of our all-too-familiar Lennard-Jones material.  However, all of our calculations in this tutorial will be conducted under the Grand Canonical ensemble.  You will hopefully see that we can get a more accurate reflection of the phase behaviour of real systems than if we are restricted to either NVT or NPT ensembles.
 
 CONFIG
 ------
@@ -101,7 +163,7 @@ The CONTROL file will take the following form in this tutorial:
    print           1000            
    stack           1000            
    sample coord   10000            
-   revconformat dlmonte            
+   revconformat DL_MONTE            
    archiveformat dlpoly4            
                                    
    yamldata 1000                   
@@ -114,7 +176,7 @@ The CONTROL file will take the following form in this tutorial:
 
 The lines that switch on the neighbour lists: *nbrlist* and *maxnonbondnbrs* have been suspended in this session.  This is because the no benefit in maintaining the list under :math:`\mu`\VT ensembles.  We have also suspended atom translation moves for simplicity (though there is nothing in principle wrong with allowing these types of moves), and volume moves since we work under a constant-volume ensemble.  There are two new lines present: the first describes the insert/delete moves for these simulations, with the first number stating how many molecules are inserted/deleted, the second being the weight of the proposed moves and the third being the minimum insertion distance from any other molecules present in the system.
 
-In this calculation DLMONTE is using the activity *a* rather than the chemical potential :math:`\mu`, which are related according to: 
+In this calculation DL_MONTE is using the activity *a* rather than the chemical potential :math:`\mu`, which are related according to: 
 
 .. math::
 
@@ -187,9 +249,9 @@ Exercise 1)
 
 As in the previous session, we need to ensure that the system has reached its equilibrium state before output data is obtained.  As you may recall, the amount of time that the system needs to equilibrate is stated by the 'equilibration' line in the CONTROL file and is different for every simulated system.  It is standard procedure for the user (*i.e.* you!) to determine what value the equilibration is for their system before obtaining results, so this is what we shall do now.
 
-|action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_4' :math:`\rightarrow` 'main' :math:`\rightarrow` 'Equil'.  You will see the standard DLMONTE inputs files: CONFIG, CONTROL and FIELD, as well as some scripts for use later.  
+|action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_4' :math:`\rightarrow` 'main' :math:`\rightarrow` 'Equil'.  You will see the standard DL_MONTE inputs files: CONFIG, CONTROL and FIELD, as well as some scripts for use later.  
 
-|action| Run the DLMONTE calculations as you have done in the previous session (quick reminder of how to do it). Extract the time-sequence of the number of particles in the system by using the following script::
+|action| Run the DL_MONTE calculations as you have done in the previous session (quick reminder of how to do it). Extract the time-sequence of the number of particles in the system by using the following script::
 
   [user@node-sw-119 tut_4]  strip_gcmc.sh
 
@@ -225,10 +287,7 @@ Now that you know how to estimate the equilibration time needed for systems unde
 
 where *j* is the width of each bin used to generate the histogram.  You must specify the value of *j* in the command.  Though you are free to vary *j*, it is recommended that you set :math:`j = 1`.  Feel free to explore the effect *j* has on the shape of your histogram.
 
-|think| How does the shape of the histogram vary with:
-
- a) temperature
- b) activity  
+|think| How does the shape of the histogram vary with temperature?
 
 |think| One could, in principle, also choose to use an :math:`\mu`\PT ensemble, what kind of problems could arise when running simulations under this ensemble?
 
@@ -253,7 +312,7 @@ Like with the inclusion of volume moves in the previous session, the conditions 
   
    P_{\mathrm{acc}}([\mathbf{r}_1,N_1] \rightarrow [\mathbf{r}_2,N_2] ) = \min(1,  \frac{V\Lambda^{-3}}{N+1} \exp \{- \beta [E(\mathbf{r}_2,N_2) - E(\mathbf{r}_1,N_1)] \} )
 
-where :math:`V` is the system volume, :math:`\Lambda` represents the characteristic length scale of the system, :math:`E(\mathbf{r}_{1/2},N_{1/2})` are the configurational energies of the initial/final configurations, respectively and :math:`\beta = \frac{1}{kT}`.  The :math:`\frac{V\Lambda^{-3}}{N+1}` coefficient represents the fact that you can insert a particle anywhere in the system (inside a volume, *V*) but the likelihood of deleting that particle is :math:`\frac{1}{\mathrm{total\number\of\particles}} = \frac{1}{N + 1}`.  :math:`\Lambda` appears to conserve units and can be readily absorbed into the chemical potential.  Similarly, the acceptance criterion for particle deletions is given by:
+where :math:`V` is the system volume, :math:`\Lambda` represents the characteristic length scale of the system, :math:`E(\mathbf{r}_{1/2},N_{1/2})` are the configurational energies of the initial/final configurations, respectively and :math:`\beta = \frac{1}{kT}`.  The :math:`\frac{V\Lambda^{-3}}{N+1}` coefficient represents the fact that you can insert a particle anywhere in the system (inside a volume, *V*) but the likelihood of deleting that particle is :math:`\frac{1}{\mathrm{N_{tot}}} = \frac{1}{N + 1}`.  :math:`\Lambda` appears to conserve units and can be readily absorbed into the chemical potential.  Similarly, the acceptance criterion for particle deletions is given by:
 
 .. math::
 
