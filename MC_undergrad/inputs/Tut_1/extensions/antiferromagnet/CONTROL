@@ -1,4 +1,4 @@
-NPT simulation of Lennard-Jones fluid at critical point - aim to reproduce Fig. 2 in Wilding & Binder, Physica A 231 439 (1996) 
+2D Square Ising Model
 finish
 seeds 12 34 56 78               # Seed RNG seeds explicitly to the default                          
 nbrlist auto                    # Use a neighbour list to speed up energy calculations

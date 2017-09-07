@@ -1,0 +1,22 @@
+Force fields and bond constraints for for CH4 in a zeolite (use EPM2 for VDW)
+CUTOFF 12.0
+UNITS kcal
+NCONFIGS 1
+ATOMS 4
+Si core 28 0.0
+O_ core 16 0.0
+CH core 16 0.0
+Xe core 1 0.0
+MOLTYPES 2
+zeolite
+MAXATOM 584
+ch4
+ATOMS 1 1
+CH core  0.00000000 0.0000000 0.0000000
+FINISH
+VDW       4
+CH core       CH core       lj    0.31494  3.72
+O_ core       CH core       lj    0.224466  3.3765
+CH core      Xe core      12-6   16777216 0.0
+CH core      Si core      12-6   16777216 0.0
+CLOSE

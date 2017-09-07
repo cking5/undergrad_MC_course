@@ -1,12 +1,12 @@
 GCMC Lennard-Jones
    finish
    seeds 12 34 56 78               # Seed RNG seeds explicitly to the default
-   temperature     1.4283461511745 # Corresponds to T*=1.1876;
+   temperature     1.2 # Corresponds to T*=1.1876;
                                    # T(in K) = T* / BOLTZMAN
    #  nbrlist auto                    # Use a neighbour list to speed up
    #                                  # energy calculations
    #  maxnonbondnbrs 512              # Maximum number of neighbours in neighbour list
-   steps          10000            # Number of moves to perform in simulation
+   steps          1500000            # Number of moves to perform in simulation
    equilibration    0              # Equilibration period: statistics
                                    #are gathered after this period
    print           1000            # Print statistics every 'print' moves

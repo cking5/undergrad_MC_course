@@ -1,6 +1,6 @@
-2D Square Ising model 64x64 grid
+2D Square Ising Model 
 finish
-seeds 12 34 56 78               # Seed RNG seeds explicitly to the default                          
+ranseed               # Seed RNG seeds explicitly to the default                          
 nbrlist auto                    # Use a neighbour list to speed up energy calculations
 maxnonbondnbrs 4                # Maximum number of neighbours in neighbour list  
 verlet 0.0

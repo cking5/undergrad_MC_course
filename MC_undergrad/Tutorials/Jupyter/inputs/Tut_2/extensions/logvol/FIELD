@@ -1,0 +1,14 @@
+Lennard-Jones, 2.5*sigma cut-off, sigma = 1 angstrom, epsilon = 1 internal unit (10J/N_A)
+CUTOFF 2.5
+UNITS internal
+NCONFIGS 1
+ATOMS 1
+LJ core 1.0  0.0
+MOLTYPES 1
+lj
+MAXATOM 512
+FINISH
+VDW 1
+LJ core  LJ core lj   1.0 1.0 
+CLOSE
+

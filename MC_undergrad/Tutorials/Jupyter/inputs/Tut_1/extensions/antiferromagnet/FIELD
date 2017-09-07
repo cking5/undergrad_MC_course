@@ -10,8 +10,8 @@ ising
 MAXATOM 4096 
 FINISH
 VDW 3
-A core  A core hsqw  1.0 1.1 -1.0 
-B core  B core hsqw  1.0 1.1 -1.0 
-A core  B core hsqw  1.0 1.1 1.0 
+A core  A core hsqw  1.0 1.1 1.0 
+B core  B core hsqw  1.0 1.1 1.0 
+A core  B core hsqw  1.0 1.1 -1.0 
 CLOSE
 

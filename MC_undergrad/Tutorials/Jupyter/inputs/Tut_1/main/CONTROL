@@ -1,11 +1,11 @@
-2D Square Ising model 64x64 grid
+NPT simulation of Lennard-Jones fluid at critical point - aim to reproduce Fig. 2 in Wilding & Binder, Physica A 231 439 (1996) 
 finish
 seeds 12 34 56 78               # Seed RNG seeds explicitly to the default                          
 nbrlist auto                    # Use a neighbour list to speed up energy calculations
 maxnonbondnbrs 4                # Maximum number of neighbours in neighbour list  
 verlet 0.0
 temperature     2.269 # T* = \frac{2}{\ln(1+sqrt(2))} 
-steps          130000000            # Number of moves to perform in simulation 
+steps          10000000            # Number of moves to perform in simulation 
 equilibration    0              # Equilibration period: statistics are gathered after this period
 print           100000         # Print statistics every 'print' moves
 stats           100000
