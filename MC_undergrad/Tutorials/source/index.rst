@@ -11,11 +11,11 @@ Contents:
 .. toctree::
    :maxdepth: 1
 
+   tutorial0
    tutorial1
    tutorial2
    tutorial3
    tutorial4
-   tutorial5
 
 Indices and tables
 ==================

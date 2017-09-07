@@ -1,231 +1,395 @@
-.. _tutorial_2:
-
----------------------------------------------
-TUTORIAL 2: 2D Ising Model using Monte Carlo
----------------------------------------------
+------------------------------------
+TUTORIAL 2: Introduction to DL_MONTE
+------------------------------------
 
 Authors: Chris King, James Grant - r.j.grant@bath.ac.uk
 
-Introduction to Monte Carlo Methods
-===================================
+In the previous session, you were introduced to the ideas underlying Monte Carlo simulations by modelling a simple system and extracting useful output data which (hopefully) concurred with theory.  In this session, you will be formally introduced to the general Monte Carlo program, DL_MONTE, which you unknowingly used in the previous session to plot the thermodynamic behaviour of a simple Lennard-Jones material using Monte Carlo methods.  This is a direct analogy with the system studied in the first session using Molecular Dynamics and we will be able to compare the results from both methods in this session.  
 
-In the previous session, you were introduced to classical potential modelling simulation techniques, specifically Molecular Dynamics.  This provides useful background knowledge for the entirely different simulation technique that we will be discussing in this session: Monte Carlo. 
+Part 1: NVT Lennard-Jones material
+==================================
 
-This course aims to familiarise undergraduates undertaking courses in the physical sciences with an alternative simulation technique to more common techniques like Molecular Dynamics and Molecular Mechanics: Monte Carlo.  In this course you will be using a general-purpose Monte Carlo program called 'DL_MONTE' to simulate different phenomena in simple systems.  By the end of this course, you should have a solid understanding of fundamental aspects of Monte Carlo theory and applications as well as how to set up and run Monte Carlo simulations using DL_MONTE.  
+To start with, you will be given an overview of the program that you will use (or have used) for all Monte Carlo calculations throughout this course: DL_MONTE.  DL_MONTE is the name of a program which provides a general Monte Carlo framework for use in scientific research.  This program is a direct Monte Carlo analogue to the Molecular Dynamics program DLPOLY (which you used in Tutorial 1). 
 
-Monte Carlo (MC) is the name given to a set of numerical techniques that use random numbers to solve numerical problems.  The earliest known uses of this type of method was to estimate the value of :math:`\pi` (Buffon's Needle) and  Enrico Fermi used a similar method in the 1930s in his work studying neutron diffraction.  The MC technique used today was invented in the 1940s by scientists working on the Manhattan Project at the Los Alamos National Laboratory in the US.  Due to the sensitive nature of the work during World War 2, the technique was given the codename 'Monte Carlo' after the casino in Monaco where relatives of one of the scientists liked to frequent.
+The best way to learn how to use DL_MONTE is by applying it to a simple system, in this case determining the thermal behaviour of a Lennard-Jones solid.  This part of the tutorial is directly analagous to Tutorial 1, except now we shall be using Monte Carlo to simulate our Lennard-Jones material instead of Molecular Dynamics.  This will hopefully help highlight the differences in their respective approaches to this problem.  In this part of the tutorial, each of our simulations will contain a constant number of particles, *N*, have a constant volume, *V*, and be at a fixed temperature, *T*, so these are called 'NVT' simulations. 
 
-Every type of system has a number of possible states or configurations that it can be in, in thermodynamics, this range of states is described by the Boltzmann distribution.  This range of possible configurations define the 'configurational space' of a system.  The essence of MC methods is that you take a system in a given initial configuration and then use random numbers to randomly change the configuration of the system in some manner, whether it be displacing a particle by a small amount, changing the system volume or adding/removing particles from a system.  This general process is called 'proposing a move' in MC calculations.  The 'move' being changing the system from one configuration to another and so it essentially 'moves' the system to a different configuration in its configurational space.  However, whether or not we accept or reject the potential move depends on what type of sampling scheme is being used.  
+The purpose of this part of the tutorial is to introduce some of the basic commands and file formats that are used by DL_MONTE. DL_MONTE requires at least 3 input files: FIELD, CONFIG and CONTROL files and we will discuss each of these in turn.
 
-The most commonly-used method of sampling configurational space is the Metropolis Algorithm.  Its function is as follows:
+CONFIG
+------
 
-1. Randomly select a particle in the system and proposes a move to another configuration
-2. Calculate the energy of both the old and new configurations
-3. Apply the following condition:
+The CONFIG file describes the initial configuration of our system before the simulation begins.  A CONFIG file used in this tutorial is shown below:
 
-.. math::
+.. code-block:: html
+   :linenos:
 
-         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ )
+   Example 1: LJ NVT               # Title                      
+   0         0                     # Integers describing how the input is read in and the style of coordinates, respectively
+   11.7452  0.00000  0.00000       # These lines describe the dimensions of the system in terms of lattice vectors, with 'x y z' components, respectively
+   0.00000  11.7452  0.00000       # Since our system is 3D, we need three basis vectors to fully describe it
+   0.00000  0.00000  11.7452       # In this case, the system is a cube with sides of length 11.7452 Angstroms
+   NUMMOL 1 1                      # NUMMOL specifies the number of types of molecules followed by the number of each type. 
+   MOLECULE lj 512 512             # The molecule has 512 atoms/particles to initially and is limited to a maximum number of 512
+   LJ core                         # Now each particle is read in to the file, in the form: NAME core
+    0 0 0                          # x y z position in the system, the first particle is located at the origin
+   LJ core                         # And the second is located at x = 0, y = 0, z = 0.125
+    0 0 0.125                      # And so on until all atoms are defined 
+   ......
 
-where :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probability of accepting the move from the initial configuration, :math:`\mathbf{r}_1`, with an energy, :math:`E(\mathbf{r}_1)`, to the new configuration, :math:`\mathbf{r}_2`, with an energy, :math:`E(\mathbf{r}_2)`.  The function min() means that the smallest value in the brackets is chosen.  If the energy of the new configuration is less than that of the original, *i.e.* :math:`E(\mathbf{r}_2) < E(\mathbf{r}_1)`, then :math:`E(\mathbf{r}_2)-E(\mathbf{r}_1) < 0` and so :math:`\exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \  > 1` and so the move is accepted with :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = 1`.  If the new energy is greater than the energy of the original configuration, *i.e.* :math:`E(\mathbf{r}_2) > E(\mathbf{r}_1)`, then :math:`E(\mathbf{r}_2)-E(\mathbf{r}_1) > 0` and so :math:`\exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \  > 1` and the move is accepted with probability :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ < 1`.the relative energies associated with the two configurations.  To determine whether the move is accepted or rejected, the difference in the energy associated with both the initial and final configurations is calculated and measured against some defined acceptance criterion.  If the criterion is met then the move is accepted and the system changes its configuration, before the next move is proposed, otherwise the move is rejected and the system configuration does not change. A schematic representation of the MC process is shown in Figure 1.
+The first line of the file gives a short title to describe what system the file is showing, it is not read by DL_MONTE so could be anything the author wishes.  The second line shows two numbers, the first relates to how any inputs for the file are read by DL_MONTE and the second describes the format of the coordinates of each object in the system.  Lines 3-5 describe the three dimensions of our system: x, y and z.  In this case, our system is a cube with sides of length 11.7452 Angstroms.  The *NUMMOL* line specifies how many different types of molecule we have in our system followed by the number of each type present.  In this case, we have one type of molecule and there is only one of it in our system.  The molecule's name and the number of atoms it contains are stated on the following line.  In this case, our molecule is called 'lj' and contains 512 Lennard-Jones particles and can only have up to 512 particles in it. The rest of the file describes the name and position of every particle present in the system in the form:
 
-.. figure:: images/Tut_2_images/Metropolis_algorithm.png
-   :scale: 80%
-   :align: center
+.. code-block:: html
+   
+   NAME core
+   x y z
 
-   **Figure 1**: Proposing a move in Monte Carlo.  This diagram shows a 'step' in Monte Carlo simulations.
 
-|think| Even if the proposed move leads to a higher-energy configuration, there is still a non-zero probability of it being accepted! Why should this be the case?
+CONTROL
+-------
+ 
+The CONTROL file is where you set all the conditions that you want your calculation to obey in DL_MONTE. The CONTROL file in this tutorial is given below:
+
+.. code-block:: html
+   :linenos:
+  
+    NVT simulation of Lennard-Jones fluid  # Title
+    finish                                 # Needs to be here, some conditions must be placed before this word, but there aren't any in this case 
+    seeds 12 34 56 78                      # Sets the initial configuration
+    nbrlist auto                           # Use a neighbour list to speed up energy calculations (don't worry about this)
+    maxnonbondnbrs 512                     # Maximum number of neighbours in neighbour list
+    temperature     1.4283461511745        # Temperature of the system in Kelvin
+    steps          10000                   # Number of moves to perform over the course of the simulation
+    equilibration    0                     # Equilibration period: statistics are gathered after this period
+    print           1000                   # Print statistics every 'print' moves to the output file
+    stack           1000                   # Number of moves over which average values are calculated
+    sample coord   10000                   # How often to print configurations to ARCHIVE.000
+    revconformat DL_MONTE                   # REVCON file (the final configuration) is in DL_MONTE CONFIG format
+    archiveformat dlpoly4                  # Sets the format for the ARCHIVE.000/HISTORY.000/TRAJECTORY.000 files
+    move atom 1 100                        # Move atoms called 'LJ' with a weight of 100
+    LJ core
+    start                                  # Tells DL_MONTE to begin the calculation
+
+The first line, as in our CONFIG file, is simply a title to describe the system that this CONTROL file belongs to.  *finish* tells DL_MONTE that there are no conditions that need to be immediately stated.  Line 3 describes a combination of four 'seeds' from which the initial configuration is based ('grown').  The lines beginning with *nbrlist* and *maxnonbondnbrs* are used by DL_MONTE to optimise its performance.  The line below these specifies what the temperature of our system is going to be, in Kelvin.  *steps* allows you to set how long the simulation will last by specifying how many steps you want it to take, where a step is one Monte Carlo move proposal and outcome.  Equilibration is how many steps at the beginning of the simulation that are needed for the system to reach equilibrium.  Lines 9-13 allow you to adjust the format of the outputs of DL_MONTE.  The *move atom* line states that we want a Monte Carlo move to represent moving a particle in our system from one position to another.  In our case, our particles are called 'LJ', corresponding to the name of the atoms in the CONFIG file.  The key feature of the CONTROL file is that DL_MONTE will not do anything unless told to do so (*N.B.* While this gives DL_MONTE great flexibility it means also means that it may be possible to ask DL_MONTE to perform ill-defined calculations). 
+
+FIELD
+-----
+
+The FIELD file contains a full description of the interatomic potentials present in the system.  An example of a FIELD file used in this tutorial is shown below:
+
+.. code-block:: html
+   :linenos:
+   
+    Lennard-Jones                    # Title
+    CUTOFF 2.5                       # The maximum distance between two particles for which the interaction energy is calculated
+    UNITS internal                   # Set the units of energies, internal = 10 J mol^-1
+    NCONFIGS 1                       # Number of configurations described in the CONFIG file
+    ATOMS 1                          # Number of atom types in the system
+    LJ core 1.0  0.0                 # In this case there is one atom type called 'LJ' with mass = 1.0 and charge = 0.0
+    MOLTYPES 1                       # Number of molecule types in the system...
+    lj                               # ...called 'lj'...
+    MAXATOM 512                      # ...with a maximum number of 512 atoms
+    FINISH                           # Completes the list of atom and molecule types in the system
+    VDW 1                            # The number of potentials present in the system
+    LJ core  LJ core lj   1.0 1.0    # Defines the interaction between two LJ atoms 
+    CLOSE                            # This ends the FIELD file once all interaction are described
+    
+Like with the other input files, the first line is a title which describes the system being described by the file.  *CUTOFF* states the maximum distance between two particles that DL_MONTE will calculate the interaction energy between them, if the distance between two particles is greater than this, then the interaction energy is neglible and ignored by DL_MONTE.  The cutoff is defined as 2.5 :math:`\sigma` by convention.  The *UNITS* line tells DL_MONTE what units of energy you want to use, in DL_MONTE, you can choose between electron volts (eV), kJmol\ :sup:`-1` \, kJ, kcal or 'internal'.  Internal units are the simplest units for the program to use and for DL_MONTE, this is 10 J mol\:sup:`-1`.  Sometimes, a CONFIG file can specify several possible configurations, so *NCONFIGS* tells DL_MONTE how many configurations are present in the associated CONFIG file.  In our case (and all future cases), there is only one configuration in the CONFIG file. The line beginning with ATOMS simply states how many different atoms are present in the CONFIG file.  In our case, there is only one (the 'LJ' in the CONFIG).  The number stated on this line must match the number of atom types present in the CONFIG file.  The next line describes all the different atom types in the form:
+
+.. code-block:: html
+
+   NAME core mass charge
+
+In our case, we have only one atom type, called 'LJ' of mass = 1.0 and no charge.  *FINISH* tells DL_MONTE that all the atom types have been defined and it can move onto the next lines.  Lines 11 and 12 describe all the interactions present in the system, *VDW* tells DL_MONTE how many different interactions are present in the system.  The line(s) after this list each interaction between all relevant atom types. In our case we only have one interaction that is between two of our 'LJ' atoms that is described by a Lennard-Jones ('lj') potential.  For the Lennard-Jones potential, one must give a value for both :math:`\epsilon` and :math:`\sigma`, in this case, :math:`\epsilon = 1.0` eV and :math:`\sigma = 1.0` Angstroms.  Other potentials may require a different number of constants to be defined, these are tabulated in the DL_MONTE manual.
+
+For more information on these files, refer to the DL_MONTE manual in 'this directory'.
+
+Exercise 1)
+-----------
+
+The aim of this exercise is to mirror some of the exercises from the first session and will hopefully illustrate another way to model a Lennard-Jones solid.  In this case, we will simulate this system under 'NVT' conditions, with simulations at various temperatures in order to estimate the melting point of the solid.
+
+As you may recall, a key part of Monte Carlo simulations is sampling over all possible states of the system by 'moving' through configuration space, where a move is a change from an initial configuration to a new one.  The most intuitive move is translational moves which consist of physically moving an object from one set of coordinates to another (within reason).  But other types of moves are possible, depending on the type of ensemble used.  For instance, one can define a volume move, where the proposed move is changing the total system volume by altering the length scales of one or more dimensions of the system and (as we will see later in the course) one can also perform insert/delete and swap moves of objects.
+
+|think| What types of moves are possible in a system under these conditions?
 
 .. |think| image:: images/General/think.png
    :height: 100 px
    :scale: 25 %
 
-|think| What happens to the total number of accepted moves in a given simulation as we change the temperature?
+**instructions for running a calculation here**
 
-MC is a stochastic method, which means that the final state of the system cannot be predicted precisely based on the initial state and parameters, but through statistical analysis, reliable results can be obtained.  This contrasts with other techniques like molecular dynamics, which are deterministic, where starting in a known initial state should lead to the same (or similar) outcomes.  This distinction allows MC to be used in a variety of applications across the scientific community where deterministic techniques are ineffective, such as phase co-existence and criticality, adsorption, and development of solid-state defects [#f1]_.  Likewise, there are other instances where MC is much more inefficient than deterministic methods.
+Outputs
+^^^^^^^
 
-The relability of MC results depends upon the method used to sample the configurational space of the system, if our sampling is not representative of all the possible states that the system can exist in, then any results will be flawed.  In other words, if our sampling method returns the probability distribution we expect, then we know that are sampling method is reliable.  In thermodynamic systems, the probability distribution of available states is given by the Boltzmann distribution:
+A successful DL_MONTE calculation will produce a number of output files:
 
-.. math::
+* OUTPUT.000 contains details of the simulation, statistics, running time, or errors if the calculation failed.
+* REVCON.000 contains the final configuration in the format specified
+* PTFILE.000 contains statistics though will eventually be deprecated in favour of...
+* YAMLDAT.000 which contains statistics in the yaml format
+* ARCHIVE.000/HISTORY.000/TRAJECTORY.000 contains the trajectory in the specified format
 
-   W(\mathbf{r}) = \exp {\Bigl(\frac{E}{kT}\Bigr)} 
+In this exercise we will analyse the YAMLDAT.000 and visualise the trajectory files.  
+For your understanding of how the simulation proceeds it may nonetheless be useful to have some familiarity with the OUTPUT file.
 
-where :math:`W(\mathbf{r})` is the probability of being in a state of energy, also known as the statistical weight, *E*, at temperature, *T*, and *k* is the Boltzmann constant.  The ratio of Boltzmann distributions at two different energies, :math:`E_2` and :math:`E_1`, is known as the Boltzmann factor:
+*N.B.* The OUTPUT.000 of a successfully completed job will end with 'normal exit'.
 
-.. math::
-  
-   \frac{W(\mathbf{r}_1)}{W(\mathbf{r}_2)} = \exp {\Bigl(\frac{E_2 -E_1}{kT}\Bigr)}
-
-So if our sampling method yields the Boltzmann distribution, we know that our simulation accurately reflects real systems.  There are many possible ways one can sample the configurational space of a simulated system, the intuitive case is simple random sampling in that we move randomly from one configuration to another.  However, this process is only reliable in systems with a constant probability distribution of states as it does not take into account the respective weighting of a given configuration.  For example, it can under-represent a small number of configurations who contribute significantly to the overall state of the system.  In order to return the Boltzmann distribution, MC simulations enforce a condition known as *detailed balance*, which is a sufficient, but not necessary condition (*i.e.* there are simpler conditions one could apply that could still get the same distribution).  We will discuss detailed balance in more detail in later sessions. 
+The sequence of moves defines the 'trajectory' of the system in configurational space.  It is important to understand that this is not the same as the physical motion of individual objects in the system, or the system itself, which is the traditional definition of a trajectory. There is no 'time' in Monte Carlo simulations; nothing *in* the system evolves with time.  This limits Monte Carlo to simulation of static systems only, so it cannot determine any dynamic properties of the system, like diffusion coefficients or rates of reaction.  Any reference to time in this context refers to the computational time required to complete the calculation.
  
-Having discussed the concepts behind MC simulation methods, it is time to demonstrate how to apply them to a physical system.  This tutorial will be centred on a MC simulation of the magnetic properties of solid materials.
-
-Ising Model of Magnetism
-========================
-
-An application where MC is more effective than deterministic methods is simulating the magnetic behaviour of solid state materials.  
-
-Our simulation will be based on a 2D Ising model, which describes the macroscopic magnetic behaviour of a solid material as a result of the relative orientation of electron spins within the crystal lattice of a material.  As you may recall, each electron has an intrinsic 'spin'.  In simple terms, the spin of an electron can be thought of as a magnetic moment, with two possible orientations: 'up' and 'down'.  If an external magnetic field is applied to a material, then the spins of the electrons within the material can interact with this field and the material can give the material its own magnetic field based on how the electron spins are aligned relative to each other.  
-
-This idea helps define several classes of magnetic behaviour: diamagnetism, paramagnetism, ferromagnetism and antiferromagnetism.  Diamagnetism occurs in materials whose electron spins preferentially anti-align with an external field, creating a magnetic field in the material that opposes and repels the external field.  Paramagnetism is where the spins preferentially align with an external field, generating a (weak) magnetic field in the material which supports the external field.  Ferromagnetism has some similarity to paramagnetism in that, under an external field, electron spins preferentially align with the external field, however, unlike paramagnetic materials, the material will continue to generate its own magnetic field even when the external field that initiated it is removed.  At *T* = 0 K, all spins will be aligned and remain unchanged, so the material will never lose its magnetic field.  However, in reality, the material will lose its magnetic field over time as every-so-often, a spin will flip due to the effect of finite temperature.  Ferromagnetism is the strongest type of observed magnetism and ferromagnetic materials form the common magnets used in day-to-day life.  Antiferromagnetism is similar to ferromagnetism in that an antiferromagnetic material will generate its own magnetic field without the presence of any external fields, however, the electron spins preferentially anti-align with each other, leading to a 'checkerboard' pattern shown in Figure 1b.  Figure 1 gives the ideal configurations for a ferromagnetic and antiferromagnetic material under an external field as a 2D lattice of colour-coded spins.
-
-.. figure:: images/Tut_2_images/ferro_antiferro.png
-   :align: center
-
-   **Figure 2:** (a) A 2D schematic of (a) a ferromagnetic material and (b) an antiferromagnetic material under an external magnetic field.  Yellow indicates the spins that are aligned with the field and purple are spins that are anti-aligned.
-
-In the 2D Ising model, our material is represented by a 2D square grid of lattice sites, where each site represents an electron spin in the solid structure.  The main factor influencing whether a given site's spin is aligned with its neighbours in a crystal, and hence what type of magnetism the material displays, is its exchange energy, *E*, which in the Ising model is given by:
-
-.. math::
-
-	E = -J \sum_{<i,j>} s_{i}s_{j}
-
-where *J* is the coupling constant between adjacent sites in a given material and :math:`s_{i/j}` is the spin of the at site i/j in the lattice, respectively.  The <...> here mean the sum goes over the nearest neighbours of the atom in position (i,j), *i.e.* over the sites at positions  (i-1, j), (i+1, j), (i, j-1) and (i, j+1) only.  All physical systems will try to minimise their energy, and so the sign of *J* determines whether spin alignment (ferromagnetism) or anti-alignment (antiferromagnetism) is favourable.  If :math:`J > 0`, then if :math:`\sum_{<i,j>} s_{i}s_{j} > 0`, *i.e.* the spin of the i\ :sup:`th` \ site is aligned with the majority of its neighbours, :math:`E < 0` and so the alignment of spins is energetically favourable and will be the preferred state of the system.  If :math:`J < 0`, then the anti-alignment of the i\ :sup:`th` \ site is energetically favourable.
-
-The exchange energy can be thought of as an activation barrier for an atom to change its spin depending on the spins of its neighbours.  This means that, like with any physical system with an energy barrier, spontaneous thermal fluctuations can overcome the barrier and cause some sites to flip their spin, with the likelihood of flipping a spin increasing as temperature increases.  Therefore, ferromagnetic materials only show domains at temperatures under a specific critical, or Curie, temperature, :math:`T_{c}`.  Above this point, ferromagnetic materials lose their ability to retain magnetisation without requiring an external magnetic field.
-
-For more information on the Ising model, consult either [#f2]_ or [#f3]_.
-
-|think| Write an expression for the energy difference between the initial and final configurations, :math:`E(\mathbf{r}_2) - E(\mathbf{r}_1)`, for the 2D Ising model.
-
-Exercise 1)
------------
-
-The aim of this exercise is to familiarise yourself with running MC calculations on a simple 2D Ising model of a ferromagnetic material. The material is represented by a 64x64 2D lattice of sites, each representing a spin in the solid structure.  Initially, all sites in the grid are aligned.  We will be running a MC simulation to look at how the overall spin alignment (magnetisation) and energy of the system evolves with both time and temperature.  The MC process for the 2D Ising model is outlined below:
-
-1. Select a site on the lattice and propose a 'move' by inverting its spin.
-2. Calculate the energy before, :math:`E_1`, and after the proposed move, :math:`E_2`, using equation x.
-3. Accept the move using the Metropolis condition:
-
-.. math::
-
-         P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E_2 - E_1}{kT}\Bigr) \ )
-
-4. Move to the next site and repeat.
-
-Actions 1-3 define a MC 'step', which are used to define how long a calculation will run.  *N.B.* a step is counted regardless of whether the propsed move was accepted or rejected.  The program selects sites systematically in the lattice, starting in one corner and going row-by-row until the end of the lattice is reached, so (on average) each site will have had one proposed move.  This defines a MC 'sweep' of the system.  Once one sweep is complete, the program will begin a new sweep and stop when it has completed a set number of MC steps.  
-
-|action| Go to 'inputs' :math:`\rightarrow` 'Tut_2' :math:`\rightarrow` 'main' :math:`\rightarrow` 'Init' and copy the contents into a new directory in your domain.  The CONFIG file displays the initial configuration of your system, the CONTROL file allows you to set the parameters and constraints for your simulation, and the FIELD file describes all interactions in the system (although they may look slightly different to the ones presented in the last session, they perform the same roles).  Though we will be going through the function of these in detail in the next session, it may be helpful to have a look and familiarise yourself with their contents.  
+|action| Repeat the calculation at different temperatures.  Create a new folder for each new temperature and copy the CONFIG, CONTROL and FIELD files from one of your other calculations into it.  Change the temperature value in the CONTROL file to a value of your choosing (HINT: you won't need to go above ++).  Run this calculation in the same manner as described above.  Do this for a range of temperatures.
 
 .. |action| image:: images/General/action.png
-   :scale: 5 %
+   :scale: 5 % 
 
-**instructions for running a simulation**
+|think| Identify the melting temperature of the system both by visualising the trajectories of your system at each temperature and by plotting energy vs temperature in the same way that you did in Tutorial 1.  Are the melting temperatures identified in your simulations consistent?
 
-As the calculation runs and completes, you will notice several new files appear in your directory.  These have similar roles to their counterparts from the previous session and will be explained in detail in the next tutorial.  The files you will be using throughout this tutorial will be the OUTPUT.000 and the PTFILE.000.  
+Remember, you can use the 'collate temperature and plot' script to plot the system energy against temperature, once you have run calculations at a variety of temperatures.
 
-Now that you have all the output data you could possibly need from this calculation, we shall proceed with extracting the following data from the OUTPUT.000 and PTFILE.000: the time evolution of magnetisation and the distribution of the magnetisations over the course of the simulation.  
-
-|action| You will need to employ the 'analysis.sh' script by running the following command in the directory containing your output files::
-
-	analysis.sh
-	
-The command should complete almost instantly and you should see several new files: M_seq.dat, M_hist.dat, M_hist.png, and M.dat.  These files contain: time-evolution of magnetisation, a normalised magnetisation frequency distribution (in both data and plotted forms), and the average magnetisation at the temperature of the simulation, respectively.
-
-We shall now proceed to run the calculation at higher temperatures to obtain the temperature-dependence of the magnetisation.  
-
-|action| Create a new directory for each temperature and copy the CONFIG, CONTROL and FIELD files from your first calculation to them.
-  
-|action| Open the CONTROL file in each and increase the temperature to a value of your choosing (HINT: you will not need to go above 5.0 K!) and run the calculations.    
-
-|action| Once each calculation is complete, run the analysis script in the same manner as above to obtain the relevant data.
-
-|action| From your calculations, plot magnetisation vs temperature for the system.  |think| Comment on the shape of your graph and estimate the critical temperature, :math:`T_{c}`, from it. *N.B.* it may be wise to run calculations at several temperatures around the perceived critical point.  
-
-For any general 2D lattice where coupling along rows and along columns are equal, :math:`T_{c}` is given by:
-
-.. math::
-
-	T_{c} = \frac{2}{\ln(1+\sqrt{2})} \approx 2.269
-
-|think| Does your estimation of :math:`T_{c}` agree with that predicted by the above equation? Account for any observed discrepancies.
-
-|action| Plot the time-evolution of magnetisation (on the same graph) for:
-
-	a) :math:`T < T_{c}`
-	b) :math:`T \approx T_c`
-	c) :math:`T > T_{c}`
-
-|think| Comment on any differences between in these plots and rationalise them using your knowledge of ferromagnetism.  Do the results correspond to the predictions of the Ising model?
-
-|action| Also, have a look at the magnetisation histogram for some of your temperatures and describe how the distribution of magnetisations appears to change with temperature.  |think| Does this behaviour support the rest of your output data?
-
-Extension:
-----------
-
-You have seen what happens as the system is heated, but you can also look at the magnetisation upon cooling the system from a state above the critical temperature to a state below the critical temperature. 
-
-|action| Take the REVCON from one of your simulations where :math:`T>T_{c}`, copy it into a new directory and rename it 'CONFIG'.  Also copy the CONTROL and FIELD files into this directory and change the temperature to :math:`\sim 10^{-3} K`.  Then run the simulation.  
-
-|action| Once the simulation is complete, use the analysis.sh script to extract the output data and plot the time evolution of magnetisation.  Record your observations.  
-|think| Does this agree with magnetic behaviour predicted by the Ising model? 
-
-|think| How does this compare with the time evolution at :math:`T > T_{c}`?
+|think| How does your estimate(s) of the melting point compare with that based on your Molecular Dynamics calculation?
 
 Exercise 2)
 -----------
 
-This exercise will demonstrate the stochastic nature of MC simulations as well as how the Metropolis algorithm produces reliable and accurate results for this simple 2D Ising model.
+So far in this course, we have assumed that the system has reached equilibrium with its surroundings, *i.e.* that the system has reached its most thermodynamically stable state with minimal net exchange of energy with its surroundings.  This concept of 'equilibration' is incredibly important to Monte Carlo (and many other computational modelling techniques) as it ensures reproducibility of results.  If we start from an arbitrary initial state with a given set of parameters, the first stage of the calculation will be establishing equilibrium, with the output during this period being of little use and should be omitted from any statistical analysis of the output.  In DL_MONTE (and DLPOLY) we account for this period of time using the 'equilibration' parameter in the CONTROL file.  This states the point at which output data is included in any statistical analysis.  This 'equilibration time' will be different for every system with a given set of initial parameters and is usually estimated during preliminary analysis of the data.
 
-We have seen what happens when we start the simulations from a fixed starting configuration (all spins aligned), but what will happen when we start from a random configuration? 
+One way of determining when a system has reached equilibrium is by plotting the time evolution of total energy over the course of the simulation, which is what you will now do.
 
-|action| Create a new directory and copy the CONFIG, CONTROL and FIELD files from one of your previous calculations into it. 
+|action| Navigate to one of your completed calculations and run the following command:: 
 
-|action| Replace the line starting with 'seeds' to just 'ranseed'.  
+   [user0@node-sw-039 tutorial1]$ strip_yaml.sh energy
 
-|action| Make a note of the temperature and run the calculation and use analysis.sh on the output data as you have done in the previous exercise. 
+|think| From these energy plots, how can you tell whether the system has equilibrated? Estimate the equilibration time for your system.
 
-|action| Run this calculation on these input files several times (WARNING: remember to copy the output files into separate directories each time before running the calculation again!) and plot the time-evolution of the magnetisation for each calculation.  Each of these calculations represent running the simulation on a different, randomly-generated initial configuration at the same temperature.  
+|think| How do you think the equilibration time will change with temperature? Explain your answer.
 
-|think| How does the final magnetisation of each random initial configuration compare with each other, *i.e.* does the initial configuration have an effect on the outcome of the simulation? 
+As you may recall, detailed balance is a sufficient condition for ensuring that our simulation reflects the laws of thermodynamics.  It is generally stated as:
 
-Extension:
-----------
+.. math::
 
-|action| For one of your calculations, find out the initial configuration by typing the following into the command line::
+   W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)
 
-	grep seeds OUTPUT.000
+where :math:`W(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the statistical weight of moving from an initial configuration, :math:`\mathbf{r}_1` to a final configuration, :math:`\mathbf{r}_2` (and vice-versa for :math:`W(\mathbf{r}_2 \rightarrow \mathbf{r}_1)`) and :math:`P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2)` is the probabilty of accepting the move from :math:`\mathbf{r}_1` to :math:`\mathbf{r}_2` (and similarly for :math:`P_{\mathrm{acc}}(\mathbf{r}_2 \rightarrow \mathbf{r}_1)`).
 
-Running this command should return a line containing four integer numbers.  
+|think| Describe the condition for detailed balance in this series of simulations, where only translational moves are permitted.
 
-|action| Create a new directory and copy the CONFIG, CONTROL and FIELD files into it.  
+Part 2: NPT Lennard-Jones Material:
+===================================
 
-|action| Go to your CONTROL file and replace 'ranseed' with 'seeds int1 int2 int3 int4' where 'int' are the numbers from the command line.
+Exercise 3)
+-----------
 
-|action| Re-run the calculation with this CONTROL file and plot the magnetisation vs time.  |think| Compare this with the equivalent \'ranseed\' calculation data.  
+In this part of the tutorial, we will again be looking at the phase transition of a Lennard-Jones solid, but this time, the each simulation will be run such that they contain a fixed number of particles, *N*, have a constant pressure, *P*, and are at constant temperature, *T*, these are known as 'NPT' simulations.  This allows not only translational moves of individual particles, but also volume moves (system expansion/contraction).
 
-|think| What do you notice about the magnetisation evolution in the two calculations? Does this confirm that the stochastic nature of Monte Carlo methods can produce reliable results?
+|action| Navigate to the folder 'NPT', you will find the same input files that you used in the previous exercises, if you have a look at these, you will see that the CONFIG and FIELD files are unchanged but the CONTROL has a few modifications:
+
+.. code-block:: html
+   :linenos:
+  
+   NPT simulation of Lennard-Jones material 
+   finish                                    
+   seeds 12 34 56 78                        
+   nbrlist auto                             
+   maxnonbondnbrs 512                       
+   temperature     1.4283461511745          
+   pressure     0.0179123655568             # pressure of the system
+   steps          10000                     
+   equilibration    0                       
+   print           1000                     
+   stack           1000                     
+   sample coord   10000                     
+   revconformat DL_MONTE                     
+   archiveformat dlpoly4                    
+   move atom 1 100                          
+   LJ core
+   move volume cubic linear 1               # Move volume, the system is cubic, linearly scaled with a weight of 1
+   start
+
+Specifically, with the additional lines::
+
+   move volume cubic linear 1     
+
+which is the instruction to introduce volume moves as *move volume*, *linear* refers to how volume is sampled, and the inclusion of pressure::
+
+   pressure     0.0179123655568
+
+In these calculations, volume moves are attempted less frequently than translational moves, this is because typically volume moves are more computationally intensive than single atom moves. |think| Why do you think that this is the case?
+
+|action| Run the calculation at the same temperature values you used in exercise 1.  Ensure that the system has equilibrated at each instance.  Remember to create a new directory for each new temperature. 
+
+|action| Examine the evolution of your system at each temperature and compare them with their equivalent NVT calculation. |think| Rationalise any observed differences between the behaviours of the NVT and NPT systems.
+
+|think| Estimate the melting point of the NPT simulations of the Lennard-Jones material.  |think| How does it compare with the value you obtained from the NVT calculations?
+
+|action| Plot the total energy of the system as a function of temperature under for both NPT and NVT calculations on the same graph.  |think| How do they compare with each other? (HINT: think about the different types of energy transfer that could be taking place in each case.)
+
+|action| Additionally, by using the command::
+
+   strip_yaml.sh volume
+
+you can extract the time evolution of the system volume from YAMLDATA.000.  |think| Plot this data for each temperature on the same graph.  |think| What trends do you observe as you change the temperature? Is this what you expect from a real material? 
+
+|action| For at least one of your calculations, plot the volume and energy time evolutions on the same graph. |think| Are there any similarities between the shape of the two plots?
+
+Exercise 4)
+-----------
+
+You have found the melting point of the system by varying the temperature while keeping the pressure constant.  Now you will examine how the melting point of the system changes with both temperature and pressure.  You can readily change the pressure of the system by altering the associated value in the CONTROL file.  |action| Navigate to the 'changep' directory, open the CONTROL file, and change the pressure (*N.B.* values anywhere between x and y should be sufficient).  |action| Create a new directory for each pressure, and within each of these directories, run the calculation at various temperatures and |think| estimate the melting point of the system at each pressure.  
+
+|think| How does the melting point vary with both temperature and pressure? Is this consistent with the behaviour of real materials?
+
+*N.B.* make sure to copy the strip_yaml script into each new directory you make.
+
+.. figure:: images/Tut_2_images/LJ_phase_diagram.png
+   :align: center
+
+   **Figure 2**: Phase diagram of the Lennard-Jones system, plotting (reduced) temperature against (reduced) density [#f1]_.
+
+Figure 2 shows the phase diagram for the Lennard-Jones system.  *N.B.* Don't be put off by the fact that density is shown instead of pressure, they are equivalent in our system.
+
+|action| Compare your results with Figure 2.  
+
+|think| Why do you not see the coexistence of solid and liquid phases in your system?
+
+*N.B.* If you want to know about reduced units, try the following sources: (1)_, (2)_
+
+.. _(1): http://www4.ncsu.edu/~franzen/public_html/CH795N/modules/ar_mod/comp_output.html,  
+
+.. _(2): http://cbio.bmt.tue.nl/pumma/index.php/Manual/ReducedUnits
 
 Conclusions:
 ============
 
-Now that you have reached the end of this tutorial, you will hopefully have a better understanding of the Monte Carlo method and the motivation for its use. You have simulated the magnetic properties of a 2D material based on the Ising model and obtained:
-
-- the temperature-dependence of magnetisation
-- the evolution of magnetisation with time
-- validation of the stochastic nature of Monte Carlo methods
-
-In the next tutorial, you will be introduced to a general Monte Carlo program called DL_MONTE and use it to model the thermal properties of a Lennard-Jones material.
+After this session, you should now be familiar with the input/output files of DL_MONTE as well as running calculation with the program.  You have demonstrated its use by running simulations on a simple Lennard-Jones solid system and confirmed that it shows thermodynamic behaviour consistent with real materials.  You have compared the results from Monte Carlo and Molecular Dynamics techniques and understood the differences between them.  You should also have an appreciation for the possible types of Monte Carlo moves that can be proposed, depending on the constraints of our simulation and the differences between them.  In the next session, we will move onto simulations under the :math:`\mu`\VT (Grand Canonical) ensemble, where the total number of particles in the system is not constant.
 
 Extensions (optional):
 ======================
 
-1. Antiferromagnetism:
-----------------------
+1.  Move size update
+--------------------
 
-So far, you have looked at how the magnetic behaviour of a ferromagnetic system changes over time and temperature, but there is another possible type of magnetism called antiferromagnetism, where the sign of the coupling constant, *J*, changes sign.  This means that it is now favourable for the spin of one site to be opposed to the spin of its neighbours, resulting in a preferred 'checkerboard' pattern of magnetisation on the 2D lattice.  You can investigate the magnetic behaviour in this case using the 2D Ising model.
+DL_MONTE is able to automatically tune the size of attempted moves to optimise performance. By altering the maximum proposed move size during the simulation DL_MONTE is able to optimise for the particular problem.
 
-**script for changing the signs of the coupling constants in the FIELD file and create a new directory for the initial calculation**
+|think| If the proposed moves are very small, how does this affect the acceptance probability? |think| How would this affect the evolution of the system?
 
-|action| Now investigate the magnetic properties of this material in a manner similar to what you have done in this tutorial.
+|think| Similarly, what happens when proposed moves are very big?
 
-|think| Compare your results of the antiferromagnet with the ferromagnet.  Rationalise any observed differences in terms of exchange energy and alignment of spins.
+|action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_4' :math:`\rightarrow` 'extensions' :math:`\rightarrow` 'movesize' to find your standard DL_MONTE input files for this part of the tutorial.  If you open the CONTROL file, you will notice three new lines::
 
-.. Link to next tutorial
+    maxatmdist   0.1               # Maximum atom displacement for a proposed move is 0.1 Angstroms
+    acceptatmmoveupdate      100   # Adjust the maximum atom displacement every 100 steps
+    acceptatmmoveratio    0.37     # The desired ratio of successful translational moves to all attempted translational moves
+
+There are two key parts of code that are needed for this performance optimisation-generating the move:
+
+.. code-block:: html
+   :linenos:
+   
+   atm = random_number * natoms + 1                           # Randomly select a particle in the system
+   delta_pos = (random_number - 0.5) * max_atm_displacement   # Change its position by moving it a random distance that is less than the maximum
+   pos_new = pos_old + delta_pos                              # Define the new position of the particle 
+
+and updating the move size: 
+
+.. code-block:: html
+   :linenos:
+   
+    do iter = 1 to max_iterations                                   # Start a 'do' loop that represents the entire simulation
+    
+        DO MONTE CARLO STUFF                                        # Use DL_MONTE to run the simulation as normal
+    
+        if mod(iter / accept_atm_move_update) == 0                  # Execute the following lines if the step number is divisible by acceptatmmoveupdate
+        
+            ratio = accepted_moves / attempted_moves                # The acceptance ratio at this point in the simulation
+            
+            if ratio > accept_atm_move_ratio                        # Execute the following line if the ratio is greater than acceptatmmoveratio
+            
+                max_atm_displacement = max_atm_displacement * 1.05  # Increase the maxatmdist value by a factor of 1.05
+                
+            else                                                    # Execute the following line if the ratio is less than acceptatmmoveratio
+            
+                max_atm_displacement = max_atm_displacement * 0.95  # Decrease the maxatmdist value by a factor of 0.95
+                
+            endif                                                   # End the if statement at line number = 9
+            
+        endif                                                       # End the if statement at line number = 5
+        
+    enddo                                                           # End the 'do' loop, i.e. end the calculation
+
+The maximum displacement of an atom is controlled by the variable *max_atm_displacement*. The *max_atm_displacement* can not be known prior to the start of the simulation and the most suitable valuable changes as the simulation progresses. The acceptance ratio (ratio of accepted moves to all proposed moves) can determine the rate of equilibration and the efficiency of the sampling. For these reasons DL_MONTE provides a mechanism for adjusting the value of *max_atm_displacement* as the simulation proceeds.
+
+The initial values in the CONTROL file are the default values for DL_MONTE but by altering these values you can improve the efficiency of sampling and minimise the equilbration time.
+
+|action| Vary each of these values and investigate how the energy equilibrates during the course of the simulation. Try and determine the set of values that give the most efficient equilibration.
+
+You can use::
+
+   grep displacement OUTPUT.000
+
+or the script::
+
+   disp.sh
+
+to print the initial values and the final value of the maximum displacement(s).
+
+*N.B.*  This functionality should be used to identify the optimum move size for sampling a given system.  Beware using this functionality in a calculation as it can break detailed balance.
+
+|think| How could the condition of detailed balance be broken by using this functionality?
+
+2. Detailed balance for volume moves
+------------------------------------
+
+Establishing the condition for detailed balance in a simulation where volume moves are enabled is more complicated than for translational moves alone.  To maintain detailed balance with volume moves, the acceptance probability for a move from an initial configuration of particles in positions :math:`\mathbf{r}_1` in a volume, :math:`V_1` to a new configuration, :math:`\mathbf{r}_2` with a volume :math:`V_2`, changes in the Metropolis algorithm to:
+
+.. math::
+
+   P_{\mathrm{acc}}([\mathbf{r}_{1},V_1] \rightarrow [\mathbf{r}_2,V_2]) = \min(1, \exp \{- \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1) + P_{ext}(V_{2}-V_{1}) - N \beta^{-1} \ln(V_{2} / V_{1}) ] \} )
+
+where :math:`P_{ext}` is the external pressure acting on the system and :math:`\beta = \frac{1}{kT}`.  In most simulations, the positions of every object in a system is expressed as dimensionless, scalable position coordinates, which scale with the size of the system such that when the volume changes, the *relative* positions of the objects in the new size remains the same, but the distance between objects in the system goes up or down depending on whether the volume has increased or decreased.  However, the number of possible configurations of a system is determined in part by its total volume, such that a larger system will have more possible configurations.  This must be accounted with the :math:`N \beta^{-1} \ln(V_{2} / V_{1})` term.  The other terms in the exponent come from the probability distributions of isothermal-isobaric systems, where the :math:`P_{ext}(V_{2}-V_{1})` represents the work done *on* the system by an external pressure.  For more information on detailed balance for volume moves, see [#f2]_.
+
+|think| When performing volume moves on molecular systems, the position of the centre of mass of the molecule is scaled, as opposed to the positions of all of its constituent atoms, rationalise this caveat. (Hint: what would happen to all the chemical bonds if the atom positions were scaled instead? How would this affect the likelihood of accepting the move?) 
+
+3. Neighbour lists
+------------------
+
+DL_MONTE uses neighbour list to improve the performance of the energy calculation, particles only have to check interactions with their neighbours, not every particle in the simulation.  This is particularly beneficial when particles retain the same numbers for the whole simulation or for any attempted moves. In DL_MONTE, this functionality is described by the following lines in the CONTROL file::
+
+   nbrlist auto
+
+This rebuilds a particle's neighbourlist whenever necessary.  The size of the neighbour list is determined by::
+
+   maxnonbondnbrs <int>
+
+This determines the memory allocated for each particles neighbourlist.  The size will be determined by the size of your system, its density and the interaction cut-off as specified in the FIELD file.  
+
+|action| Go to the directory named 'helloneighbour' and view the CONTROL file, you will notice that it looks identical to the CONTROL files that you have already seen, with one extra line called::
+
+   verlet <float>  
+
+|action| Run calculations using different values for this parameter and see how they affect the time taken to complete the calculation.  You can extract this for a given calculation by using the command::
+
+   grep "total elapsed" OUTPUT.000
+
+or alternatively the script::
+
+   time.sh
+
+|think| How does tuning the *verlet* parameter affect the duration of this calculation? |think| Why might this be the case?
+
+4. Logarithmic Volume Moves
+---------------------------
+
+The 'linear' keyword in the 'volume move' line of the NPT CONTROL file represents how the volume will change, in this case, on a linear scale.  However, one can also set the volume change to a logarithmic scale, this can be more efficient in simulations where large volume changes are required to representatively sample configuration space. 
+
+|action| Create a new directory and copy the CONFIG, CONTROL and FIELD files and the strip_yaml script from one of your completed calculations into it. Open the CONTROL file and change the keyword *linear* to  *log* in the volume move command.  This changes the way in which the the move is generated; logarithmic rather than linear, and is often claimed to be more efficient.  The acceptance criterion for the move in the Metropolis algorithm is now:
+
+.. math::
+
+  P_{\mathrm{acc}}([\mathbf{r}_{1},V_1] \rightarrow [\mathbf{r}_2,V_2]) = \min(0,  ( N + 1 ) \ln(\frac{V_{2}}{V_{1}}) - \beta [U(\mathbf{r}_2) - U(\mathbf{r}_1) + P_{ext}(V_{2}-V_{1})])
+         
+|action| Extract the time evolution of the volume for this calculation and compare it with the volume evolution from the equivalent linear calculation.  |think| Rationalise the observed differences.
 
 .. rubric:: Footnotes
 
-.. [#f1] S. Mordechai (Editor), *Applications of Monte Carlo Method in Science and Engineering* [Online]. Available: https://www.intechopen.com/books/applications-of-monte-carlo-method-in-science-and-engineering 
-.. [#f2] J. V. Selinger, "Ising Model for Ferromagnetism" in *Introduction to the Theory of Soft Matter: From Ideal Gases to Liquid Crystals*.  Cham: Springer International Publishing, 2016, pp. 7-24.
-.. [#f3] N. J. Giordano, *Computational Physics*.  Upper Saddle River, N.J.: Prentice Hall, 1997. 
+.. [#f1] B. L. Holian, "Shear viscosities away from the melting line: A comparison of equilibrium and nonequilibrium molecular dynamics", *J. Chem. Phys.*, **78**, 11, pp. 5147-5150, 1983.
+
+.. [#f2] M. S. Shell, "Monte Carlo simulations in other ensembles"[online], University of California at Santa Barbara: Engineering, 2012.  Available from: https://engineering.ucsb.edu/~shell/che210d/Monte_Carlo_other_ensembles.pdf
