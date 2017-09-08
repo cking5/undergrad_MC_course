@@ -1,4 +1,4 @@
-NVT simulation of Lennard-Jones fluid
+NVT simulation of Lennard-Jones
 finish
 yamldata 1000
 seeds 12 34 56 78               # Seed RNG seeds explicitly to the default

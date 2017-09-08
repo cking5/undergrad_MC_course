@@ -83,6 +83,7 @@ The conservation of total energy (*E* = constant) is critical to maintaining phy
   KE = \frac{1}{2}m\langle c^{2} \rangle = \frac{3}{2}RT
 
 where *m* is the total mass of all the particles, *R* is the molar gas constant, and *c* is the speed of the particle (in an arbitrary direction), the <...> represent taking the average value of the variable inside them.  In this case, the average is conducted over all particles in the system.
+
 In our model (and many other classical models), the total potential energy of the system is the sum of the interaction energies of each particle with the rest of the system: 
 
 .. math::

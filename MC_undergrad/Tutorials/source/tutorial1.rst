@@ -156,7 +156,7 @@ Extension:
 
 You have seen what happens as the system is heated, but you can also look at the magnetisation upon cooling the system from a state above the critical temperature to a state below the critical temperature. 
 
-|action| Take the REVCON from one of your simulations where :math:`T>T_{c}`, copy it into a new directory and rename it 'CONFIG'.  Also copy the CONTROL and FIELD files into this directory and change the temperature to :math:`\sim 10^{-3} K`.  Then run the simulation.  
+|action| Take the REVCON from one of your simulations where :math:`T > T_{c}`, copy it into a new directory and rename it 'CONFIG'.  Also copy the CONTROL and FIELD files into this directory and change the temperature to :math:`\sim 10^{-3} K`.  Then run the simulation.  
 
 |action| Once the simulation is complete, use the analysis.sh script to extract the output data and plot the time evolution of magnetisation.  Record your observations.  
 |think| Does this agree with magnetic behaviour predicted by the Ising model? 
@@ -211,7 +211,28 @@ In the next tutorial, you will be introduced to a general Monte Carlo program ca
 Extensions (optional):
 ======================
 
-1. Antiferromagnetism:
+1. Extended Ising Model
+-----------------------
+
+This (arguably) simplistic 2D square Ising model can be used to estimate other properties of a material.  For instance, we can estimate a value for the heat capacity at constant volume, :math:`C_v`, from system magnetisation, *M*:
+
+.. math::
+
+   C_v = \frac{\mathrm{d}E}{\mathrm{d}T} = \frac{<E^2> - <E>^2}{kT^2}
+
+where :math:`<E^2>` is the average of the squared energy and :math:`<E>^2` is the average of the energy squared (make sure that you understand the difference between the two!).  In this exercise, you can use the data from your calculations to estimate :math:`C_v` and create a graph of how the :math:`C_v` of the system changes with temperature.
+
+|action| Navigate to one of your calculations and use the following script to extract the values of the energy values and calculate :math:`<E^2>` and :math:`<E>^2` from your calculations and from these, estimate a value for :math:`C_v` at the given temperature:
+
+**script to extract the average energy and energy values from the OUTPUT file and calculate the required values**
+
+|action| Run the above script for each of your temperatures.  
+
+|action| Once you have values for :math:`C_v` for all of your temperatures, plot :math:`C_v` vs *T*.
+
+|think| Are there any notable features in the shape of your plot? Does anything interesting happen at your estimated value of :math:`T_c`?
+
+2. Antiferromagnetism:
 ----------------------
 
 So far, you have looked at how the magnetic behaviour of a ferromagnetic system changes over time and temperature, but there is another possible type of magnetism called antiferromagnetism, where the sign of the coupling constant, *J*, changes sign.  This means that it is now favourable for the spin of one site to be opposed to the spin of its neighbours, resulting in a preferred 'checkerboard' pattern of magnetisation on the 2D lattice.  You can investigate the magnetic behaviour in this case using the 2D Ising model.

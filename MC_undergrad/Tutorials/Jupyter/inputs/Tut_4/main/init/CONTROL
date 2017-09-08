@@ -1,4 +1,4 @@
-GCMC simulation of CO2 in zeolite
+GCMC simulation of ch4 in zeolite
 use gaspressure   		# use the partial pressure in GCMC moves (as opposed to chemical potential)
 use orthonormal              
 finish

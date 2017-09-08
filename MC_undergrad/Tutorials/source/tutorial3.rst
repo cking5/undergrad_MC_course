@@ -20,7 +20,7 @@ Ensembles are very important in thermodynamics and statistical mechanics, where 
 - *T*: system temperature kept constant
 - *E*: the total energy of the system kept constant
 
-For example, 'NVT' means that the total number of particles, total volume and temperature are kept constant (known as the Canonical Ensemble) and 'NPT' means that the total number of particles, total pressure and temperature are kept constant (a.k.a. the Gibbs ensemble).  Figure 1 displays physical representations of the different ensembles that are used in thermodynamics.
+For example, 'NVT' means that the total number of particles, total volume and temperature are kept constant (known as the Canonical Ensemble) and 'NpT' means that the total number of particles, total pressure and temperature are kept constant (a.k.a. the Gibbs ensemble).  Figure 1 displays physical representations of the different ensembles that are used in thermodynamics.
 
 .. figure:: images/Tut_3_images/Statistical_Ensembles.png
    :align: center
@@ -44,7 +44,7 @@ In fact, the limitations that we encountered in the previous sessions are readil
 
 Removing the constraint of having fixed particle number allows several new Monte Carlo move types to be defined, the most fundamental being insert/delete moves, where the proposed move adds or removes a particle from the system, respectively.  Other move types like swaps and replacements can be defined in terms of insert/delete moves.
 
-The total energy, :math:`E` of the system performing an insert/delete move is defined as:
+The total energy of the system performing an insert/delete move, :math:`E(\mathbf{r}_2,N_2)`, is defined as:
 
 .. math::
 
@@ -91,7 +91,6 @@ As you may recall, we use the Metropolis algorithm in this course to accept/reje
 
          P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ )
 
-
 The statistical weight of a configuration amongst a given disrtibution of configurations and the acceptance probability for a move define the condition of detailed balance:
 
 .. math::
@@ -115,10 +114,9 @@ However, detailed balance also ensures equilibrium between all states such that 
 .. figure:: images/Tut_3_images/detailed_balance3.png
    :align: center
 
-   **Figure 3:** A visualisation of the difference between the condition of balance (left) and detailed balance (right) for a set of different configurations, A-H, in the configurational space of a system.
+   **Figure 3:** A visualisation of detailed balance (right) for a set of different configurations, A-H, in the configurational space of a system.
 
-
-As in the previous sessions, we will be using DL_MONTE run Monte Carlo calculations on the phase behaviour of our all-too-familiar Lennard-Jones material.  However, all of our calculations in this tutorial will be conducted under the Grand Canonical ensemble.  You will hopefully see that we can get a more accurate reflection of the phase behaviour of real systems than if we are restricted to either NVT or NPT ensembles.
+As in the previous sessions, we will be using DL_MONTE run Monte Carlo calculations on the phase behaviour of our all-too-familiar Lennard-Jones material.  However, all of our calculations in this tutorial will be conducted under the Grand Canonical ensemble.  You will hopefully see that we can get a more accurate reflection of the phase behaviour of real systems than if we are restricted to either NVT or NpT ensembles.
 
 CONFIG
 ------
@@ -174,7 +172,7 @@ The CONTROL file will take the following form in this tutorial:
    #  move volume cubic linear 1   
    start                           
 
-The lines that switch on the neighbour lists: *nbrlist* and *maxnonbondnbrs* have been suspended in this session.  This is because the no benefit in maintaining the list under :math:`\mu`\VT ensembles.  We have also suspended atom translation moves for simplicity (though there is nothing in principle wrong with allowing these types of moves), and volume moves since we work under a constant-volume ensemble.  There are two new lines present: the first describes the insert/delete moves for these simulations, with the first number stating how many molecules are inserted/deleted, the second being the weight of the proposed moves and the third being the minimum insertion distance from any other molecules present in the system.
+The lines that switch on the neighbour lists: 'nbrlist' and 'maxnonbondnbrs' have been suspended in this session.  This is because the no benefit in maintaining the list under :math:`\mu`\VT ensembles.  We have also suspended atom translation moves for simplicity (though there is nothing in principle wrong with allowing these types of moves), and volume moves since we work under a constant-volume ensemble.  There are two new lines present: the first describes the insert/delete moves for these simulations, with the first number stating how many molecules are inserted/deleted, the second being the weight of the proposed moves and the third being the minimum insertion distance from any other molecules present in the system.
 
 In this calculation DL_MONTE is using the activity *a* rather than the chemical potential :math:`\mu`, which are related according to: 
 
@@ -182,35 +180,9 @@ In this calculation DL_MONTE is using the activity *a* rather than the chemical 
 
   a = \exp \Bigl(\frac{\mu}{RT}\Bigr)
 
-where *R* is the gas constant.  This means that small changes to :math:`\mu` can have a large impact on the activity (assuming that *T* is constant).  For instance, the table below gives some example values of *a* for a given value of :math:`\mu` at *T* = 1.43 K:
+where *R* is the gas constant.  This means that small changes to :math:`\mu` can have a large impact on the activity (assuming that *T* is constant).  In your inputs folder you will notice a file called 'activity-chempotential.txt', which lists values of :math:`\mu` and *a* in the first and second columns, respectively at *T* = 1.43 K:
 
-+--------------------------------+--------+
-| :math:`\mu` / Jmol\ :sup:`-1`  | *a*    |
-+================================+========+
-| -50.0                          | 0.0148 |
-+--------------------------------+--------+ 
-| -40.0                          | 0.0345 |
-+--------------------------------+--------+
-| -30.0                          | 0.0801 |
-+--------------------------------+--------+
-| -20.0                          | 0.1858 |
-+--------------------------------+--------+
-| -10.0                          | 0.4311 |
-+--------------------------------+--------+
-| 0.00                           | 1.0000 |
-+--------------------------------+--------+
-| 10.0                           | 2.3199 |
-+--------------------------------+--------+
-| 20.0                           | 5.3819 |
-+--------------------------------+--------+
-| 30.0                           | 12.485 |
-+--------------------------------+--------+
-| 40.0                           | 28.964 |
-+--------------------------------+--------+
-| 50.0                           | 67.194 |
-+--------------------------------+--------+
-
-|action| Plot *a* vs :math:`\mu` for the table above to see how small changes in :math:`\mu` can have a big impact on *a*
+|action| Plot the data in 'activity-chempotential.txt'.
 
 .. |action| image:: images/General/action.png
    :scale: 5 %
@@ -240,7 +212,7 @@ The FIELD file looks almost identical to the ones from the previous session:
    LJ core  LJ core lj   1.0 1.0  
    CLOSE                          
 
-In the NVT and NPT cases all the particles were declared to be part of the same molecule, now each particle is a molecule in its own right.  This distinction is made to simplify the calculation under :math:`\mu`\VT ensembles.  In principle, atoms can be added or removed from a molecule however, for simplicity, we shall insert or delete whole molecules rather than parts of molecules.  Since we have a single Lennard-Jones particle in each molecule we simply position the particle at the 'origin' of the molecule.
+In the NVT and NpT cases all the particles were declared to be part of the same molecule, now each particle is a molecule in its own right.  This distinction is made to simplify the calculation under :math:`\mu`\VT ensembles.  In principle, atoms can be added or removed from a molecule however, for simplicity, we shall insert or delete whole molecules rather than parts of molecules.  Since we have a single Lennard-Jones particle in each molecule we simply position the particle at the 'origin' of the molecule.
 
 Remember, there must be correspondence between the CONFIG and FIELD files, *i.e.* the number of molecule and atom types should be the same in both files.  Also remember that the number of interactions stated in the 'VDW' line must correspond to the number of interactions defined between it and the 'CLOSE' statement.
 
@@ -255,7 +227,7 @@ As in the previous session, we need to ensure that the system has reached its eq
 
   [user@node-sw-119 tut_4]  strip_gcmc.sh
 
-When using 'fixed *N*' ensembles, like NVT and NPT, the simplest way to infer the equilibration of a system is to plot the system energy over the course of the simulation and define the equilibration as the number of steps in the simulation needed for the energy to fluctuate around some constant value.  Under the GC ensembles, this does not apply, instead we plot *N* over the course of the simulation and find the number of steps required for *N* to become roughly constant.
+When using 'fixed *N*' ensembles, like NVT and NpT, the simplest way to infer the equilibration of a system is to plot the system energy over the course of the simulation and define the equilibration as the number of steps in the simulation needed for the energy to fluctuate around some constant value.  Under the GC ensembles, this does not apply, instead we plot *N* over the course of the simulation and find the number of steps required for *N* to become roughly constant.
 
 |action| By plotting the time-evolution of *N* for each of your simulations, increase the number of steps to determine when the system reaches equilibrium.
 
@@ -298,7 +270,7 @@ where *j* is the width of each bin used to generate the histogram.  You must spe
 Conclusions:
 ============
 
-In this session, you have been introduced to the Grand Canonical (GC) ensemble, where the total number of particles in the system can vary but the chemical potential of the system remains constant.  You have demonstrated the use of the GC ensemble by investigating the thermal behaviour of a simple Lennard-Jones system and appreciated theadvantages of using GC over 'fixed *N*' ensembles.  In the next session, we will apply the GC ensemble to the physical system of methane adsorption onto the surface of a zeolite in order to predict the conditions for ideal adsorption.
+In this session, you have been introduced to the Grand Canonical (GC) ensemble, where the total number of particles in the system can vary but the chemical potential of the system remains constant.  You have demonstrated the use of the GC ensemble by investigating the thermal behaviour of a simple Lennard-Jones system and appreciated the advantages of using GC over 'fixed *N*' ensembles.  In the next session, we will apply the GC ensemble to the physical system of methane adsorption onto the surface of a zeolite in order to predict the conditions for ideal adsorption.
 
 Extensions (optional):
 ======================

@@ -1,4 +1,4 @@
-Lennard-Jones starting configuration rho = 0.125; particles are molecules, not atoms
+GCMC Lennard-Jones starting configuration; particles are molecules, not atoms
          0         1
   10.0000000000000000  0.0000000000000000  0.0000000000000000
   0.0000000000000000  10.0000000000000000  0.0000000000000000

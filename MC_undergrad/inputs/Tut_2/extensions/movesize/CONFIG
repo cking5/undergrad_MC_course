@@ -1,4 +1,4 @@
-Lennard-Jones sc starting configuration rho = 0.316
+NVT Lennard-Jones starting configuration
          0         0
   11.7452  0.00000  0.00000
   0.00000  11.7452  0.00000
