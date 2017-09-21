@@ -1,0 +1,26 @@
+GCMC Lennard-Jones
+   finish
+   seeds 12 34 56 78               # Seed RNG seeds explicitly to the default
+   temperature     1.2 # Corresponds to T*=1.1876;
+                                   # T(in K) = T* / BOLTZMAN
+   #  nbrlist auto                    # Use a neighbour list to speed up
+   #                                  # energy calculations
+   #  maxnonbondnbrs 512              # Maximum number of neighbours in neighbour list
+   steps          1500000            # Number of moves to perform in simulation
+   equilibration    0              # Equilibration period: statistics
+                                   #are gathered after this period
+   print           1000            # Print statistics every 'print' moves
+   stack           1000            # Size of blocks for block averaging to obtain statistics
+   sample coord   10000            # How often to print configurations to ARCHIVE.000
+   revconformat dlmonte            # REVCON file is in DLMONTE CONFIG format
+   archiveformat dlpoly4           # ARCHIVE.000/HISTORY.000/TRAJECTORY.000 format
+                                   # In this case: HISTORY.000 in DLPOLY4 style
+   yamldata 1000
+   move gcinsertmol 1 100 0.7      # Perform insertion/removal moves for lj, a weight 100, with a min. distance of 0.7 from atoms for inserts
+   lj  0.06177                     # Use an activity of 0.06177
+   #  move atom 1 512                 # Move atoms with a weight of 512
+   #  LJ core
+   #  move volume cubic linear 1      # Move volume, box is cubic,
+   #                                # linear scaling with a weight of 1
+   start
+
