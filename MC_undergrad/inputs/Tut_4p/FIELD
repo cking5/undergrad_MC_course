@@ -1,0 +1,16 @@
+semi-grand LJ field file
+CUTOFF 2.5
+UNITS internal
+NCONFIGS 1
+ATOMS 2
+A core 1.0  0.0
+B core 1.0  0.0
+MOLTYPES 1
+lj
+MAXATOM 2048
+FINISH
+VDW 3
+A core  A core lj   1.0 1.0
+B core  B core lj   1.0 1.1
+A core  B core lj   1.0 1.05
+CLOSE

@@ -3,13 +3,13 @@ CUTOFF 2.5
 UNITS internal
 NCONFIGS 1
 ATOMS 1
-LJ core 1.0  0.0
+A core 1.0  0.0
 MOLTYPES 1
 lj
 ATOMS 1 1
-LJ core 0.0 0.0 0.0 
+A core 0.0 0.0 0.0 
 FINISH
 VDW 1
-LJ core  LJ core lj   1.0 1.0 
+A core  A core lj   1.0 1.0 
 CLOSE
 
