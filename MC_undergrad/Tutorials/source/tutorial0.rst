@@ -10,7 +10,7 @@ Molecular Dynamics (MD) is a classical potential modelling simulation technique.
 Part 1: The Lennard-Jones Solid
 ===============================
 
-Now that you've become acquainted with the nature of MD simulations, we shall now apply some of the concepts and methods to explore the properties of a model system: a 3D Lennard-Jones material.  A Lennard-Jones material is a hypothetical material which is made up of chargeless particles that only interact with each other via the Lennard-Jones potential.  The Lennard-Jones potential has the following form:
+Now that you've become acquainted with the nature of MD simulations, we shall now apply some of the concepts and methods to explore the properties of a model system: a 3D Lennard-Jones material.  A Lennard-Jones material is a hypothetical material which is made up of chargeless particles that only interact with each other via the Lennard-Jones potential.  The Lennard-Jones potential can be expressed in the following form:
 
 .. math::
 
@@ -28,7 +28,7 @@ This model system has limited use in real world applications as it neglects all 
 Exercise 1)
 -----------
 
-In this exercise, we will be running molecular dynamics calculations on a 3D model of a Lennard-Jones solid in an face-centred cubic (fcc) arrangement to predict its behaviour when the temperature is raised.  
+In this exercise, we will be running molecular dynamics calculations on a 3D model of a Lennard-Jones solid in a face-centred cubic (fcc) arrangement to predict its behaviour when the temperature is raised.  
 
 |action| Navigate to 'inputs' :math:`\rightarrow` 'Tut_1' :math:`\rightarrow` 'main' :math:`\rightarrow` 'Init'.  You will see input files: CONFIG, CONTROL, and FIELD.  The CONFIG file displays the size of the system and the position and velocity components in each direction (x, y, z) of every particle at the beginning of the simulation, the FIELD file defines the interactions between particles, and the CONTROL file sets the parameters and conditions for running the simulation. 
 
@@ -45,7 +45,7 @@ Once the calculation has successfully completed, it is now time to begin the ana
 
 **(alternate instructions for visualising configurations here)**
 
-|action| Click the windows button and search for a program called \'Vesta\' and open it.  Vesta is a program which allows you to visualise systems of atoms/molecules in three dimensions. 
+|action| Click the windows button and search for a program called 'Vesta' and open it.  Vesta is a program which allows you to visualise systems of atoms/molecules in three dimensions. 
 
 |action| To view your initial and final system configurations, go to file :math:`\rightarrow` New Structure; select import and browse to find your CONFIG and REVCON, respectively.  Do this separately for each file.  You should see both structures appear in separate tabs. 
 

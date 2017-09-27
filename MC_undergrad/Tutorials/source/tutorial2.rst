@@ -110,7 +110,7 @@ The aim of this exercise is to mirror some of the exercises from the first sessi
 
 As you may recall, a key part of Monte Carlo simulations is sampling over all possible states of the system by 'moving' through configuration space, where a move is a change from an initial configuration to a new one.  The most intuitive move is translational moves which consist of physically moving an object from one set of coordinates to another (within a preset maximum distance).  But other types of moves are possible, depending on the type of ensemble used.  For instance, one can define a volume move, where the proposed move is changing the total system volume by altering the length scales of one or more dimensions of the system and (as we will see later in the course) one can also perform insert/delete and swap moves of objects.
 
-|think| What types of moves are possible in a system under these conditions?
+|think| What types of moves are possible in a system under NVT conditions?
 
 .. |think| image:: images/General/think.png
    :height: 100 px
@@ -126,7 +126,7 @@ A successful DL_MONTE calculation will produce a number of output files:
 * OUTPUT.000 contains details of the simulation, statistics, running time, or errors if the calculation failed.
 * REVCON.000 contains the final configuration in the format specified
 * PTFILE.000 contains statistics though will eventually be deprecated in favour of...
-* YAMLDAT.000 which contains statistics in the yaml format
+* YAMLDATA.000 which contains statistics in the yaml format
 * ARCHIVE.000/HISTORY.000/TRAJECTORY.000 contains the trajectory in the specified format
 
 In this exercise we will analyse the YAMLDAT.000 and visualise the trajectory files.  
@@ -141,7 +141,7 @@ The sequence of moves defines the 'trajectory' of the system in configurational 
 .. |action| image:: images/General/action.png
    :scale: 5 % 
 
-|think| Identify the melting temperature of the system both by visualising the trajectories of your system at each temperature and by plotting energy vs temperature in the same way that you did in Tutorial 1.  Are the melting temperatures identified in your simulations consistent?
+|think| Identify the melting temperature of the system both by visualising the trajectories of your system at each temperature and by plotting energy vs temperature (in the same way that you did in Tutorial 0).  Are the melting temperatures identified in your simulations consistent?
 
 Remember, you can use the 'collate temperature and plot' script to plot the system energy against temperature, once you have run calculations at a variety of temperatures.
 
