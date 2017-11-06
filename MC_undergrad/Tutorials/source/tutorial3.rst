@@ -91,7 +91,7 @@ As you may recall, we use the Metropolis algorithm in this course to accept/reje
 
          P_{\mathrm{acc}}(\mathbf{r}_1 \rightarrow \mathbf{r}_2) = \min(1, \exp \ \Bigl(- \frac{E(\mathbf{r}_2) - E(\mathbf{r}_1)}{kT}\Bigr) \ )
 
-The statistical weight of a configuration amongst a given disrtibution of configurations and the acceptance probability for a move define the condition of detailed balance:
+The statistical weight of a configuration amongst a given distribution of configurations and the acceptance probability for a move define the condition of detailed balance:
 
 .. math::
 
