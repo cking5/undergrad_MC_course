@@ -15,7 +15,8 @@ Contents:
    tutorial1
    tutorial2
    tutorial3
-   tutorial4
+   tutorial4c
+   tutorial4p
 
 Indices and tables
 ==================
