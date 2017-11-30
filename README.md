@@ -6,6 +6,7 @@ undergrad_MC_course is licensed under a Creative Commons Attribution 4.0 Interna
 AUTHORS
 -------
 Chris King, James Grant, Steve Parker
+
 Department of Chemistry, University of Bath
 
 Purpose
@@ -24,15 +25,15 @@ Contents
 
 The course contains tutorial documentation and input files for DL_MONTE2 arranged as follows:
  
-* <tutorials>
-    * <jupyter>
-        * <images>
-        * <inputs>
-    * <source>
-        * <images>
-    * <teaching_plans>
-* <inputs>
-    * <tut_{0..4>
+* tutorials
+    * jupyter
+        * images
+        * inputs
+    * source
+        * images
+    * teaching_plans
+* inputs
+    * tut_{0..4}
 
 The tutorials come are provided in rst which can be used to make html or latex->pdf versions of the worksheets.  We are also experimenting with developing a version of the material in the form of Jupyter notebooks to reduce the barrier to uptake of the material in line with developments in many courses at Bath and across academia.  We also aim to provide a teaching plan or learning outcomes for each of the tutorials which are currently available as Word docs.  DL_MONTE input files for each of the tutorials and in due course optional extenstion projects are also provided.  We are also developing slides to support the teaching of the course whihc will be included in due course.
 
