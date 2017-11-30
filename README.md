@@ -1,4 +1,4 @@
-# README - undergrad_MC_course#
+# README - undergrad_MC_course
 (C) Chris King, James Grant, Steve Parker 
 
 undergrad_MC_course is licensed under a Creative Commons Attribution 4.0 International License which you should have received with this work.  If not see <http://creativecommons.org/licenses/by/4.0/>.
