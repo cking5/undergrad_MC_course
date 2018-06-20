@@ -14,5 +14,5 @@ revconformat dlmonte            # REVCON file is in DLMONTE CONFIG format
 archiveformat dlpoly4           # ARCHIVE.000/HISTORY.000/TRAJECTORY.000 format
                                 # In this case: HISTORY.000 in DLPOLY4 style
 move atom 1 100                 # Move atoms with a weight of 100
-LJ core
+A core
 start

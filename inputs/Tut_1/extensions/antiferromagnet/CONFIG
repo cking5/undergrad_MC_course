@@ -1,5 +1,4 @@
-2D Square Ising Model 64x64 grid
-NCONFIG 1 
+Square Ising model 64x64 grid
          0         0
         3.0000000000        0.0000000000        0.0000000000
         0.0000000000       64.0000000000        0.0000000000

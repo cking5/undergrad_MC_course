@@ -5,7 +5,7 @@ nbrlist auto                    # Use a neighbour list to speed up energy calcul
 maxnonbondnbrs 4                # Maximum number of neighbours in neighbour list  
 verlet 0.0
 temperature     0.001 # T* = \frac{2}{\ln(1+sqrt(2))} 
-steps          130000000            # Number of moves to perform in simulation 
+steps          1300000            # Number of moves to perform in simulation 
 equilibration    0              # Equilibration period: statistics are gathered after this period
 print           100000         # Print statistics every 'print' moves
 stats           100000
