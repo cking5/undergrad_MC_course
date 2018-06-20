@@ -16,7 +16,8 @@ Contents:
    tutorial2
    tutorial3
    tutorial4c
-   tutorial4p
+..   tutorial4p
+.. Tutorial 4p commented as needs work to address ntoation issues, which also prevent latex compilation?
 
 Indices and tables
 ==================

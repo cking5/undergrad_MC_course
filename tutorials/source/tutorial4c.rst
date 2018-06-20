@@ -1,7 +1,8 @@
 .. _tutorial_4: 
 
+--------------------------------------------------
 TUTORIAL 4: CH\ :sub:`4` \ adsorption in a zeolite
-==================================================
+--------------------------------------------------
 
 Authors: Chris King, James Grant - r.j.grant@bath.ac.uk
 

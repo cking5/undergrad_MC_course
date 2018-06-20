@@ -1,7 +1,8 @@
 .. _tutorial_0:
 
+----------------------------------------------
 TUTORIAL 0: Introduction to Molecular Dynamics
-==============================================
+----------------------------------------------
 
 Authors: Chris King, James Grant - r.j.grant@bath.ac.uk
 
